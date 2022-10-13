@@ -50,7 +50,7 @@ class BusinessController extends Controller
             [
                 'code' => 'ok',
                 'message' => 'Test',
-                'request' => $request->file('avatar')
+                'request' => $request->all()
             ]
         );
 

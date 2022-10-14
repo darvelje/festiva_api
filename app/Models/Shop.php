@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property integer $comission
  * @property string $name
  * @property string $description
  * @property string $cover
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $user_id
+ * @property string $slug
  * @property ShopProduct[] $shopProducts
  * @property ShopCoupon[] $shopCoupons
  * @property Order[] $orders

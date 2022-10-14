@@ -58,7 +58,7 @@ class BusinessController extends Controller
 
         try{
             DB::beginTransaction();
-            
+
             $business = new Shop();
 
             if($request->userId){
@@ -112,11 +112,19 @@ class BusinessController extends Controller
     }
 
     //section Update_Business
-    public function updateBusiness(NewBusinessRequest $request){
+    public function updateBusiness(Request $request){
+
+//                return response()->json(
+//            [
+//                'code' => 'ok',
+//                'message' => 'Test',
+//                'request' => $request->all()
+//            ]
+//        );
         try{
             DB::beginTransaction();
 
-            $business = Shop::whereSlug($request->businessSlug)->first();
+            $business = Shop::whereId($request->businessId)->first();
 
             $business->name = $request->businessName;
             $business->slug = Str::slug($request->businessUrl);

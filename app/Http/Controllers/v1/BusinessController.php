@@ -8,9 +8,19 @@ use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+
+
+//        return response()->json(
+//            [
+//                'code' => 'ok',
+//                'message' => 'Test',
+//                'request' => $request->all()
+//            ]
+//        );
 
 class BusinessController extends Controller
 {
@@ -23,22 +33,22 @@ class BusinessController extends Controller
         return response()->json(
             [
                 'code' => 'ok',
-                'message' => 'Users',
+                'message' => 'Businesses',
                 'businesses' => $businesses
             ]
         );
     }
 
     //section Get_Business
-    public function getBusinessById(Request $request){
+    public function getBusinessBySlug(Request $request){
 
-        $shop = Shop::whereId($request->businessId)->first();
+        $business = Shop::whereSlug($request->businessSlug)->first();
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Business',
-                'shop' => $shop
+                'business' => $business
             ]
         );
     }
@@ -46,16 +56,9 @@ class BusinessController extends Controller
     //section New_Business
     public function newBusiness(Request $request){
 
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Test',
-//                'request' => $request->all()
-//            ]
-//        );
-
         try{
             DB::beginTransaction();
+            
             $business = new Shop();
 
             if($request->userId){
@@ -75,15 +78,17 @@ class BusinessController extends Controller
             }
 
             $business->name = $request->businessName;
+            $business->slug = Str::slug($request->businessUrl);
             $business->description = $request->businessDescription;
             $business->address = $request->businessAddress;
             $business->phone = $request->businessPhone;
             $business->email = $request->businessEmail;
             $business->url = $request->businessUrl;
-            if ($request->hasFile('avatar')) {
+            $business->comission = $request->businessComission;
+            if ($request->hasFile('businessAvatar')) {
                 $business->avatar = self::uploadImage($request->businessAvatar, $request->businessName);
             }
-            if ($request->hasFile('cover')) {
+            if ($request->hasFile('businessCover')) {
                 $business->cover = self::uploadImage($request->businessCover, $request->businessName);
             }
 
@@ -94,7 +99,7 @@ class BusinessController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Business created successfuly',
+                    'message' => 'Business created successfully',
                     'business' => $business
                 ]
             );
@@ -110,18 +115,21 @@ class BusinessController extends Controller
     public function updateBusiness(NewBusinessRequest $request){
         try{
             DB::beginTransaction();
-            $business = Shop::whereId($request->businessId)->first();
+
+            $business = Shop::whereSlug($request->businessSlug)->first();
 
             $business->name = $request->businessName;
+            $business->slug = Str::slug($request->businessUrl);
             $business->description = $request->businessDescription;
             $business->address = $request->businessAddress;
             $business->phone = $request->businessPhone;
             $business->email = $request->businessEmail;
             $business->url = $request->businessUrl;
-            if ($request->hasFile('avatar')) {
+            $business->comission = $request->businessComission;
+            if ($request->hasFile('businessAvatar')) {
                 $business->avatar = self::uploadImage($request->businessAvatar, $request->businessName);
             }
-            if ($request->hasFile('cover')) {
+            if ($request->hasFile('businessCover')) {
                 $business->cover = self::uploadImage($request->businessCover, $request->businessName);
             }
 
@@ -132,7 +140,7 @@ class BusinessController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Business updated successfuly',
+                    'message' => 'Business updated successfully',
                     'business' => $business
                 ]
             );
@@ -148,13 +156,24 @@ class BusinessController extends Controller
     public function deleteBusiness(Request $request){
         try {
             DB::beginTransaction();
-            Shop::whereId($request->businessId)->delete();
+
+            $result = Shop::whereId($request->businessId)->delete();
+
             DB::commit();
+
+            if($result){
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'Business deleted successfully'
+                    ]
+                );
+            }
 
             return response()->json(
                 [
-                    'code' => 'ok',
-                    'message' => 'Business deleted successfuly'
+                    'code' => 'error',
+                    'message' => 'Business not found'
                 ]
             );
 
@@ -170,9 +189,9 @@ class BusinessController extends Controller
     public static function uploadImage($path, $name){
         $image = $path;
 
-        $avatarName =  $name . substr(uniqid(rand(), true), 7, 7) . '.webp';
+        $avatarName =  $name . substr(uniqid(rand(), true), 7, 7) . '.png';
 
-        $img = Image::make($image->getRealPath())->encode('webp', 50)->orientate();
+        $img = Image::make($image->getRealPath())->encode('png', 50)->orientate();
 
         $img->resize(null, 300, function ($constraint) {
             $constraint->aspectRatio();

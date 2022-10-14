@@ -31,13 +31,13 @@ class UserController extends Controller
     //section Get_User
     public function getUserById(Request $request){
 
-        $users = User::whereId($request->userId)->first();
+        $user = User::whereId($request->userId)->first();
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'User',
-                'users' => $users
+                'user' => $user
             ]
         );
     }
@@ -64,7 +64,7 @@ class UserController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'User created successfuly',
+                    'message' => 'User created successfully',
                     'user' => $user
                 ]
             );
@@ -98,7 +98,7 @@ class UserController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'User updated successfuly',
+                    'message' => 'User updated successfully',
                     'user' => $user
                 ]
             );
@@ -120,7 +120,7 @@ class UserController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'User deleted successfuly'
+                    'message' => 'User deleted successfully'
                 ]
             );
 

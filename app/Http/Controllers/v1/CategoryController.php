@@ -13,14 +13,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Test',
-//                'request' => $request->all()
-//            ]
-//        );
-
 class CategoryController extends Controller
 {
 
@@ -52,7 +44,7 @@ class CategoryController extends Controller
         );
     }
 
-    //section New_Business
+    //section New_Category
     public function newCategory(Request $request){
 
         try{

@@ -8,16 +8,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $name
  * @property float $rate
+ * @property float $main
  * @property string $created_at
  * @property string $updated_at
  * @property ShopProductsPricesrate[] $shopProductsPricesrates
  */
 class Currency extends Model
 {
-    /**
-     * @var array
-     */
-    protected $fillable = ['name', 'rate', 'created_at', 'updated_at'];
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

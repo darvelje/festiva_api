@@ -18,10 +18,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ShopCoupon extends Model
 {
-    /**
-     * @var array
-     */
-    protected $fillable = ['shop_id', 'name', 'code', 'value', 'status', 'type', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

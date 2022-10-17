@@ -21,6 +21,13 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/business/update', [\App\Http\Controllers\v1\BusinessController::class, 'updateBusiness']);
     Route::delete('/v1/business/delete', [\App\Http\Controllers\v1\BusinessController::class, 'deleteBusiness']);
 
+// section Routes_Business_Coupons
+    Route::get('/v1/business/coupons/all', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'getShopCoupons']);
+    Route::get('/v1/business/coupons/view/{shopCouponId}', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'getShopCouponById']);
+    Route::post('/v1/business/coupons/new', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'newShopCoupon']);
+    Route::post('/v1/business/coupons/update', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'updateShopCoupon']);
+    Route::delete('/v1/business/coupons/delete', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'deleteShopCoupon']);
+
 // section Routes_Category
     Route::get('/v1/category/all', [\App\Http\Controllers\v1\CategoryController::class, 'getCategories']);
     Route::get('/v1/category/view/{categorySlug}', [\App\Http\Controllers\v1\CategoryController::class, 'getCategoryBySlug']);

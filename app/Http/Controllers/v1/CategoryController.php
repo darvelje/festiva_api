@@ -54,7 +54,6 @@ class CategoryController extends Controller
 
             $category->name = $request->categoryName;
             $category->slug = Str::slug($request->categorySlug);
-            $category->main = Str::slug($request->categoryMain);
 
             $category->save();
 
@@ -85,7 +84,6 @@ class CategoryController extends Controller
 
             $category->name = $request->categoryName;
             $category->slug = Str::slug($request->categorySlug);
-            $category->main = Str::slug($request->categoryMain);
 
             $category->update();
 

@@ -114,13 +114,6 @@ class BusinessController extends Controller
     //section Update_Business
     public function updateBusiness(Request $request){
 
-//                return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Test',
-//                'request' => $request->all()
-//            ]
-//        );
         try{
             DB::beginTransaction();
 

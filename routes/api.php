@@ -21,6 +21,13 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/business/update', [\App\Http\Controllers\v1\BusinessController::class, 'updateBusiness']);
     Route::delete('/v1/business/delete', [\App\Http\Controllers\v1\BusinessController::class, 'deleteBusiness']);
 
+// section Routes_Categories
+    Route::get('/v1/category/all', [\App\Http\Controllers\v1\CategoryController::class, 'getCategories']);
+    Route::get('/v1/category/view/{categorySlug}', [\App\Http\Controllers\v1\CategoryController::class, 'getCategoryBySlug']);
+    Route::post('/v1/category/new', [\App\Http\Controllers\v1\CategoryController::class, 'newCategory']);
+    Route::post('/v1/category/update', [\App\Http\Controllers\v1\CategoryController::class, 'updateCategory']);
+    Route::delete('/v1/category/delete', [\App\Http\Controllers\v1\CategoryController::class, 'deleteCategory']);
+
 // section Routes_Product
 
 

@@ -28,6 +28,12 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/category/update', [\App\Http\Controllers\v1\CategoryController::class, 'updateCategory']);
     Route::delete('/v1/category/delete', [\App\Http\Controllers\v1\CategoryController::class, 'deleteCategory']);
 
+// section Routes_Settings
+    Route::get('/v1/settings/all', [\App\Http\Controllers\v1\SettingsController::class, 'getSettings']);
+    Route::post('/v1/settings/set', [\App\Http\Controllers\v1\SettingsController::class, 'setSettings']);
+    Route::post('/v1/settings/update', [\App\Http\Controllers\v1\SettingsController::class, 'updateSettings']);
+    Route::delete('/v1/settings/delete', [\App\Http\Controllers\v1\SettingsController::class, 'deleteSettings']);
+
 // section Routes_Product
 
 

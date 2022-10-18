@@ -99,8 +99,7 @@ class BusinessController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Business created successfully',
-                    'business' => $business
+                    'message' => 'Business created successfully'
                 ]
             );
         }
@@ -141,8 +140,7 @@ class BusinessController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Business updated successfully',
-                    'business' => $business
+                    'message' => 'Business updated successfully'
                 ]
             );
         }

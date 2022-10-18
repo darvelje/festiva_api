@@ -64,8 +64,7 @@ class BusinessCouponsController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Shop coupon created successfully',
-                    'shopCoupon' => $shopCoupon
+                    'message' => 'Shop coupon created successfully'
                 ]
             );
         }
@@ -98,8 +97,7 @@ class BusinessCouponsController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Shop coupon updated successfully',
-                    'shopCoupon' => $shopCoupon
+                    'message' => 'Shop coupon updated successfully'
                 ]
             );
         }

@@ -69,9 +69,9 @@ class ProductController extends Controller
                 for($i=0; $i<$lengthArrayProductImage; $i++){
                     $productPhoto = new ShopProductPhoto();
                     $productPhoto->shop_product_id = $product->id;
-                    $productPhoto->main = $product->id;
-                    $productPhoto->path_photo = self::uploadImage($request->productImage[$i], $request->productName);
-                    
+                    $productPhoto->main = $request->productImage[$i]['main'];
+                    $productPhoto->path_photo = self::uploadImage($request->productImage[$i]['image'], $request->productName);
+
                     $productPhoto->save();
                 }
             }
@@ -133,7 +133,7 @@ class ProductController extends Controller
             $lengthArrayProductImageDeleted = count($request->productImageDeleted);
 
             for($i=0; $i<$lengthArrayProductImageDeleted; $i++){
-                ShopProductPhoto::where('shop_product_id',$request->productId)->delete();
+                ShopProductPhoto::whereId($request->productImageDeleted[$i])->delete();
             }
 
             $lengthArrayProductImage = count($request->productImage);
@@ -142,27 +142,41 @@ class ProductController extends Controller
                 for($i=0; $i<$lengthArrayProductImage; $i++){
                     $productPhoto = new ShopProductPhoto();
                     $productPhoto->shop_product_id = $product->id;
-                    $productPhoto->path_photo = self::uploadImage($request->productImage[$i], $request->productName);
+                    $productPhoto->main = $request->productImage[$i]['main'];
+                    $productPhoto->path_photo = self::uploadImage($request->productImage[$i]['image'], $request->productName);
                     $productPhoto->save();
                 }
             }
 
-            ShopProductPhoto::where('shop_product_id',$request->productId);
+            $productMain = ShopProductPhoto::where('shop_product_id',$request->productId)->whereMain(true)->count();
+
+            if($productMain == 0){
+                $productPhotoMain = ShopProductPhoto::where('shop_product_id',$request->productId)->first();
+
+                $productPhotoMain->main = true;
+                $productPhotoMain->update();
+            }
 
             $lengthArrayProductCategory = count($request->productCategory);
 
+            ShopProductPhoto::whereId($request->productId)->delete();
+
             if($lengthArrayProductCategory != 0){
                 for($i=0; $i<$lengthArrayProductCategory; $i++){
-                    $productCategory = ShopProductsHasCategoriesProduct::whereShopProductId($request->productId);
+                    $productCategory = new ShopProductsHasCategoriesProduct();
+                    $productCategory->shop_product_id = $request->productId;
                     $productCategory->category_product_id = $request->productCategory[$i];
-                    $productCategory->update();
+                    $productCategory->save();
                 }
             }
 
             $lengthArrayProductPrice= count($request->productPrice);
 
+
+
             for($i=0; $i<$lengthArrayProductPrice; $i++){
-                $productPrice = ShopProductsPricesrate::whereShopProductId($request->productId);
+                $productPrice = ShopProductsPricesrate::where('shop_product_id',$request->productId);
+                //$productPrice->shop_product_id = $request->productId;
                 $productPrice->currency_code = $request->productPrice[$i]['currencyCode'];
                 $productPrice->rate = $request->productPrice[$i]['value'];
                 $productPrice->main = $request->productPrice[$i]['main'];

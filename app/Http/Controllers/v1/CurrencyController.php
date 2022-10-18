@@ -49,8 +49,8 @@ class CurrencyController extends Controller
             $currency = new Currency();
 
             $currency->name = $request->currencyName;
-            $currency->rate = Str::slug($request->currencyRate);
-            $currency->main = Str::slug($request->currencyMain);
+            $currency->code = $request->currencyCode;
+            $currency->main = $request->currencyMain;
 
             $currency->save();
 
@@ -80,8 +80,8 @@ class CurrencyController extends Controller
             $currency = Currency::whereId($request->currencyId)->first();
 
             $currency->name = $request->currencyName;
-            $currency->rate = Str::slug($request->currencyRate);
-            $currency->main = Str::slug($request->currencyMain);
+            $currency->code = $request->currencyCode;
+            $currency->main = $request->currencyMain;
 
             $currency->update();
 

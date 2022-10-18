@@ -59,8 +59,7 @@ class CurrencyController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Currency created successfully',
-                    'currency' => $currency
+                    'message' => 'Currency created successfully'
                 ]
             );
         }
@@ -90,8 +89,7 @@ class CurrencyController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Currency updated successfully',
-                    'currency' => $currency
+                    'message' => 'Currency updated successfully'
                 ]
             );
         }

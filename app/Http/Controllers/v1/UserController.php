@@ -64,8 +64,7 @@ class UserController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'User created successfully',
-                    'user' => $user
+                    'message' => 'User created successfully'
                 ]
             );
         }
@@ -98,8 +97,7 @@ class UserController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'User updated successfully',
-                    'user' => $user
+                    'message' => 'User updated successfully'
                 ]
             );
         }

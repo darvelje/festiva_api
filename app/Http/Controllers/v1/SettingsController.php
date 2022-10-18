@@ -58,8 +58,7 @@ class SettingsController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => '$setting created successfully',
-                    'setting' => $setting
+                    'message' => '$setting created successfully'
                 ]
             );
         }
@@ -99,8 +98,7 @@ class SettingsController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => '$setting updated successfully',
-                    'setting' => $setting
+                    'message' => '$setting updated successfully'
                 ]
             );
         }

@@ -159,7 +159,7 @@ class ProductController extends Controller
 
             $lengthArrayProductCategory = count($request->productCategory);
 
-            ShopProductPhoto::whereId($request->productId)->delete();
+            ShopProductsHasCategoriesProduct::where('shop_product_id',$request->productId)->delete();
 
             if($lengthArrayProductCategory != 0){
                 for($i=0; $i<$lengthArrayProductCategory; $i++){
@@ -172,15 +172,15 @@ class ProductController extends Controller
 
             $lengthArrayProductPrice= count($request->productPrice);
 
-
+            ShopProductsPricesrate::where('shop_product_id',$request->productId)->delete();
 
             for($i=0; $i<$lengthArrayProductPrice; $i++){
-                $productPrice = ShopProductsPricesrate::where('shop_product_id',$request->productId);
-                //$productPrice->shop_product_id = $request->productId;
+                $productPrice = new ShopProductsPricesrate();
+                $productPrice->shop_product_id = $request->productId;
                 $productPrice->currency_code = $request->productPrice[$i]['currencyCode'];
                 $productPrice->rate = $request->productPrice[$i]['value'];
                 $productPrice->main = $request->productPrice[$i]['main'];
-                $productPrice->update();
+                $productPrice->save();
             }
 
             DB::commit();
@@ -199,38 +199,38 @@ class ProductController extends Controller
         }
     }
 
-//    // section Delete_Currency
-//    public function deleteCurrency(Request $request){
-//        try {
-//            DB::beginTransaction();
-//
-//            $result = Currency::whereId($request->currencyId)->delete();
-//
-//            DB::commit();
-//
-//            if($result){
-//                return response()->json(
-//                    [
-//                        'code' => 'ok',
-//                        'message' => 'Currency deleted successfully'
-//                    ]
-//                );
-//            }
-//
-//            return response()->json(
-//                [
-//                    'code' => 'error',
-//                    'message' => 'Currency not found'
-//                ]
-//            );
-//
-//        }
-//        catch(\Throwable $th){
-//            return response()->json(
-//                ['code' => 'error', 'message' => $th->getMessage()]
-//            );
-//        }
-//    }
+    // section Delete_Product
+    public function deleteProduct(Request $request){
+        try {
+            DB::beginTransaction();
+
+            $result = ShopProduct::whereId($request->productId)->delete();
+
+            DB::commit();
+
+            if($result){
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'Product deleted successfully'
+                    ]
+                );
+            }
+
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Product not found'
+                ]
+            );
+
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
 
     //section Upload_image
     public static function uploadImage($path, $name){

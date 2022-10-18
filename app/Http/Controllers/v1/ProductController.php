@@ -76,6 +76,7 @@ class ProductController extends Controller
                     else{
                         $productPhoto->main = false;
                     }
+                    $productPhoto->save();
                 }
             }
 
@@ -86,6 +87,8 @@ class ProductController extends Controller
                     $productCategory = new ShopProductsHasCategoriesProduct();
                     $productCategory->shop_product_id = $product->id;
                     $productCategory->category_product_id = $request->productCategory[$i];
+                    $productCategory->save();
+
                 }
             }
 
@@ -97,6 +100,7 @@ class ProductController extends Controller
                 $productPrice->currency_code = $request->productPrice[$i]['currencyCode'];
                 $productPrice->rate = $request->productPrice[$i]['value'];
                 $productPrice->main = $request->productPrice[$i]['main'];
+                $productPrice->save();
             }
 
             DB::commit();

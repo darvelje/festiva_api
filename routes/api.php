@@ -48,6 +48,13 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/currency/update', [\App\Http\Controllers\v1\CurrencyController::class, 'updateCurrency']);
     Route::delete('/v1/currency/delete', [\App\Http\Controllers\v1\CurrencyController::class, 'deleteCurrency']);
 
+// section Routes_Shop_Currency
+    Route::get('/v1/business/currency/all', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencies']);
+    Route::get('/v1/business/currency/view/{shopCurrencyCode}', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencyByCode']);
+    Route::post('/v1/business/currency/new', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'newBusinessCurrency']);
+    Route::post('/v1/business/currency/update', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'updateBusinessCurrency']);
+    Route::delete('/v1/business/currency/delete', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'deleteBusinessCurrency']);
+
 // section Routes_Product
     Route::get('/v1/product/view/{productSlug}', [\App\Http\Controllers\v1\ProductController::class, 'getProductBySlug']);
     Route::post('/v1/product/new', [\App\Http\Controllers\v1\ProductController::class, 'newProduct']);

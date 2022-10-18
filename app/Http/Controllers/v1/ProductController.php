@@ -119,36 +119,78 @@ class ProductController extends Controller
         }
     }
 
-//    //section Update_Currency
-//    public function updateCurrency(Request $request){
-//
-//        try{
-//            DB::beginTransaction();
-//
-//            $currency = Currency::whereId($request->currencyId)->first();
-//
-//            $currency->name = $request->currencyName;
-//            $currency->rate = Str::slug($request->currencyRate);
-//            $currency->main = Str::slug($request->currencyMain);
-//
-//            $currency->update();
-//
-//            DB::commit();
-//
-//            return response()->json(
-//                [
-//                    'code' => 'ok',
-//                    'message' => 'Currency updated successfully',
-//                    'currency' => $currency
-//                ]
-//            );
-//        }
-//        catch(\Throwable $th){
-//            return response()->json(
-//                ['code' => 'error', 'message' => $th->getMessage()]
-//            );
-//        }
-//    }
+    //section Update_Product
+    public function updateProduct(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $product = ShopProduct::with('shopProductPhotos', 'shop', 'categoriesProducts' )->whereId($request->productId)->first();
+
+            $product->name = $request->productName;
+            $product->stock = $request->productStock;
+            $product->quantity_min = $request->productQuantityMin;
+            $product->slug = Str::slug($request->productSlug);
+            $product->shop_id = $request->productShopId;
+
+            $product->update();
+
+            $lengthArrayProductImage = count($request->productImage);
+
+            return $lengthArrayProductImage;
+
+            if($lengthArrayProductImage != 0){
+                for($i=0; $i<$lengthArrayProductImage; $i++){
+                    $productPhoto = ShopProductPhoto::whereShopProductId($request->productId);
+
+                    return $productPhoto;
+
+                    $productPhoto->path_photo = self::uploadImage($request->productImage[$i], $request->productName);
+                    if($i == 0){
+                        $productPhoto->main = true;
+                    }
+                    else{
+                        $productPhoto->main = false;
+                    }
+                    $productPhoto->update();
+                }
+            }
+
+            $lengthArrayProductCategory = count($request->productCategory);
+
+            if($lengthArrayProductCategory != 0){
+                for($i=0; $i<$lengthArrayProductCategory; $i++){
+                    $productCategory = ShopProductsHasCategoriesProduct::whereShopProductId($request->productId);
+                    $productCategory->category_product_id = $request->productCategory[$i];
+                    $productCategory->update();
+                }
+            }
+
+            $lengthArrayProductPrice= count($request->productPrice);
+
+            for($i=0; $i<$lengthArrayProductPrice; $i++){
+                $productPrice = ShopProductsPricesrate::whereShopProductId($request->productId);
+                $productPrice->currency_code = $request->productPrice[$i]['currencyCode'];
+                $productPrice->rate = $request->productPrice[$i]['value'];
+                $productPrice->main = $request->productPrice[$i]['main'];
+                $productPrice->update();
+            }
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Product updated successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
 
 //    // section Delete_Currency
 //    public function deleteCurrency(Request $request){

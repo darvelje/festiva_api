@@ -59,5 +59,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/product/all', [\App\Http\Controllers\v1\ProductController::class, 'getProducts']);
     Route::get('/v1/product/view/{productSlug}', [\App\Http\Controllers\v1\ProductController::class, 'getProductBySlug']);
     Route::post('/v1/product/new', [\App\Http\Controllers\v1\ProductController::class, 'newProduct']);
+    Route::post('/v1/product/update', [\App\Http\Controllers\v1\ProductController::class, 'updateProduct']);
+    Route::delete('/v1/product/delete', [\App\Http\Controllers\v1\ProductController::class, 'deleteProduct']);
 
 

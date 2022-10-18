@@ -19,24 +19,24 @@ class ProductController extends Controller
 {
 
 
-//    //section Get_Currency
-//    public function getCurrencies(){
-//
-//        $currencies = Currency::all();
-//
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Currencies',
-//                'currencies' => $currencies
-//            ]
-//        );
-//    }
+    //section Get_Products
+    public function getProducts(){
+
+        $products = ShopProduct::with('shopProductPhotos', 'shop', 'categoriesProducts' )->get();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Products',
+                'products' => $products
+            ]
+        );
+    }
 
     //section Get_Product
     public function getProductBySlug(Request $request){
 
-        $product = ShopProduct::with('shopProductPhotos', 'shop', 'categoriesProducts', 'categoriesProducts.categoriesProduct' )->whereSlug($request->productSlug)->first();
+        $product = ShopProduct::with('shopProductPhotos', 'shop', 'categoriesProducts' )->whereSlug($request->productSlug)->first();
 
         return response()->json(
             [

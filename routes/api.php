@@ -56,6 +56,7 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/business/currency/delete', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'deleteBusinessCurrency']);
 
 // section Routes_Product
+    Route::get('/v1/product/all', [\App\Http\Controllers\v1\ProductController::class, 'getProducts']);
     Route::get('/v1/product/view/{productSlug}', [\App\Http\Controllers\v1\ProductController::class, 'getProductBySlug']);
     Route::post('/v1/product/new', [\App\Http\Controllers\v1\ProductController::class, 'newProduct']);
 

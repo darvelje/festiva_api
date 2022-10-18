@@ -69,13 +69,9 @@ class ProductController extends Controller
                 for($i=0; $i<$lengthArrayProductImage; $i++){
                     $productPhoto = new ShopProductPhoto();
                     $productPhoto->shop_product_id = $product->id;
+                    $productPhoto->main = $product->id;
                     $productPhoto->path_photo = self::uploadImage($request->productImage[$i], $request->productName);
-                    if($i == 0){
-                        $productPhoto->main = true;
-                    }
-                    else{
-                        $productPhoto->main = false;
-                    }
+                    
                     $productPhoto->save();
                 }
             }
@@ -125,36 +121,33 @@ class ProductController extends Controller
         try{
             DB::beginTransaction();
 
-            $product = ShopProduct::with('shopProductPhotos', 'shop', 'categoriesProducts' )->whereId($request->productId)->first();
+            $product = ShopProduct::whereId($request->productId)->first();
 
             $product->name = $request->productName;
             $product->stock = $request->productStock;
             $product->quantity_min = $request->productQuantityMin;
             $product->slug = Str::slug($request->productSlug);
-            $product->shop_id = $request->productShopId;
 
             $product->update();
 
-            $lengthArrayProductImage = count($request->productImage);
+            $lengthArrayProductImageDeleted = count($request->productImageDeleted);
 
-            return $lengthArrayProductImage;
+            for($i=0; $i<$lengthArrayProductImageDeleted; $i++){
+                ShopProductPhoto::where('shop_product_id',$request->productId)->delete();
+            }
+
+            $lengthArrayProductImage = count($request->productImage);
 
             if($lengthArrayProductImage != 0){
                 for($i=0; $i<$lengthArrayProductImage; $i++){
-                    $productPhoto = ShopProductPhoto::whereShopProductId($request->productId);
-
-                    return $productPhoto;
-
+                    $productPhoto = new ShopProductPhoto();
+                    $productPhoto->shop_product_id = $product->id;
                     $productPhoto->path_photo = self::uploadImage($request->productImage[$i], $request->productName);
-                    if($i == 0){
-                        $productPhoto->main = true;
-                    }
-                    else{
-                        $productPhoto->main = false;
-                    }
-                    $productPhoto->update();
+                    $productPhoto->save();
                 }
             }
+
+            ShopProductPhoto::where('shop_product_id',$request->productId);
 
             $lengthArrayProductCategory = count($request->productCategory);
 

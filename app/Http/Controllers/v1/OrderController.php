@@ -8,6 +8,7 @@ use App\Http\Requests\NewBusinessRequest;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Shop;
+use App\Models\ShopProduct;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,34 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    //section Get_Order
+    public function getOrders(){
+
+        $orders = Order::with('user', 'shop', 'orderProducts', 'orderProducts.shopProduct' )->get();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Orders',
+                'orders' => $orders
+            ]
+        );
+    }
+
+    //section Get_OrderById
+    public function getOrderById(Request $request){
+
+        $order = Order::with('user', 'shop', 'orderProducts', 'orderProducts.shopProduct' )->whereId($request->orderId)->first();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Order',
+                'order' => $order
+            ]
+        );
+    }
+
     //section New_Order
     public function newOrder(Request $request){
 
@@ -60,5 +89,39 @@ class OrderController extends Controller
             );
         }
     }
+
+    // section Delete_Order
+    public function deleteOrder(Request $request){
+        try {
+            DB::beginTransaction();
+
+            $result = Order::whereId($request->orderId)->delete();
+
+            DB::commit();
+
+            if($result){
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'Order deleted successfully'
+                    ]
+                );
+            }
+
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Order not found'
+                ]
+            );
+
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
 
 }

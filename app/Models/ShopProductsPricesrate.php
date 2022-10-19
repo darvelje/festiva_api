@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $rate
  * @property string $created_at
  * @property string $updated_at
- * @property ShopProduct $shopProduct
  * @property ShopCurrency $shopCurrency
+ * @property ShopProduct $shopProduct
  */
 class ShopProductsPricesrate extends Model
 {
@@ -25,16 +25,16 @@ class ShopProductsPricesrate extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shopProduct()
+    public function shopCurrency()
     {
-        return $this->belongsTo('App\Models\ShopProduct');
+        return $this->belongsTo('App\Models\ShopCurrency', 'currency_code', 'currency_code');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shopCurrency()
+    public function shopProduct()
     {
-        return $this->belongsTo('App\Models\ShopCurrency', 'currency_code', 'currency_code');
+        return $this->belongsTo('App\Models\ShopProduct');
     }
 }

@@ -15,10 +15,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email_verified_at
  * @property string $password
  * @property string $created_at
- * @property Notification[] $notifications
+ * @property UserAddress[] $userAddresses
  * @property Order[] $orders
  * @property ShopProduct[] $shopProducts
- * @property UserAddress[] $userAddresses
+ * @property Notification[] $notifications
  */
 class User extends Model
 {
@@ -30,9 +30,9 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function notifications()
+    public function userAddresses()
     {
-        return $this->hasMany('App\Models\Notification');
+        return $this->hasMany('App\Models\UserAddress');
     }
 
     /**
@@ -54,8 +54,8 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function userAddresses()
+    public function notifications()
     {
-        return $this->hasMany('App\Models\UserAddress');
+        return $this->hasMany('App\Models\Notification');
     }
 }

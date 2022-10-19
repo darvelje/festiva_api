@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property string $created_at
  * @property string $updated_at
+ * @property ShopDeliveryZone[] $shopDeliveryZones
  * @property Municipality[] $municipalities
  */
 class Province extends Model
@@ -18,6 +19,14 @@ class Province extends Model
      * @var array
      */
     protected $fillable = ['name', 'slug', 'created_at', 'updated_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopDeliveryZones()
+    {
+        return $this->hasMany('App\Models\ShopDeliveryZone');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

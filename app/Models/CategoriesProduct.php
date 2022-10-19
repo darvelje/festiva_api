@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $slug
- * @property ShopProduct[] $shopProducts
+ * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
  */
 class CategoriesProduct extends Model
 {
@@ -20,10 +20,10 @@ class CategoriesProduct extends Model
     protected $fillable = ['name', 'created_at', 'updated_at', 'slug'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopProducts()
+    public function shopProductsHasCategoriesProducts()
     {
-        return $this->belongsToMany('App\Models\ShopProduct', 'shop_products_has_categories_products', 'category_product_id');
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct', 'category_product_id');
     }
 }

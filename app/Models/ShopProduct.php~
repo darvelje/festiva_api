@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $quantity_min
  * @property string $created_at
  * @property string $updated_at
- * @property OrderProduct[] $orderProducts
+ * @property string $slug
  * @property ShopProductPhoto[] $shopProductPhotos
- * @property Shop $shop
  * @property ShopProductsPricesrate[] $shopProductsPricesrates
+ * @property OrderProduct[] $orderProducts
+ * @property Shop $shop
  * @property CategoriesProduct[] $categoriesProducts
  * @property User[] $users
  */
@@ -24,15 +25,7 @@ class ShopProduct extends Model
     /**
      * @var array
      */
-    protected $fillable = ['shop_id', 'name', 'stock', 'quantity_min', 'created_at', 'updated_at'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function orderProducts()
-    {
-        return $this->hasMany('App\Models\OrderProduct');
-    }
+    protected $fillable = ['shop_id', 'name', 'stock', 'quantity_min', 'created_at', 'updated_at', 'slug'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -43,19 +36,27 @@ class ShopProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function shop()
-    {
-        return $this->belongsTo('App\Models\Shop');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function shopProductsPricesrates()
     {
         return $this->hasMany('App\Models\ShopProductsPricesrate');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderProducts()
+    {
+        return $this->hasMany('App\Models\OrderProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo('App\Models\Shop');
     }
 
     /**

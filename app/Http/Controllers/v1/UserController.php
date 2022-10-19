@@ -53,6 +53,7 @@ class UserController extends Controller
             $user->last_name = $request->userLastName;
             $user->phone = $request->userPhone;
             $user->email = $request->userEmail;
+            $user->password = Hash::make($request->userPassword);
             if ($request->hasFile('avatar')) {
                 $user->avatar = self::uploadImage($request->userAvatar, $request->userName);
             }

@@ -63,9 +63,8 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/product/delete', [\App\Http\Controllers\v1\ProductController::class, 'deleteProduct']);
 
 // section Routes_Order
-    Route::get('/v1/order/all', [\App\Http\Controllers\v1\OrderController::class, 'getProducts']);
-    Route::get('/v1/order/view/{orderId}', [\App\Http\Controllers\v1\OrderController::class, 'getProductBySlug']);
+    Route::get('/v1/order/all', [\App\Http\Controllers\v1\OrderController::class, 'getOrders']);
+    Route::get('/v1/order/view/{orderId}', [\App\Http\Controllers\v1\OrderController::class, 'getOrderById']);
     Route::post('/v1/order/new', [\App\Http\Controllers\v1\OrderController::class, 'newOrder']);
-    Route::post('/v1/order/update', [\App\Http\Controllers\v1\OrderController::class, 'updateProduct']);
-    Route::delete('/v1/order/delete', [\App\Http\Controllers\v1\OrderController::class, 'deleteProduct']);
+    Route::delete('/v1/order/delete', [\App\Http\Controllers\v1\OrderController::class, 'deleteOrder']);
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NewBusinessRequest;
 use App\Models\Shop;
 use App\Models\User;
+use App\Models\UserAddress;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -25,81 +27,56 @@ use Illuminate\Http\Request;
 class UserAddressController extends Controller
 {
 
-    //section Get_Businesses
-    public function getBusinesses(){
+    //section Get_UserAddresses
+    public function getUserAddresses(){
 
-        $businesses = Shop::all();
-
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Businesses',
-                'businesses' => $businesses
-            ]
-        );
-    }
-
-    //section Get_Business
-    public function getBusinessBySlug(Request $request){
-
-        $business = Shop::whereSlug($request->businessSlug)->first();
+        $userAddresses = UserAddress::with('locality', 'locality.municipality', 'locality.municipality.province')->get();
 
         return response()->json(
             [
                 'code' => 'ok',
-                'message' => 'Business',
-                'business' => $business
+                'message' => 'User addresses',
+                'userAddresses' => $userAddresses
             ]
         );
     }
 
-    //section New_Business
-    public function newBusiness(Request $request){
+    //section Get_UserAddress
+    public function getUserAddressById(Request $request){
+
+        $userAddress = UserAddress::with('locality', 'locality.municipality', 'locality.municipality.province')->whereId($request->userAddressId)->first();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'User address',
+                'userAddress' => $userAddress
+            ]
+        );
+    }
+
+    //section New_UserAddress
+    public function newUserAddress(Request $request){
 
         try{
             DB::beginTransaction();
 
-            $business = new Shop();
+            $userAddress = new UserAddress();
 
-            if($request->userId){
-                $business->user_id = $request->userId;
-            }
-            else{
+            $userAddress->user_id = $request->userId;
+            $userAddress->localitie_id = $request->userLocalitieId;
+            $userAddress->contact_name = $request->userContactName;
+            $userAddress->contact_phone = $request->userContactPhone;
+            $userAddress->zip_code = $request->userZipCode;
 
-                $user = new User();
-
-                $user->name = $request->userName;
-                $user->email = $request->userEmail;
-                $user->password = Hash::make($request->userPassword);
-
-                $user->save();
-
-                $business->user_id = $user->id;
-            }
-
-            $business->name = $request->businessName;
-            $business->slug = Str::slug($request->businessUrl);
-            $business->description = $request->businessDescription;
-            $business->address = $request->businessAddress;
-            $business->phone = $request->businessPhone;
-            $business->email = $request->businessEmail;
-            $business->url = $request->businessUrl;
-            $business->comission = $request->businessComission;
-            if ($request->hasFile('businessAvatar')) {
-                $business->avatar = self::uploadImage($request->businessAvatar, $request->businessName);
-            }
-            if ($request->hasFile('businessCover')) {
-                $business->cover = self::uploadImage($request->businessCover, $request->businessName);
-            }
-
-            $business->save();
+            $userAddress->save();
 
             DB::commit();
 
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Business created successfully'
+                    'message' => 'User address created successfully'
                 ]
             );
         }
@@ -110,37 +87,28 @@ class UserAddressController extends Controller
         }
     }
 
-    //section Update_Business
-    public function updateBusiness(Request $request){
+    //section Update_UserAddress
+    public function updateUserAddress(Request $request){
 
         try{
             DB::beginTransaction();
 
-            $business = Shop::whereId($request->businessId)->first();
+            $userAddress = UserAddress::whereId($request->userAddressId)->first();
 
-            $business->name = $request->businessName;
-            $business->slug = Str::slug($request->businessUrl);
-            $business->description = $request->businessDescription;
-            $business->address = $request->businessAddress;
-            $business->phone = $request->businessPhone;
-            $business->email = $request->businessEmail;
-            $business->url = $request->businessUrl;
-            $business->comission = $request->businessComission;
-            if ($request->hasFile('businessAvatar')) {
-                $business->avatar = self::uploadImage($request->businessAvatar, $request->businessName);
-            }
-            if ($request->hasFile('businessCover')) {
-                $business->cover = self::uploadImage($request->businessCover, $request->businessName);
-            }
+            $userAddress->user_id = $request->userId;
+            $userAddress->localitie_id = $request->userLocalitieId;
+            $userAddress->contact_name = $request->userContactName;
+            $userAddress->contact_phone = $request->userContactPhone;
+            $userAddress->zip_code = $request->userZipCode;
 
-            $business->update();
+            $userAddress->update();
 
             DB::commit();
 
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Business updated successfully'
+                    'message' => 'User address updated successfully'
                 ]
             );
         }
@@ -151,12 +119,12 @@ class UserAddressController extends Controller
         }
     }
 
-    // section Delete_Business
-    public function deleteBusiness(Request $request){
+    // section Delete_UserAddress
+    public function deleteUserAddress(Request $request){
         try {
             DB::beginTransaction();
 
-            $result = Shop::whereId($request->businessId)->delete();
+            $result = UserAddress::whereId($request->userAddressId)->delete();
 
             DB::commit();
 
@@ -164,7 +132,7 @@ class UserAddressController extends Controller
                 return response()->json(
                     [
                         'code' => 'ok',
-                        'message' => 'Business deleted successfully'
+                        'message' => 'User address deleted successfully'
                     ]
                 );
             }
@@ -172,7 +140,7 @@ class UserAddressController extends Controller
             return response()->json(
                 [
                     'code' => 'error',
-                    'message' => 'Business not found'
+                    'message' => 'User address not found'
                 ]
             );
 
@@ -184,22 +152,4 @@ class UserAddressController extends Controller
         }
     }
 
-    //section Upload_image
-    public static function uploadImage($path, $name){
-        $image = $path;
-
-        $avatarName =  $name . substr(uniqid(rand(), true), 7, 7) . '.png';
-
-        $img = Image::make($image->getRealPath())->encode('png', 50)->orientate();
-
-        $img->resize(null, 300, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->stream(); // <-- Key point
-
-        Storage::disk('public')->put('/businessImages' . '/' . $avatarName, $img, 'public');
-        $path = '/businessImages/' . $avatarName;
-
-        return $path;
-    }
 }

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewBusinessRequest;
 use App\Models\Shop;
+use App\Models\ShopDeliveryZone;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +29,7 @@ class BusinessDeliveryZonesController extends Controller
         return response()->json(
             [
                 'code' => 'ok',
-                'message' => 'User addresses',
+                'message' => 'Business delivery zones',
                 'userAddresses' => $userAddresses
             ]
         );
@@ -41,7 +43,7 @@ class BusinessDeliveryZonesController extends Controller
         return response()->json(
             [
                 'code' => 'ok',
-                'message' => 'User address',
+                'message' => 'Business delivery zone',
                 'userAddress' => $userAddress
             ]
         );
@@ -53,22 +55,44 @@ class BusinessDeliveryZonesController extends Controller
         try{
             DB::beginTransaction();
 
-            $userAddress = new UserAddress();
+            $validateRequest = Validator::make($request->all(), [
+                'businessDeliveryZoneShopId' => 'required',
+                'businessDeliveryZoneLocalitieId' => 'required',
+                'businessDeliveryZoneMunicipalitieId' => 'required',
+                'businessDeliveryZoneProvinceId' => 'required',
+                'businessDeliveryZoneTime' => 'required',
+                'businessDeliveryZoneTimeType' => 'required',
+                'businessDeliveryZoneCurrencyCode' => 'required',
+                'businessDeliveryZonePrice' => 'required',
+            ]);
 
-            $userAddress->user_id = $request->userId;
-            $userAddress->localitie_id = $request->userLocalitieId;
-            $userAddress->contact_name = $request->userContactName;
-            $userAddress->contact_phone = $request->userContactPhone;
-            $userAddress->zip_code = $request->userZipCode;
+            if($validateRequest->fails()){
+                return response()->json(
+                    [
+                        'code' => 'error',
+                        'errors' => $validateRequest->errors()
+                    ]);
+            }
 
-            $userAddress->save();
+            $shopDeliveryZone = new ShopDeliveryZone();
+
+            $shopDeliveryZone->shop_id = $request->businessDeliveryZoneShopId;
+            $shopDeliveryZone->localitie_id = $request->businessDeliveryZoneLocalitieId;
+            $shopDeliveryZone->municipalitie_id = $request->businessDeliveryZoneMunicipalitieId;
+            $shopDeliveryZone->province_id = $request->businessDeliveryZoneProvinceId;
+            $shopDeliveryZone->time = $request->businessDeliveryZoneTime;
+            $shopDeliveryZone->time_type = $request->businessDeliveryZoneTimeType;
+            $shopDeliveryZone->currency_code = $request->businessDeliveryZoneCurrencyCode;
+            $shopDeliveryZone->price= $request->businessDeliveryZonePrice;
+
+            $shopDeliveryZone->save();
 
             DB::commit();
 
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'User address created successfully'
+                    'message' => 'Business delivery zone created successfully'
                 ]
             );
         }
@@ -85,22 +109,26 @@ class BusinessDeliveryZonesController extends Controller
         try{
             DB::beginTransaction();
 
-            $userAddress = UserAddress::whereId($request->userAddressId)->first();
 
-            $userAddress->user_id = $request->userId;
-            $userAddress->localitie_id = $request->userLocalitieId;
-            $userAddress->contact_name = $request->userContactName;
-            $userAddress->contact_phone = $request->userContactPhone;
-            $userAddress->zip_code = $request->userZipCode;
+            $shopDeliveryZone = ShopDeliveryZone::whereId($request->businessDeliveryZoneId)->first();
 
-            $userAddress->update();
+            $shopDeliveryZone->shop_id = $request->businessDeliveryZoneShopId;
+            $shopDeliveryZone->localitie_id = $request->businessDeliveryZoneLocalitieId;
+            $shopDeliveryZone->municipalitie_id = $request->businessDeliveryZoneMunicipalitieId;
+            $shopDeliveryZone->province_id = $request->businessDeliveryZoneProvinceId;
+            $shopDeliveryZone->time = $request->businessDeliveryZoneTime;
+            $shopDeliveryZone->time_type = $request->businessDeliveryZoneTimeType;
+            $shopDeliveryZone->currency_code = $request->businessDeliveryZoneCurrencyCode;
+            $shopDeliveryZone->price= $request->businessDeliveryZonePrice;
+
+            $shopDeliveryZone->update();
 
             DB::commit();
 
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'User address updated successfully'
+                    'message' => 'Business delivery zone updated successfully'
                 ]
             );
         }
@@ -116,7 +144,7 @@ class BusinessDeliveryZonesController extends Controller
         try {
             DB::beginTransaction();
 
-            $result = UserAddress::whereId($request->userAddressId)->delete();
+            $result = ShopDeliveryZone::whereId($request->businessDeliveryZoneId)->delete();
 
             DB::commit();
 
@@ -124,7 +152,7 @@ class BusinessDeliveryZonesController extends Controller
                 return response()->json(
                     [
                         'code' => 'ok',
-                        'message' => 'User address deleted successfully'
+                        'message' => 'Business delivery zone deleted successfully'
                     ]
                 );
             }
@@ -132,7 +160,7 @@ class BusinessDeliveryZonesController extends Controller
             return response()->json(
                 [
                     'code' => 'error',
-                    'message' => 'User address not found'
+                    'message' => 'Business delivery zone not found'
                 ]
             );
 

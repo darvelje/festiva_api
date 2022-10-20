@@ -50,6 +50,7 @@ class CurrencyController extends Controller
             $validateRequest = Validator::make($request->all(), [
                 'currencyName' => 'required|min:3|max:255|string',
                 'currencyCode' => 'required|min:3|max:5|string|unique:currencies,code',
+                'currencyRate' => 'required',
                 'currencyMain' => 'required',
             ]);
 
@@ -93,11 +94,9 @@ class CurrencyController extends Controller
 
             $validateRequest = Validator::make($request->all(), [
                 'currencyName' => 'required|min:3|max:255|string',
-                'currencyCode' => 'required|min:3|max:5|string|unique:currencies,code',
+                'currencyRate' => 'required',
                 'currencyMain' => 'required',
-            ])->setAttributeNames([
-                'currencyName' => 'nombre de la moneda',
-                'currencyCode' => 'código de la moneda',
+                'currencyCode' => 'required|min:3|max:5|string|unique:currencies,code,'.$request->currencyId,
             ]);
 
             if($validateRequest->fails()){

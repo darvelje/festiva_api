@@ -7,9 +7,11 @@ use App\Models\Setting;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Nette\Schema\ValidationException;
 
 
 class SettingsController extends Controller
@@ -18,7 +20,7 @@ class SettingsController extends Controller
     //section Get_Settings
     public function getSettings(){
 
-        $settings = Setting::all();
+        $settings = Setting::first();
 
         return response()->json(
             [
@@ -33,13 +35,31 @@ class SettingsController extends Controller
     public function setSettings(Request $request){
 
         try{
+
             DB::beginTransaction();
+
+            $validateRequest = Validator::make($request->all(), [
+                'settingAppName' => 'required|min:3|max:255|string',
+                'settingComission' => 'required|min:3|max:255|numeric',
+                'settingPhone' => 'required|min:8|max:10',
+                'settingEmail' => 'required|min:3|max:255|email',
+                'settingAddress' => 'required|min:3|max:255',
+                'settingDescription' => 'required|min:3|max:255|string',
+            ]);
+
+            if($validateRequest->fails()){
+                return response()->json(
+                    [
+                        'code' => 'error',
+                        'errors' => $validateRequest->errors()
+                    ]);
+            }
 
             $setting = new Setting();
 
             $setting->app_name = $request->settingAppName;
             $setting->shop_comission= $request->settingComission;
-            $setting->telefono = $request->settingPhone;
+            $setting->phone = $request->settingPhone;
             $setting->email = $request->settingEmail;
             $setting->address = $request->settingAddress;
             $setting->description = $request->settingDescription;
@@ -75,11 +95,28 @@ class SettingsController extends Controller
         try{
             DB::beginTransaction();
 
-            $setting = Setting::whereId($request->settingId)->first();
+            $validateRequest = Validator::make($request->all(), [
+                'settingAppName' => 'required|min:3|max:255|string',
+                'settingComission' => 'required|min:3|max:255|numeric',
+                'settingPhone' => 'required|min:8|max:10',
+                'settingEmail' => 'required|min:3|max:255|email',
+                'settingAddress' => 'required|min:3|max:255',
+                'settingDescription' => 'required|min:3|max:255|string',
+            ]);
+
+            if($validateRequest->fails()){
+                return response()->json(
+                    [
+                        'code' => 'error',
+                        'errors' => $validateRequest->errors()
+                    ]);
+            }
+
+            $setting = Setting::first();
 
             $setting->app_name = $request->settingAppName;
             $setting->shop_comission= $request->settingComission;
-            $setting->telefono = $request->settingPhone;
+            $setting->phone = $request->settingPhone;
             $setting->email = $request->settingEmail;
             $setting->address = $request->settingAddress;
             $setting->description = $request->settingDescription;
@@ -98,7 +135,7 @@ class SettingsController extends Controller
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => '$setting updated successfully'
+                    'message' => 'Setting updated successfully'
                 ]
             );
         }
@@ -110,11 +147,11 @@ class SettingsController extends Controller
     }
 
     // section Delete_Settings
-    public function deleteSettings(Request $request){
+    public function deleteSettings(){
         try {
             DB::beginTransaction();
 
-            $result = Setting::whereId($request->settingId)->delete();
+            $result = Setting::first()->delete();
 
             DB::commit();
 

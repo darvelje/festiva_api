@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -46,6 +47,20 @@ class CurrencyController extends Controller
         try{
             DB::beginTransaction();
 
+            $validateRequest = Validator::make($request->all(), [
+                'currencyName' => 'required|min:3|max:255|string',
+                'currencyCode' => 'required|min:3|max:5|string|unique:currencies,code',
+                'currencyMain' => 'required',
+            ]);
+
+            if($validateRequest->fails()){
+                return response()->json(
+                    [
+                        'code' => 'error',
+                        'errors' => $validateRequest->errors()
+                    ]);
+            }
+
             $currency = new Currency();
 
             $currency->name = $request->currencyName;
@@ -75,6 +90,23 @@ class CurrencyController extends Controller
 
         try{
             DB::beginTransaction();
+
+            $validateRequest = Validator::make($request->all(), [
+                'currencyName' => 'required|min:3|max:255|string',
+                'currencyCode' => 'required|min:3|max:5|string|unique:currencies,code',
+                'currencyMain' => 'required',
+            ])->setAttributeNames([
+                'currencyName' => 'nombre de la moneda',
+                'currencyCode' => 'código de la moneda',
+            ]);
+
+            if($validateRequest->fails()){
+                return response()->json(
+                    [
+                        'code' => 'error',
+                        'errors' => $validateRequest->errors()
+                    ]);
+            }
 
             $currency = Currency::whereId($request->currencyId)->first();
 

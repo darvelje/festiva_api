@@ -13,22 +13,22 @@ return [
     |
     */
 
-    'accepted' => 'The :attribute must be accepted.',
-    'accepted_if' => 'The :attribute must be accepted when :other is :value.',
-    'active_url' => 'The :attribute is not a valid URL.',
-    'after' => 'The :attribute must be a date after :date.',
-    'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
-    'alpha' => 'The :attribute must only contain letters.',
-    'alpha_dash' => 'The :attribute must only contain letters, numbers, dashes and underscores.',
-    'alpha_num' => 'The :attribute must only contain letters and numbers.',
-    'array' => 'The :attribute must be an array.',
-    'before' => 'The :attribute must be a date before :date.',
-    'before_or_equal' => 'The :attribute must be a date before or equal to :date.',
+    'accepted' => 'El :attribute debe ser aceptado.',
+    'accepted_if' => 'El :attribute debe aceptarse cuando :other es :value.',
+    'active_url' => 'El :attribute no es una URL válida.',
+    'after' => 'El :attribute debe ser una fecha posterior a :date.',
+    'after_or_equal' => 'El :attribute debe ser una fecha posterior a :date.',
+    'alpha' => 'El :attribute debe contener solo letras.',
+    'alpha_dash' => 'El :attribute debe contener solo letras, números, puntos y guión bajo.',
+    'alpha_num' => 'El :attribute debe contener solo letras y números.',
+    'array' => 'El :attribute debe ser una lista.',
+    'before' => 'El :attribute debe ser anterior a :date.',
+    'before_or_equal' => 'El :attribute debe ser anterior o igual a :date.',
     'between' => [
-        'array' => 'The :attribute must have between :min and :max items.',
-        'file' => 'The :attribute must be between :min and :max kilobytes.',
-        'numeric' => 'The :attribute must be between :min and :max.',
-        'string' => 'The :attribute must be between :min and :max characters.',
+        'array' => 'El :attribute debe tener entre :min y :max elementos.',
+        'file' => 'El :attribute debe tener entre :min y :max kilobytes.',
+        'numeric' => 'El :attribute debe tener entre :min y :max.',
+        'string' => 'El :attributed ebe tener entre :min y :max caracteres.',
     ],
     'boolean' => 'The :attribute field must be true or false.',
     'confirmed' => 'The :attribute confirmation does not match.',
@@ -117,7 +117,7 @@ return [
     'prohibited_unless' => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits' => 'The :attribute field prohibits :other from being present.',
     'regex' => 'The :attribute format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => 'El campo :attribute es requerido.',
     'required_array_keys' => 'The :attribute field must contain entries for: :values.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_if_accepted' => 'The :attribute field is required when :other is accepted.',
@@ -170,8 +170,8 @@ return [
     */
 
     'attributes' => [
-        'currencyName' => 'currency name',
-        'currencyCode' => 'currency code',
+        'currencyName' => 'nombre de la moneda',
+        'currencyCode' => 'código de la moneda',
     ],
 
 ];

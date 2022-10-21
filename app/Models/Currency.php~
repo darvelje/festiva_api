@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property boolean $main
  * @property string $code
+ * @property float $rate
  * @property ShopCurrency $shopCurrency
  */
 class Currency extends Model
@@ -18,7 +19,7 @@ class Currency extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'created_at', 'updated_at', 'main', 'code'];
+    protected $fillable = ['name', 'created_at', 'updated_at', 'main', 'code', 'rate'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

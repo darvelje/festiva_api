@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 // section Routes_Shop_Currency
     Route::get('/v1/business/currency/all', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencies']);
     Route::get('/v1/business/currency/view/{shopCurrencyCode}', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencyByCode']);
+    Route::get('/v1/business/currency/{businessUrl}', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencyBySlug']);
     Route::post('/v1/business/currency/new', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'newBusinessCurrency']);
     Route::post('/v1/business/currency/update', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'updateBusinessCurrency']);
     Route::delete('/v1/business/currency/delete', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'deleteBusinessCurrency']);
@@ -65,6 +66,7 @@ use Illuminate\Support\Facades\Route;
 // section Routes_Product
     Route::get('/v1/product/all', [\App\Http\Controllers\v1\ProductController::class, 'getProducts']);
     Route::get('/v1/product/view/{productSlug}', [\App\Http\Controllers\v1\ProductController::class, 'getProductBySlug']);
+    Route::get('/v1/business/products/{businessUrl}', [\App\Http\Controllers\v1\ProductController::class, 'getProductByBusinessSlug']);
     Route::post('/v1/product/new', [\App\Http\Controllers\v1\ProductController::class, 'newProduct']);
     Route::post('/v1/product/update', [\App\Http\Controllers\v1\ProductController::class, 'updateProduct']);
     Route::delete('/v1/product/delete', [\App\Http\Controllers\v1\ProductController::class, 'deleteProduct']);

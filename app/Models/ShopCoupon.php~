@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property string $created_at
  * @property string $updated_at
+ * @property Order[] $orders
  * @property Shop $shop
  */
 class ShopCoupon extends Model
@@ -22,6 +23,14 @@ class ShopCoupon extends Model
      * @var array
      */
     protected $fillable = ['shop_id', 'name', 'code', 'value', 'status', 'type', 'created_at', 'updated_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\Order');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

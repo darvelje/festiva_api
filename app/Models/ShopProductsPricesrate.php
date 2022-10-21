@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string $currency_code
  * @property integer $shop_product_id
- * @property boolean $main
- * @property float $rate
+ * @property float $price
  * @property string $created_at
  * @property string $updated_at
  * @property ShopCurrency $shopCurrency
@@ -20,7 +19,7 @@ class ShopProductsPricesrate extends Model
     /**
      * @var array
      */
-    protected $fillable = ['currency_code', 'shop_product_id', 'main', 'rate', 'created_at', 'updated_at'];
+    protected $fillable = ['currency_code', 'shop_product_id', 'price', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

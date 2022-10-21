@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property Currency $currency
  * @property Shop $shop
- * @property Order[] $orders
- * @property ShopProductsPricesrate[] $shopProductsPricesrates
  * @property ShopDeliveryZone[] $shopDeliveryZones
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
+ * @property Order[] $orders
  */
 class ShopCurrency extends Model
 {
@@ -44,9 +44,9 @@ class ShopCurrency extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function orders()
+    public function shopDeliveryZones()
     {
-        return $this->hasMany('App\Models\Order', 'currency_code', 'currency_code');
+        return $this->hasMany('App\Models\ShopDeliveryZone', 'currency_code', 'currency_code');
     }
 
     /**
@@ -60,8 +60,8 @@ class ShopCurrency extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopDeliveryZones()
+    public function orders()
     {
-        return $this->hasMany('App\Models\ShopDeliveryZone', 'currency_code', 'currency_code');
+        return $this->hasMany('App\Models\Order', 'currency_code', 'currency_code');
     }
 }

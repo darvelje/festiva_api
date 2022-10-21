@@ -24,27 +24,27 @@ class BusinessDeliveryZonesController extends Controller
     //section Get_BusinessDeliveryZones
     public function getBusinessDeliveryZones(){
 
-        $userAddresses = UserAddress::with('locality', 'locality.municipality', 'locality.municipality.province')->get();
+        $shopDeliveryZones = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province')->get();
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Business delivery zones',
-                'userAddresses' => $userAddresses
+                'shopDeliveryZones' => $shopDeliveryZones
             ]
         );
     }
 
-    //section Get_BusinessDeliveryZones
+    //section Get_BusinessDeliveryZonesById
     public function getBusinessDeliveryZoneById(Request $request){
 
-        $userAddress = UserAddress::with('locality', 'locality.municipality', 'locality.municipality.province')->whereId($request->userAddressId)->first();
+        $shopDeliveryZone = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province')->whereId($request->businessDeliveryZoneId)->first();
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Business delivery zone',
-                'userAddress' => $userAddress
+                'shopDeliveryZone' => $shopDeliveryZone
             ]
         );
     }

@@ -59,6 +59,11 @@ class ShopProduct extends Model
         return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
     }
 
+    public function category(){
+            return $this->hasOne(CategoriesProduct::class,'shop_product_id');
+
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

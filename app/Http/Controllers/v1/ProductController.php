@@ -37,7 +37,7 @@ class ProductController extends Controller
     //section Get_Product
     public function getProductBySlug(Request $request){
 
-        $product = ShopProduct::with('shopProductPhotos', 'shop', 'categoriesProducts' )->whereSlug($request->productSlug)->first();
+        $product = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct' )->whereSlug($request->productSlug)->first();
 
         return response()->json(
             [
@@ -51,13 +51,24 @@ class ProductController extends Controller
     //section Get_Product_By_Shop_Slug
     public function getProductByBusinessSlug(Request $request){
 
-        $products = Shop::with('shop')->whereSlug($request->businessUrl)->first();
+        $shop = Shop::with('shopProducts.shopProductPhotos','shopProducts','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct')->whereSlug($request->businessUrl)->first();
+
+        $products =$shop->shopProducts;
+
+        foreach ($products as $product){
+            if($product->shopProductsHasCategoriesProducts->count()>0){
+                $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+            }
+
+            $product->photos = $product->shopProductPhotos;
+
+        }
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Products',
-                'products' => $products->shop
+                'products' => $products
             ]
         );
     }

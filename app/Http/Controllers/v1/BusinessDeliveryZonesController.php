@@ -3,25 +3,15 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\NewBusinessRequest;
-use App\Models\Shop;
 use App\Models\ShopDeliveryZone;
-use App\Models\User;
-use App\Models\UserAddress;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-
 
 class BusinessDeliveryZonesController extends Controller
 {
 
-    //section Get_BusinessDeliveryZones
+    //section Get_Business_Delivery_Zones
     public function getBusinessDeliveryZones(){
 
         $shopDeliveryZones = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province')->get();
@@ -49,7 +39,7 @@ class BusinessDeliveryZonesController extends Controller
         );
     }
 
-    //section New_BusinessDeliveryZones
+    //section New_Business_Delivery_Zones
     public function newBusinessDeliveryZone(Request $request){
 
         try{
@@ -103,12 +93,11 @@ class BusinessDeliveryZonesController extends Controller
         }
     }
 
-    //section Update_BusinessDeliveryZones
+    //section Update_Business_Delivery_Zones
     public function updateBusinessDeliveryZone(Request $request){
 
         try{
             DB::beginTransaction();
-
 
             $shopDeliveryZone = ShopDeliveryZone::whereId($request->businessDeliveryZoneId)->first();
 
@@ -139,7 +128,7 @@ class BusinessDeliveryZonesController extends Controller
         }
     }
 
-    // section Delete_BusinessDeliveryZones
+    // section Delete_Business_Delivery_Zones
     public function deleteBusinessDeliveryZone(Request $request){
         try {
             DB::beginTransaction();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
+use App\Models\Shop;
 use App\Models\ShopCurrency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,20 @@ class BusinessCurrencyController extends Controller
                 'code' => 'ok',
                 'message' => 'Shop Curency',
                 'shopCurrency' => $shopCurrency
+            ]
+        );
+    }
+
+    //section Get_Business_Currency_By_Business
+    public function getBusinessCurrencyBySlug(Request $request){
+
+        $shopCurrency = Shop::with('shopCurrencies')->whereSlug($request->businessUrl)->first();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Shop currencies',
+                'currencies' => $shopCurrency->shopCurrencies
             ]
         );
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use App\Models\ShopProduct;
 use App\Models\ShopProductPhoto;
 use App\Models\ShopProductsHasCategoriesProduct;
@@ -47,8 +48,30 @@ class ProductController extends Controller
         );
     }
 
+    //section Get_Product_By_Shop_Slug
+    public function getProductByBusinessSlug(Request $request){
+
+        $products = Shop::with('shop')->whereSlug($request->businessUrl)->first();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Products',
+                'products' => $products->shop
+            ]
+        );
+    }
+
     //section New_Product
     public function newProduct(Request $request){
+
+//        return response()->json(
+//            [
+//                'code' => 'ok',
+//                'message' => 'Test',
+//                'request' => $request->all()
+//            ]
+//        );
 
         try{
             DB::beginTransaction();
@@ -76,26 +99,18 @@ class ProductController extends Controller
                 }
             }
 
-            $lengthArrayProductCategory = count($request->productCategory);
+            $productCategory = new ShopProductsHasCategoriesProduct();
+            $productCategory->shop_product_id = $product->id;
+            $productCategory->category_product_id = $request->productCategory;
+            $productCategory->save();
 
-            if($lengthArrayProductCategory != 0){
-                for($i=0; $i<$lengthArrayProductCategory; $i++){
-                    $productCategory = new ShopProductsHasCategoriesProduct();
-                    $productCategory->shop_product_id = $product->id;
-                    $productCategory->category_product_id = $request->productCategory[$i];
-                    $productCategory->save();
-
-                }
-            }
-
-            $lengthArrayProductPrice= count($request->productPrice);
+            $lengthArrayProductPrice = count($request->productPrice);
 
             for($i=0; $i<$lengthArrayProductPrice; $i++){
                 $productPrice = new ShopProductsPricesrate();
                 $productPrice->shop_product_id = $product->id;
                 $productPrice->currency_code = $request->productPrice[$i]['currencyCode'];
-                $productPrice->rate = $request->productPrice[$i]['value'];
-                $productPrice->main = $request->productPrice[$i]['main'];
+                $productPrice->price = $request->productPrice[$i]['value'];
                 $productPrice->save();
             }
 

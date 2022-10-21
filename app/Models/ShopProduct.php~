@@ -13,11 +13,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $slug
- * @property ShopProductPhoto[] $shopProductPhotos
- * @property ShopProductsPricesrate[] $shopProductsPricesrates
  * @property OrderProduct[] $orderProducts
+ * @property ShopProductPhoto[] $shopProductPhotos
  * @property Shop $shop
- * @property CategoriesProduct[] $categoriesProducts
+ * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
  * @property User[] $users
  */
 class ShopProduct extends Model
@@ -30,25 +30,17 @@ class ShopProduct extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopProductPhotos()
-    {
-        return $this->hasMany('App\Models\ShopProductPhoto');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopProductsPricesrates()
-    {
-        return $this->hasMany('App\Models\ShopProductsPricesrate');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function orderProducts()
     {
         return $this->hasMany('App\Models\OrderProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductPhotos()
+    {
+        return $this->hasMany('App\Models\ShopProductPhoto');
     }
 
     /**
@@ -60,11 +52,19 @@ class ShopProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function categoriesProducts()
+    public function shopProductsHasCategoriesProducts()
     {
-        return $this->belongsToMany('App\Models\CategoriesProduct', 'shop_products_has_categories_products', null, 'category_product_id');
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductsPricesrates()
+    {
+        return $this->hasMany('App\Models\ShopProductsPricesrate');
     }
 
     /**

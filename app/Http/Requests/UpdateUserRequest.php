@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class NewUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,16 +23,15 @@ class NewUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed>s
      */
     public function rules()
     {
         return [
-            'userName' => 'required|max:255|string|email',
-            'userLastName' => 'required|max:255|string|email',
-            'userPhone' => 'required|max:255|string|email',
-            'userEmail' => 'required|max:255|unique:users|string|email',
-            'userPassword' => 'required|max:255|string',
+            'userName' => 'required|min:3|max:255|string',
+            'userLastName' => 'required|min:3|max:255|string',
+            'userPhone' => 'required|min:8|max:10|',
+            'userEmail' => 'required|max:255|string|email|unique:users,email,'.$this->userId,
         ];
     }
 

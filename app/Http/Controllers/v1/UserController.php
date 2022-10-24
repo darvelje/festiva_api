@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -77,16 +78,20 @@ class UserController extends Controller
     }
 
     //section Update_User
-    public function updateUser(NewUserRequest $request){
+    public function updateUser(UpdateUserRequest $request){
         try{
             DB::beginTransaction();
+
             $user = User::whereId($request->userId)->first();
 
             $user->name = $request->userName;
-            $user->last_name = $request->userDescription;
+            $user->last_name = $request->userLastName;
             $user->phone = $request->userPhone;
             $user->email = $request->userEmail;
-            $user->password = Hash::make($request->userPassword);
+
+            if($request->userPassword){
+                $user->password = Hash::make($request->userPassword);
+            }
             if ($request->hasFile('avatar')) {
                 $user->avatar = self::uploadImage($request->userAvatar, $request->userName);
             }

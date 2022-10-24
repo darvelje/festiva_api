@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/user/all', [\App\Http\Controllers\v1\UserController::class, 'getUsers']);
     Route::get('/v1/user/view/{userId}', [\App\Http\Controllers\v1\UserController::class, 'getUserById']);
     Route::post('/v1/user/new', [\App\Http\Controllers\v1\UserController::class, 'newUser']);
-    Route::post('/v1/user/update/{userId}', [\App\Http\Controllers\v1\UserController::class, 'updateUser']);
+    Route::post('/v1/user/update', [\App\Http\Controllers\v1\UserController::class, 'updateUser']);
     Route::delete('/v1/user/delete', [\App\Http\Controllers\v1\UserController::class, 'deleteUser']);
 
 // section Routes_Business

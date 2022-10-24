@@ -57,7 +57,7 @@ class BusinessCurrencyController extends Controller
                 [
                     'code' => 'ok',
                     'message' => 'Shop currencies',
-                    'currencies' => $shopCurrency->shopCurrencies
+                    'currencies' => $shopCurrency
                 ]
             );
         }

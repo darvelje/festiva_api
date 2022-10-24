@@ -80,6 +80,7 @@ use Illuminate\Support\Facades\Route;
 // section Routes_User_Address
     Route::get('/v1/user/address/all', [\App\Http\Controllers\v1\UserAddressController::class, 'getUserAddresses']);
     Route::get('/v1/user/address/view/{userAddressId}', [\App\Http\Controllers\v1\UserAddressController::class, 'getUserAddressById']);
+    Route::get('/v1/user/address/{userId}', [\App\Http\Controllers\v1\UserAddressController::class, 'getUserAddressByUserId']);
     Route::post('/v1/user/address/new', [\App\Http\Controllers\v1\UserAddressController::class, 'newUserAddress']);
     Route::post('/v1/user/address/update', [\App\Http\Controllers\v1\UserAddressController::class, 'updateUserAddress']);
     Route::delete('/v1/user/address/delete', [\App\Http\Controllers\v1\UserAddressController::class, 'deleteUserAddress']);

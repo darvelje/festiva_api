@@ -48,13 +48,25 @@ class BusinessCurrencyController extends Controller
 
         $shopCurrency = Shop::with('shopCurrencies')->whereSlug($request->businessUrl)->first();
 
+        if($shopCurrency){
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shop currencies',
+                    'currencies' => $shopCurrency->shopCurrencies
+                ]
+            );
+        }
+
         return response()->json(
             [
-                'code' => 'ok',
-                'message' => 'Shop currencies',
-                'currencies' => $shopCurrency->shopCurrencies
+                'code' => 'error',
+                'message' => 'Shop not found'
             ]
         );
+
+
     }
 
     //section New_Business_Currency

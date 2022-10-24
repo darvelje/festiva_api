@@ -139,7 +139,7 @@ return [
     'unique' => 'El :attribute ya se ha tomado.',
     'uploaded' => 'EL :attribute no se pudo cargar.',
     'url' => 'El :attribute debe ser una URL válida.',
-    'uuid' => 'El :attribute debe ser una UUID.válida',
+    'uuid' => 'El :attribute debe ser una UUID válida',
 
     /*
     |--------------------------------------------------------------------------

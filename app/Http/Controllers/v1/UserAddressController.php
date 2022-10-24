@@ -44,7 +44,6 @@ class UserAddressController extends Controller
     //section Get_UserAddress_By_Id
     public function getUserAddressById(Request $request){
 
-        //$userAddress = UserAddress::with('locality', 'locality.municipality', 'locality.municipality.province')->whereId($request->userAddressId)->first();
         $userAddress =  DB::table('view_useraddresses_id')->whereId($request->userAddressId)->first();
 
         return response()->json(

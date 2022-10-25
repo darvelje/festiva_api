@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 // section Routes_Business_Coupons
     Route::get('/v1/business/coupons/all', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'getShopCoupons']);
     Route::get('/v1/business/coupons/view/{shopCouponId}', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'getShopCouponById']);
+    Route::get('/v1/business/coupons/{businessUrl}', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'getShopCouponByShopSlug']);
     Route::post('/v1/business/coupons/new', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'newShopCoupon']);
     Route::post('/v1/business/coupons/update', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'updateShopCoupon']);
     Route::delete('/v1/business/coupons/delete', [\App\Http\Controllers\v1\BusinessCouponsController::class, 'deleteShopCoupon']);

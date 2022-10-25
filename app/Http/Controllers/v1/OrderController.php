@@ -26,6 +26,50 @@ class OrderController extends Controller
 
         $orders = Order::with('user', 'shop', 'orderProducts', 'orderProducts.shopProduct' )->get();
 
+        foreach($orders as $order){
+
+            $order->products = $order->orderProducts;
+
+           foreach($order->products as $product){
+
+               $product->product_id = $product->shopProduct->id;
+               $product->name = $product->shopProduct->name;
+
+               unset($product->id);
+               unset($product->order_id);
+               unset($product->shop_product_id);
+               unset($product->created_at);
+               unset($product->updated_at);
+               unset($product->shopProduct);
+
+           }
+
+            unset($order->created_at);
+            unset($order->updated_at);
+            unset($order->user_id);
+
+            unset($order->user->created_at);
+            unset($order->user->updated_at);
+            unset($order->user->email_verified_at);
+            unset($order->user->password);
+
+            unset($order->shop->created_at);
+            unset($order->shop->updated_at);
+            unset($order->shop->description);
+            unset($order->shop->cover);
+            unset($order->shop->avatar);
+            unset($order->shop->facebook_link);
+            unset($order->shop->instagram_link);
+            unset($order->shop->twitter_link);
+            unset($order->shop->wa_link);
+            unset($order->shop->telegram_link);
+            unset($order->shop->user_id);
+            unset($order->shop->comission);
+
+            unset($order->orderProducts);
+
+        }
+
         return response()->json(
             [
                 'code' => 'ok',

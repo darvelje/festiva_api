@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\CategoriesProduct;
+use App\Models\Shop;
 use App\Models\ShopCoupon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,15 @@ class BusinessCouponsController extends Controller
     //section Get_Business_Coupons
     public function getShopCoupons(){
 
-        $shopCoupons = ShopCoupon::all();
+        $shopCoupons = ShopCoupon::with('shop')->get();
+
+        foreach ($shopCoupons as $coupon){
+            $coupon->shop_name = $coupon->shop->name;
+
+            unset($coupon->shop);
+            unset($coupon->created_at);
+            unset($coupon->updated_at);
+        }
 
         return response()->json(
             [
@@ -31,13 +40,35 @@ class BusinessCouponsController extends Controller
     //section Get_Business_Coupon
     public function getShopCouponById(Request $request){
 
-        $shopCoupon = ShopCoupon::whereId($request->shopCouponId)->first();
+        $shopCoupon = ShopCoupon::with('shop')->whereId($request->shopCouponId)->first();
+
+        $shopCoupon->shop_name = $shopCoupon->shop->name;
+
+        unset($shopCoupon->shop);
+        unset($shopCoupon->created_at);
+        unset($shopCoupon->updated_at);
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Shop coupon',
                 'shopCoupon' => $shopCoupon
+            ]
+        );
+    }
+
+    //section Get_Business_Coupon_By_Shop_Slug
+    public function getShopCouponByShopSlug(Request $request){
+
+        $shop = Shop::with('shopCoupons')->whereSlug($request->businessUrl)->first();
+
+        $shopCoupons = $shop->shopCoupons;
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Shop coupons',
+                'shopCoupons' => $shopCoupons
             ]
         );
     }

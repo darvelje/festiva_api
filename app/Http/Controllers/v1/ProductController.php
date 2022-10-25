@@ -22,7 +22,6 @@ class ProductController extends Controller
     //section Get_Products
     public function getProducts(){
 
-       // $products = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct' )->get();
         $products = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates' )->get();
 
         foreach ($products as $product){
@@ -36,8 +35,6 @@ class ProductController extends Controller
                 unset($prod_photo->created_at);
                 unset($prod_photo->updated_at);
             }
-
-            //$products->shop_name = $products->shop->name;
 
             $product->prices = $product->shopProductsPricesrates;
 
@@ -54,11 +51,6 @@ class ProductController extends Controller
             unset($product->shop_id);
 
         }
-
-//
-
-//
-//
 
         return response()->json(
             [
@@ -155,14 +147,6 @@ class ProductController extends Controller
 
     //section New_Product
     public function newProduct(Request $request){
-
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Test',
-//                'request' => $request->all()
-//            ]
-//        );
 
         try{
             DB::beginTransaction();

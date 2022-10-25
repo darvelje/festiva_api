@@ -19,11 +19,46 @@ use Illuminate\Support\Str;
 class ProductController extends Controller
 {
 
-
     //section Get_Products
     public function getProducts(){
 
-        $products = ShopProduct::with('shopProductPhotos', 'shop', 'categoriesProducts' )->get();
+       // $products = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct' )->get();
+        $products = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates' )->get();
+
+        foreach ($products as $product){
+            if($product->shopProductsHasCategoriesProducts->count()>0){
+                $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+            }
+
+            $product->photos = $product->shopProductPhotos;
+
+            foreach ($product->photos as $prod_photo){
+                unset($prod_photo->created_at);
+                unset($prod_photo->updated_at);
+            }
+
+            //$products->shop_name = $products->shop->name;
+
+            $product->prices = $product->shopProductsPricesrates;
+
+            foreach ($product->prices as $prod_prices){
+                unset($prod_prices->created_at);
+                unset($prod_prices->updated_at);
+            }
+
+            unset($product->shopProductPhotos);
+            unset($product->shopProductsHasCategoriesProducts);
+            unset($product->shopProductsPricesrates);
+            unset($product->created_at);
+            unset($product->updated_at);
+            unset($product->shop_id);
+
+        }
+
+//
+
+//
+//
 
         return response()->json(
             [
@@ -34,10 +69,37 @@ class ProductController extends Controller
         );
     }
 
-    //section Get_Product
+    //section Get_Product_By_Slug
     public function getProductBySlug(Request $request){
 
-        $product = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct' )->whereSlug($request->productSlug)->first();
+        $product = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates' )->whereSlug($request->productSlug)->first();
+
+        if($product->shopProductsHasCategoriesProducts->count()>0){
+            $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+        }
+
+        $product->photos = $product->shopProductPhotos;
+
+        foreach ($product->photos as $prod_photo){
+            unset($prod_photo->created_at);
+            unset($prod_photo->updated_at);
+        }
+
+        $product->shop_name = $product->shop->name;
+
+        $product->prices = $product->shopProductsPricesrates;
+
+        foreach ($product->prices as $prod_prices){
+            unset($prod_prices->created_at);
+            unset($prod_prices->updated_at);
+        }
+
+        unset($product->shopProductPhotos);
+        unset($product->shopProductsHasCategoriesProducts);
+        unset($product->shopProductsPricesrates);
+        unset($product->created_at);
+        unset($product->updated_at);
+        unset($product->shop);
 
         return response()->json(
             [
@@ -51,7 +113,7 @@ class ProductController extends Controller
     //section Get_Product_By_Shop_Slug
     public function getProductByBusinessSlug(Request $request){
 
-        $shop = Shop::with('shopProducts.shopProductPhotos','shopProducts','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct')->whereSlug($request->businessUrl)->first();
+        $shop = Shop::with('shopProducts.shopProductPhotos','shopProducts','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct', 'shopProducts.shopProductsPricesrates')->whereSlug($request->businessUrl)->first();
 
         $products =$shop->shopProducts;
 
@@ -60,7 +122,25 @@ class ProductController extends Controller
                 $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
             }
 
-            $product->photos = $product->shopProductPhotos;
+           $product->photos = $product->shopProductPhotos;
+
+            foreach ($product->photos as $prod_photo){
+                unset($prod_photo->created_at);
+                unset($prod_photo->updated_at);
+            }
+
+           $product->prices = $product->shopProductsPricesrates;
+
+            foreach ($product->prices as $prod_prices){
+                unset($prod_prices->created_at);
+                unset($prod_prices->updated_at);
+            }
+
+            unset($product->shopProductPhotos);
+            unset($product->shopProductsHasCategoriesProducts);
+            unset($product->shopProductsPricesrates);
+            unset($product->created_at);
+            unset($product->updated_at);
 
         }
 

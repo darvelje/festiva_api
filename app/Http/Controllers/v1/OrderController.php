@@ -99,71 +99,59 @@ class OrderController extends Controller
     //section Get_OrderByUserId
     public function getOrdersByUserId(Request $request){
 
-        $order = Order::with('user', 'shop', 'orderProducts', 'orderProducts.shopProduct', 'userAddress' ,'userAddress.locality', 'userAddress.locality.municipality',  'userAddress.locality.municipality.province')->whereId($request->orderId)->first();
+        $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($request->userId)->first();
 
-        $order->products = $order->orderProducts;
+        $orders = $user->orders;
 
-        foreach($order->products as $product){
+        foreach($orders as $order){
+            unset($order->shop_id);
+            unset($order->user_id);
+            unset($order->created_at);
+            unset($order->updated_at);
+            unset($order->user_address_id);
 
-            $product->product_id = $product->shopProduct->id;
-            $product->name = $product->shopProduct->name;
 
-            unset($product->id);
-            unset($product->order_id);
-            unset($product->shop_product_id);
-            unset($product->created_at);
-            unset($product->updated_at);
-            unset($product->shopProduct);
+            $order->products = $order->orderProducts;
+
+            foreach($order->products as $product){
+
+                $product->product_id = $product->shopProduct->id;
+                $product->name = $product->shopProduct->name;
+
+                unset($product->id);
+                unset($product->order_id);
+                unset($product->shop_product_id);
+                unset($product->created_at);
+                unset($product->updated_at);
+                unset($product->shopProduct);
+
+            }
+
+            unset($order->orderProducts);
+
+            $order->deliver_address = $order->userAddress;
+
+            unset($order->deliver_address->user_id);
+            unset($order->deliver_address->created_at);
+            unset($order->deliver_address->updated_at);
+
+            $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+
+            $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+            $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+            $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+            $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+
+            unset($order->deliver_address->locality);
+            unset($order->userAddress);
 
         }
-
-        $order->deliver_address = $order->userAddress;
-
-        unset($order->deliver_address->user_id);
-        unset($order->deliver_address->created_at);
-        unset($order->deliver_address->updated_at);
-
-        $order->deliver_address->locality_name = $order->deliver_address->locality->name;
-
-        $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
-        $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
-        $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
-        $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
-
-        unset($order->deliver_address->locality);
-
-        unset($order->created_at);
-        unset($order->updated_at);
-        unset($order->user_id);
-        unset($order->shop_id);
-
-        unset($order->user->created_at);
-        unset($order->user->updated_at);
-        unset($order->user->email_verified_at);
-        unset($order->user->password);
-
-        unset($order->shop->created_at);
-        unset($order->shop->updated_at);
-        unset($order->shop->description);
-        unset($order->shop->cover);
-        unset($order->shop->avatar);
-        unset($order->shop->facebook_link);
-        unset($order->shop->instagram_link);
-        unset($order->shop->twitter_link);
-        unset($order->shop->wa_link);
-        unset($order->shop->telegram_link);
-        unset($order->shop->user_id);
-        unset($order->shop->comission);
-
-        unset($order->orderProducts);
-        unset($order->userAddress);
-
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Order',
-                'order' => $order
+                'order' => $orders
             ]
         );
     }

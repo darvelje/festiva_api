@@ -85,6 +85,7 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Order
     Route::get('/v1/order/all', [OrderController::class, 'getOrders']);
+    Route::get('/v1/order/user/{userId}', [OrderController::class, 'getOrdersByUserId']);
     Route::get('/v1/order/view/{orderId}', [OrderController::class, 'getOrderById']);
     Route::post('/v1/order/new', [OrderController::class, 'newOrder']);
     Route::delete('/v1/order/delete', [OrderController::class, 'deleteOrder']);

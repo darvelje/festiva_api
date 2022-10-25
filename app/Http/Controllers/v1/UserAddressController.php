@@ -16,14 +16,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Test',
-//                'request' => $request->all()
-//            ]
-//        );
-
 class UserAddressController extends Controller
 {
 
@@ -58,13 +50,24 @@ class UserAddressController extends Controller
     //section Get_UserAddress_By_User
     public function getUserAddressByUserId(Request $request){
 
-        $userAddress =  DB::table('view_useraddresses_userid')->whereUserId($request->userId)->get();
+        $userAddress =  DB::table('view_useraddresses_userid')->where('user_id', $request->userId)->get();
+
+        $resultUserAddresses = collect();
+
+        $resultUserAddresses['user_id'] = $userAddress[0]->user_id;
+
+        $resultUserAddresses['addresses'] = $userAddress->groupBy(['addres_id'])->flatten(1);
+
+        $resultUserAddresses['addresses'] = $resultUserAddresses['addresses']->map(function ($item) {
+            return collect($item)->forget(['user_id']);
+         });
+
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'User address',
-                'userAddress' => $userAddress
+                'userAddress' => $resultUserAddresses
             ]
         );
     }

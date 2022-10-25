@@ -46,13 +46,9 @@ class BusinessCurrencyController extends Controller
     //section Get_Business_Currency_By_Business
     public function getBusinessCurrencyBySlug(Request $request){
 
-       // $shopCurrency = Shop::with('shopCurrencies')->whereSlug($request->businessUrl)->first();
-       // $shopCurrency = Shop::with('shopCurrencies')->whereSlug($request->businessUrl)->first();
-
         $shopCurrency =  DB::table('view_shopcurrencies_shopslug')->whereSlug($request->businessUrl)->get();
 
         if($shopCurrency){
-
             return response()->json(
                 [
                     'code' => 'ok',

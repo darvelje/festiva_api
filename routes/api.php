@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/business/currency/delete', [BusinessCurrencyController::class, 'deleteBusinessCurrency']);
 
 // section Routes_Business_Delivery_Zones
-    Route::get('/v1/business/delivery/zones/all', [BusinessDeliveryZonesController::class, 'getBusinessDeliveryZones']);
+    Route::get('/v1/business/delivery/zones/{businessUrl}', [BusinessDeliveryZonesController::class, 'getBusinessDeliveryZonesByBusinessSlug']);
     Route::get('/v1/business/delivery/zones/view/{businessDeliveryZoneId}', [BusinessDeliveryZonesController::class, 'getBusinessDeliveryZoneById']);
     Route::post('/v1/business/delivery/zones/new', [BusinessDeliveryZonesController::class, 'newBusinessDeliveryZone']);
     Route::post('/v1/business/delivery/zones/update', [BusinessDeliveryZonesController::class, 'updateBusinessDeliveryZone']);

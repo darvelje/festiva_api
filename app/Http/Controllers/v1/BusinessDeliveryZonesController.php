@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use App\Models\ShopDeliveryZone;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -12,15 +13,28 @@ class BusinessDeliveryZonesController extends Controller
 {
 
     //section Get_Business_Delivery_Zones
-    public function getBusinessDeliveryZones(){
+    public function getBusinessDeliveryZonesByBusinessSlug(Request $request){
 
-        $shopDeliveryZones = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province')->get();
+        $shop= Shop::with('shopDeliveryZones', 'shopDeliveryZones.locality', 'shopDeliveryZones.locality.municipality', 'shopDeliveryZones.locality.municipality.province')->whereSlug($request->businessUrl)->first();
+
+        $shopDeliveryZone = $shop->shopDeliveryZones;
+
+        foreach ($shopDeliveryZone as $zone){
+
+            $zone->localitie = $zone->locality->name;
+            $zone->municipalitie = $zone->locality->municipality->name;
+            $zone->province = $zone->locality->municipality->province->name;
+
+            unset($zone->locality);
+            unset($zone->created_at);
+            unset($zone->updated_at);
+        }
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Business delivery zones',
-                'shopDeliveryZones' => $shopDeliveryZones
+                'shopDeliveryZones' => $shopDeliveryZone
             ]
         );
     }
@@ -29,6 +43,14 @@ class BusinessDeliveryZonesController extends Controller
     public function getBusinessDeliveryZoneById(Request $request){
 
         $shopDeliveryZone = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province')->whereId($request->businessDeliveryZoneId)->first();
+
+        $shopDeliveryZone->localitie = $shopDeliveryZone->locality->name;
+        $shopDeliveryZone->municipalitie = $shopDeliveryZone->locality->municipality->name;
+        $shopDeliveryZone->province = $shopDeliveryZone->locality->municipality->province->name;
+
+        unset($shopDeliveryZone->locality);
+        unset($shopDeliveryZone->created_at);
+        unset($shopDeliveryZone->updated_at);
 
         return response()->json(
             [

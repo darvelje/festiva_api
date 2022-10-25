@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Shop_Currency
     Route::get('/v1/business/currency/all', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencies']);
-    Route::get('/v1/business/currency/view/{shopCurrencyCode}', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencyByCode']);
+    Route::post('/v1/business/currency/view', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencyById']);
     Route::get('/v1/business/currency/{businessUrl}', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'getBusinessCurrencyBySlug']);
     Route::post('/v1/business/currency/new', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'newBusinessCurrency']);
     Route::post('/v1/business/currency/update', [\App\Http\Controllers\v1\BusinessCurrencyController::class, 'updateBusinessCurrency']);

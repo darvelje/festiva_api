@@ -13,16 +13,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $contact_name
  * @property string $contact_phone
  * @property string $zip_code
+ * @property string $name
+ * @property string $address
+ * @property Order[] $orders
  * @property Locality $locality
  * @property User $user
- * @property Order[] $orders
  */
 class UserAddress extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'localitie_id', 'created_at', 'updated_at', 'contact_name', 'contact_phone', 'zip_code'];
+    protected $fillable = ['user_id', 'localitie_id', 'created_at', 'updated_at', 'contact_name', 'contact_phone', 'zip_code', 'name', 'address'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\Order');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -38,13 +48,5 @@ class UserAddress extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function orders()
-    {
-        return $this->hasMany('App\Models\Order');
     }
 }

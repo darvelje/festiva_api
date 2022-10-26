@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $municipalitie_id
  * @property string $name
  * @property string $slug
- * @property ShopDeliveryZone[] $shopDeliveryZones
  * @property Municipality $municipality
  * @property UserAddress[] $userAddresses
+ * @property ShopDeliveryZone[] $shopDeliveryZones
  */
 class Locality extends Model
 {
@@ -19,14 +19,6 @@ class Locality extends Model
      * @var array
      */
     protected $fillable = ['municipalitie_id', 'name', 'slug'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopDeliveryZones()
-    {
-        return $this->hasMany('App\Models\ShopDeliveryZone', 'localitie_id');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -42,5 +34,13 @@ class Locality extends Model
     public function userAddresses()
     {
         return $this->hasMany('App\Models\UserAddress', 'localitie_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopDeliveryZones()
+    {
+        return $this->hasMany('App\Models\ShopDeliveryZone', 'localitie_id');
     }
 }

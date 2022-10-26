@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $slug
- * @property integer $category_id
+ * @property integer $parent_id
  * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
  */
 class CategoriesProduct extends Model
@@ -18,7 +18,7 @@ class CategoriesProduct extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'created_at', 'updated_at', 'slug', 'category_id'];
+    protected $fillable = ['name', 'created_at', 'updated_at', 'slug', 'parent_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

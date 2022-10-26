@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NewCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\CategoriesProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +47,7 @@ class CategoryController extends Controller
     }
 
     //section New_Category
-    public function newCategory(Request $request){
+    public function newCategory(NewCategoryRequest $request){
 
         try{
             DB::beginTransaction();
@@ -54,6 +56,9 @@ class CategoryController extends Controller
 
             $category->name = $request->categoryName;
             $category->slug = Str::slug($request->categorySlug);
+            if($request->categoryParentId){
+                $category->parent_id =$request->categoryParentId;
+            }
 
             $category->save();
 
@@ -83,6 +88,9 @@ class CategoryController extends Controller
 
             $category->name = $request->categoryName;
             $category->slug = Str::slug($request->categorySlug);
+            if($request->categoryParentId){
+                $category->parent_id =$request->categoryParentId;
+            }
 
             $category->update();
 
@@ -103,7 +111,7 @@ class CategoryController extends Controller
     }
 
     // section Delete_Category
-    public function deleteCategory(Request $request){
+    public function deleteCategory(UpdateCategoryRequest $request){
         try {
             DB::beginTransaction();
 

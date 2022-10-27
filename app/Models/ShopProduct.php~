@@ -18,8 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property ShopProductPhoto[] $shopProductPhotos
  * @property User[] $users
  * @property Shop $shop
- * @property ShopProductsPricesrate[] $shopProductsPricesrates
  * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
  */
 class ShopProduct extends Model
 {
@@ -63,16 +63,16 @@ class ShopProduct extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopProductsPricesrates()
+    public function shopProductsHasCategoriesProducts()
     {
-        return $this->hasMany('App\Models\ShopProductsPricesrate');
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopProductsHasCategoriesProducts()
+    public function shopProductsPricesrates()
     {
-        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
+        return $this->hasMany('App\Models\ShopProductsPricesrate');
     }
 }

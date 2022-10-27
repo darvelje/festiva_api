@@ -15,11 +15,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property string $status
  * @property OrderProduct[] $orderProducts
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
  * @property ShopProductPhoto[] $shopProductPhotos
+ * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
  * @property User[] $users
  * @property Shop $shop
- * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
- * @property ShopProductsPricesrate[] $shopProductsPricesrates
  */
 class ShopProduct extends Model
 {
@@ -39,9 +39,25 @@ class ShopProduct extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function shopProductsPricesrates()
+    {
+        return $this->hasMany('App\Models\ShopProductsPricesrate');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function shopProductPhotos()
     {
         return $this->hasMany('App\Models\ShopProductPhoto');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductsHasCategoriesProducts()
+    {
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
     }
 
     /**
@@ -58,21 +74,5 @@ class ShopProduct extends Model
     public function shop()
     {
         return $this->belongsTo('App\Models\Shop');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopProductsHasCategoriesProducts()
-    {
-        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopProductsPricesrates()
-    {
-        return $this->hasMany('App\Models\ShopProductsPricesrate');
     }
 }

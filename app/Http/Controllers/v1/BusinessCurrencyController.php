@@ -64,8 +64,6 @@ class BusinessCurrencyController extends Controller
                 'message' => 'Shop not found'
             ]
         );
-
-
     }
 
     //section New_Business_Currency
@@ -74,10 +72,21 @@ class BusinessCurrencyController extends Controller
         try{
             DB::beginTransaction();
 
+            $result = ShopCurrency::where('shop_id', $request->shopCurrencyShopId)->where('currency_id', $request->shopCurrencyId)->first();
+
+            if($result){
+                return response()->json(
+                    [
+                        'code' => 'error',
+                        'message' => 'The store already has that currency'
+                    ]
+                );
+            }
+
             $shopCurrency = new ShopCurrency();
 
             $shopCurrency->shop_id = $request->shopCurrencyShopId;
-            $shopCurrency->currency_code = $request->shopCurrencyCode;
+            $shopCurrency->currency_id = $request->shopCurrencyId;
             $shopCurrency->rate = $request->shopCurrencyRate;
             $shopCurrency->main = $request->shopCurrencyMain;
 
@@ -108,7 +117,7 @@ class BusinessCurrencyController extends Controller
             $shopCurrency = ShopCurrency::whereId($request->shopCurrencyId)->first();
 
             $shopCurrency->shop_id = $request->shopCurrencyShopId;
-            $shopCurrency->currency_code = $request->shopCurrencyCode;
+            $shopCurrency->currency_id = $request->shopCurrencyId;
             $shopCurrency->rate = $request->shopCurrencyRate;
             $shopCurrency->main = $request->shopCurrencyMain;
 

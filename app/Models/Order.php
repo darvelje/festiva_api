@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $user_id
  * @property integer $user_address_id
  * @property integer $shop_coupon_id
- * @property string $currency_code
+ * @property integer $currency_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $delivery_type
@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property UserAddress $userAddress
  * @property Shop $shop
  * @property User $user
- * @property ShopCurrency $shopCurrency
+ * @property Currency $currency
  * @property ShopCoupon $shopCoupon
  */
 class Order extends Model
@@ -28,7 +28,7 @@ class Order extends Model
     /**
      * @var array
      */
-    protected $fillable = ['shop_id', 'user_id', 'user_address_id', 'shop_coupon_id', 'currency_code', 'created_at', 'updated_at', 'delivery_type', 'status_payment', 'total_price'];
+    protected $fillable = ['shop_id', 'user_id', 'user_address_id', 'shop_coupon_id', 'currency_id', 'created_at', 'updated_at', 'delivery_type', 'status_payment', 'total_price'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -65,9 +65,9 @@ class Order extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shopCurrency()
+    public function currency()
     {
-        return $this->belongsTo('App\Models\ShopCurrency', 'currency_code', 'currency_code');
+        return $this->belongsTo('App\Models\Currency');
     }
 
     /**

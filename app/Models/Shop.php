@@ -26,9 +26,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $comission
  * @property Order[] $orders
  * @property ShopCurrency[] $shopCurrencies
+ * @property ShopDeliveryZone[] $shopDeliveryZones
  * @property ShopCoupon[] $shopCoupons
  * @property ShopProduct[] $shopProducts
- * @property ShopDeliveryZone[] $shopDeliveryZones
  */
 class Shop extends Model
 {
@@ -56,6 +56,14 @@ class Shop extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function shopDeliveryZones()
+    {
+        return $this->hasMany('App\Models\ShopDeliveryZone');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function shopCoupons()
     {
         return $this->hasMany('App\Models\ShopCoupon');
@@ -67,13 +75,5 @@ class Shop extends Model
     public function shopProducts()
     {
         return $this->hasMany('App\Models\ShopProduct');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopDeliveryZones()
-    {
-        return $this->hasMany('App\Models\ShopDeliveryZone');
     }
 }

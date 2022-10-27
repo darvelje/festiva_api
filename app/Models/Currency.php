@@ -12,7 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $main
  * @property string $code
  * @property float $rate
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
+ * @property Order[] $orders
  * @property ShopCurrency $shopCurrency
+ * @property ShopDeliveryZone[] $shopDeliveryZones
  */
 class Currency extends Model
 {
@@ -22,10 +25,34 @@ class Currency extends Model
     protected $fillable = ['name', 'created_at', 'updated_at', 'main', 'code', 'rate'];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductsPricesrates()
+    {
+        return $this->hasMany('App\Models\ShopProductsPricesrate');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\Order');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function shopCurrency()
     {
-        return $this->hasOne('App\Models\ShopCurrency', 'currency_code', 'code');
+        return $this->hasOne('App\Models\ShopCurrency', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopDeliveryZones()
+    {
+        return $this->hasMany('App\Models\ShopDeliveryZone');
     }
 }

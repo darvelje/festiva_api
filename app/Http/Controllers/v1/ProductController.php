@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\CategoriesProduct;
 use App\Models\Shop;
 use App\Models\ShopProduct;
 use App\Models\ShopProductPhoto;
@@ -146,9 +147,61 @@ class ProductController extends Controller
         );
     }
 
+    //section Get_Product_By_Shop_Slug
+    public function getProductByCategorySlug(Request $request){
+
+        //$shop = Shop::with('shopProducts.shopProductPhotos','shopProducts','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct', 'shopProducts.shopProductsPricesrates')->whereSlug($request->businessUrl)->first();
+
+
+        $category = CategoriesProduct::with(
+            'shopProductsHasCategoriesProducts',
+            'shopProductsHasCategoriesProducts.shopProduct',
+            'shopProductsHasCategoriesProducts.shopProduct.shopProductPhotos',
+            'shopProductsHasCategoriesProducts.shopProduct.shopProductsPricesrates',
+            'shopProductsHasCategoriesProducts.shopProduct.shopProductsPricesrates.currency')
+        ->whereSlug($request->categorySlug);
+
+//        $products =$shop->shopProducts;
+//
+//        foreach ($products as $product){
+//            if($product->shopProductsHasCategoriesProducts->count()>0){
+//                $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+//            }
+//
+//           $product->photos = $product->shopProductPhotos;
+//
+//            foreach ($product->photos as $prod_photo){
+//                unset($prod_photo->created_at);
+//                unset($prod_photo->updated_at);
+//            }
+//
+//           $product->prices = $product->shopProductsPricesrates;
+//
+//            foreach ($product->prices as $prod_prices){
+//                unset($prod_prices->created_at);
+//                unset($prod_prices->updated_at);
+//            }
+//
+//            unset($product->shopProductPhotos);
+//            unset($product->shopProductsHasCategoriesProducts);
+//            unset($product->shopProductsPricesrates);
+//            unset($product->created_at);
+//            unset($product->updated_at);
+//
+//        }
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Products',
+                'products' => $category
+            ]
+        );
+    }
+
     //section New_Product
     public function newProduct(Request $request){
-        
+
         try{
             DB::beginTransaction();
 

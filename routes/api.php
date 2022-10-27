@@ -78,6 +78,7 @@ use Illuminate\Support\Facades\Route;
 // section Routes_Product
     Route::get('/v1/product/all', [ProductController::class, 'getProducts']);
     Route::get('/v1/product/view/{productSlug}', [ProductController::class, 'getProductBySlug']);
+    Route::get('/v1/products/category/{categorySlug}', [ProductController::class, 'getProductByCategorySlug']);
     Route::get('/v1/business/products/{businessUrl}', [ProductController::class, 'getProductByBusinessSlug']);
     Route::post('/v1/product/new', [ProductController::class, 'newProduct']);
     Route::post('/v1/product/update', [ProductController::class, 'updateProduct']);

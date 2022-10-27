@@ -20,13 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
  * @property User[] $users
  * @property Shop $shop
+ * @property $description
  */
 class ShopProduct extends Model
 {
-    /**
-     * @var array
-     */
-    protected $fillable = ['shop_id', 'name', 'stock', 'quantity_min', 'created_at', 'updated_at', 'slug', 'status'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

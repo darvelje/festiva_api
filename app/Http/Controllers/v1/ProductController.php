@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
+use function GuzzleHttp\Promise\all;
 
 
 class ProductController extends Controller
@@ -147,7 +148,7 @@ class ProductController extends Controller
 
     //section New_Product
     public function newProduct(Request $request){
-
+        
         try{
             DB::beginTransaction();
 
@@ -158,6 +159,7 @@ class ProductController extends Controller
             $product->quantity_min = $request->productQuantityMin;
             $product->slug = Str::slug($request->productSlug);
             $product->shop_id = $request->productShopId;
+            $product->description = $request->productDescription;
 
             $product->save();
 
@@ -184,7 +186,7 @@ class ProductController extends Controller
             for($i=0; $i<$lengthArrayProductPrice; $i++){
                 $productPrice = new ShopProductsPricesrate();
                 $productPrice->shop_product_id = $product->id;
-                $productPrice->currency_code = $request->productPrice[$i]['currencyCode'];
+                $productPrice->currency_id = $request->productPrice[$i]['currencyId'];
                 $productPrice->price = $request->productPrice[$i]['value'];
                 $productPrice->save();
             }

@@ -111,7 +111,7 @@ class CategoryController extends Controller
     }
 
     // section Delete_Category
-    public function deleteCategory(UpdateCategoryRequest $request){
+    public function deleteCategory(Request $request){
         try {
             DB::beginTransaction();
 

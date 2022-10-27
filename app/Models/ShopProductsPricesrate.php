@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property string $currency_code
+ * @property integer $currency_id
  * @property integer $shop_product_id
  * @property float $price
  * @property string $created_at
  * @property string $updated_at
- * @property ShopCurrency $shopCurrency
+ * @property Currency $currency
  * @property ShopProduct $shopProduct
  */
 class ShopProductsPricesrate extends Model
@@ -19,14 +19,14 @@ class ShopProductsPricesrate extends Model
     /**
      * @var array
      */
-    protected $fillable = ['currency_code', 'shop_product_id', 'price', 'created_at', 'updated_at'];
+    protected $fillable = ['currency_id', 'shop_product_id', 'price', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shopCurrency()
+    public function currency()
     {
-        return $this->belongsTo('App\Models\ShopCurrency', 'currency_code', 'currency_code');
+        return $this->belongsTo('App\Models\Currency');
     }
 
     /**

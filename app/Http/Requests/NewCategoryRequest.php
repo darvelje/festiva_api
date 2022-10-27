@@ -26,7 +26,6 @@ class NewCategoryRequest extends FormRequest
         return [
             'categoryName' => 'required|min:3|max:255|string',
             'categorySlug' => 'required|min:3|max:255|string',
-            'categoryParentId' => 'numeric',
         ];
     }
 }

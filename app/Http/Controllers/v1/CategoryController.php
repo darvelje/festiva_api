@@ -79,7 +79,7 @@ class CategoryController extends Controller
     }
 
     //section Update_Category
-    public function updateCategory(Request $request){
+    public function updateCategory(UpdateCategoryRequest $request){
 
         try{
             DB::beginTransaction();

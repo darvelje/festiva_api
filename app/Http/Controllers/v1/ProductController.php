@@ -66,7 +66,7 @@ class ProductController extends Controller
     //section Get_Product_By_Slug
     public function getProductBySlug(Request $request){
 
-        $product = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates' )->whereSlug($request->productSlug)->first();
+        $product = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates',  'shopProductsPricesrates.currency')->whereSlug($request->productSlug)->first();
 
         if($product){
             if($product->shopProductsHasCategoriesProducts->count()>0){
@@ -85,6 +85,8 @@ class ProductController extends Controller
             $product->prices = $product->shopProductsPricesrates;
 
             foreach ($product->prices as $prod_prices){
+                $prod_prices->currency_code = $prod_prices->currency->code;
+                unset($prod_prices->currency);
                 unset($prod_prices->created_at);
                 unset($prod_prices->updated_at);
             }
@@ -94,7 +96,7 @@ class ProductController extends Controller
             unset($product->shopProductsPricesrates);
             unset($product->created_at);
             unset($product->updated_at);
-            unset($product->shop);
+
 
             return response()->json(
                 [

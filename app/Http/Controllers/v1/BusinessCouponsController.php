@@ -42,19 +42,31 @@ class BusinessCouponsController extends Controller
 
         $shopCoupon = ShopCoupon::with('shop')->whereId($request->shopCouponId)->first();
 
-        $shopCoupon->shop_name = $shopCoupon->shop->name;
+        if($shopCoupon){
+            $shopCoupon->shop_name = $shopCoupon->shop->name;
 
-        unset($shopCoupon->shop);
-        unset($shopCoupon->created_at);
-        unset($shopCoupon->updated_at);
+            unset($shopCoupon->shop);
+            unset($shopCoupon->created_at);
+            unset($shopCoupon->updated_at);
 
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Shop coupon',
-                'shopCoupon' => $shopCoupon
-            ]
-        );
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shop coupon',
+                    'shopCoupon' => $shopCoupon
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Shop coupon not found'
+                ]
+            );
+        }
+
+
     }
 
     //section Get_Business_Coupon_By_Shop_Slug
@@ -62,15 +74,27 @@ class BusinessCouponsController extends Controller
 
         $shop = Shop::with('shopCoupons')->whereSlug($request->businessUrl)->first();
 
-        $shopCoupons = $shop->shopCoupons;
+        if($shop){
+            $shopCoupons = $shop->shopCoupons;
 
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Shop coupons',
-                'shopCoupons' => $shopCoupons
-            ]
-        );
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shop coupons',
+                    'shopCoupons' => $shopCoupons
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Business not found'
+                ]
+            );
+        }
+
+
     }
 
     //section New_Business_Coupon

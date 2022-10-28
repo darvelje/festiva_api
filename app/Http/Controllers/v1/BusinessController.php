@@ -44,13 +44,24 @@ class BusinessController extends Controller
 
         $business = Shop::whereSlug($request->businessSlug)->first();
 
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Business',
-                'business' => $business
-            ]
-        );
+        if($business){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Business',
+                    'business' => $business
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Business not found',
+                ]
+            );
+        }
+
     }
 
     //section New_Business

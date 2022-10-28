@@ -34,13 +34,25 @@ class BusinessCurrencyController extends Controller
 
         $shopCurrency = ShopCurrency::find($request->shopCurrencyId);
 
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Shop Curency',
-                'shopCurrency' => $shopCurrency
-            ]
-        );
+        if($shopCurrency){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shop Curency',
+                    'shopCurrency' => $shopCurrency
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shop Curency not found'
+                ]
+            );
+        }
+
+
     }
 
     //section Get_Business_Currency_By_Business
@@ -61,7 +73,7 @@ class BusinessCurrencyController extends Controller
         return response()->json(
             [
                 'code' => 'error',
-                'message' => 'Shop not found'
+                'message' => 'Business not found'
             ]
         );
     }

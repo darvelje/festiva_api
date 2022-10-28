@@ -17,26 +17,38 @@ class BusinessDeliveryZonesController extends Controller
 
         $shop= Shop::with('shopDeliveryZones', 'shopDeliveryZones.locality', 'shopDeliveryZones.locality.municipality', 'shopDeliveryZones.locality.municipality.province')->whereSlug($request->businessUrl)->first();
 
-        $shopDeliveryZone = $shop->shopDeliveryZones;
+        if($shop){
 
-        foreach ($shopDeliveryZone as $zone){
+            $shopDeliveryZone = $shop->shopDeliveryZones;
 
-            $zone->localitie = $zone->locality->name;
-            $zone->municipalitie = $zone->locality->municipality->name;
-            $zone->province = $zone->locality->municipality->province->name;
+            foreach ($shopDeliveryZone as $zone){
 
-            unset($zone->locality);
-            unset($zone->created_at);
-            unset($zone->updated_at);
+                $zone->localitie = $zone->locality->name;
+                $zone->municipalitie = $zone->locality->municipality->name;
+                $zone->province = $zone->locality->municipality->province->name;
+
+                unset($zone->locality);
+                unset($zone->created_at);
+                unset($zone->updated_at);
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Business delivery zones',
+                    'shopDeliveryZones' => $shopDeliveryZone
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shop not found'
+                ]
+            );
         }
 
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Business delivery zones',
-                'shopDeliveryZones' => $shopDeliveryZone
-            ]
-        );
     }
 
     //section Get_BusinessDeliveryZonesById

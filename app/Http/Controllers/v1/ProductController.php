@@ -163,6 +163,7 @@ class ProductController extends Controller
 
         $category->products =  $category->shopProductsHasCategoriesProducts;
         unset($category->shopProductsHasCategoriesProducts);
+
         foreach ($category->products as $product){
            $product->product_id = $product->shopProduct->id;
            $product->product_name = $product->shopProduct->name;

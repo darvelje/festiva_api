@@ -68,62 +68,21 @@ class ProductController extends Controller
 
         $product = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates' )->whereSlug($request->productSlug)->first();
 
-        if($product->shopProductsHasCategoriesProducts->count()>0){
-            $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
-        }
-
-        $product->photos = $product->shopProductPhotos;
-
-        foreach ($product->photos as $prod_photo){
-            unset($prod_photo->created_at);
-            unset($prod_photo->updated_at);
-        }
-
-        $product->shop_name = $product->shop->name;
-
-        $product->prices = $product->shopProductsPricesrates;
-
-        foreach ($product->prices as $prod_prices){
-            unset($prod_prices->created_at);
-            unset($prod_prices->updated_at);
-        }
-
-        unset($product->shopProductPhotos);
-        unset($product->shopProductsHasCategoriesProducts);
-        unset($product->shopProductsPricesrates);
-        unset($product->created_at);
-        unset($product->updated_at);
-        unset($product->shop);
-
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Product',
-                'product' => $product
-            ]
-        );
-    }
-
-    //section Get_Product_By_Shop_Slug
-    public function getProductByBusinessSlug(Request $request){
-
-        $shop = Shop::with('shopProducts.shopProductPhotos','shopProducts','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct', 'shopProducts.shopProductsPricesrates')->whereSlug($request->businessUrl)->first();
-
-        $products =$shop->shopProducts;
-
-        foreach ($products as $product){
+        if($product){
             if($product->shopProductsHasCategoriesProducts->count()>0){
                 $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
             }
 
-           $product->photos = $product->shopProductPhotos;
+            $product->photos = $product->shopProductPhotos;
 
             foreach ($product->photos as $prod_photo){
                 unset($prod_photo->created_at);
                 unset($prod_photo->updated_at);
             }
 
-           $product->prices = $product->shopProductsPricesrates;
+            $product->shop_name = $product->shop->name;
+
+            $product->prices = $product->shopProductsPricesrates;
 
             foreach ($product->prices as $prod_prices){
                 unset($prod_prices->created_at);
@@ -135,16 +94,79 @@ class ProductController extends Controller
             unset($product->shopProductsPricesrates);
             unset($product->created_at);
             unset($product->updated_at);
+            unset($product->shop);
 
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Product',
+                    'product' => $product
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Product not found'
+                ]
+            );
         }
 
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Products',
-                'products' => $products
-            ]
-        );
+    }
+
+    //section Get_Product_By_Shop_Slug
+    public function getProductByBusinessSlug(Request $request){
+
+        $shop = Shop::with('shopProducts.shopProductPhotos','shopProducts','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct', 'shopProducts.shopProductsPricesrates')->whereSlug($request->businessUrl)->first();
+
+        if($shop){
+            $products =$shop->shopProducts;
+
+            foreach ($products as $product){
+                if($product->shopProductsHasCategoriesProducts->count()>0){
+                    $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+                }
+
+                $product->photos = $product->shopProductPhotos;
+
+                foreach ($product->photos as $prod_photo){
+                    unset($prod_photo->created_at);
+                    unset($prod_photo->updated_at);
+                }
+
+                $product->prices = $product->shopProductsPricesrates;
+
+                foreach ($product->prices as $prod_prices){
+                    unset($prod_prices->created_at);
+                    unset($prod_prices->updated_at);
+                }
+
+                unset($product->shopProductPhotos);
+                unset($product->shopProductsHasCategoriesProducts);
+                unset($product->shopProductsPricesrates);
+                unset($product->created_at);
+                unset($product->updated_at);
+
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Products',
+                    'products' => $products
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Business not found'
+                ]
+            );
+        }
+
     }
 
     //section Get_Product_By_category_Slug

@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property Province $province
- * @property Locality[] $localities
  * @property ShopDeliveryZone[] $shopDeliveryZones
+ * @property Locality[] $localities
  */
 class Municipality extends Model
 {
@@ -33,16 +33,16 @@ class Municipality extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function localities()
+    public function shopDeliveryZones()
     {
-        return $this->hasMany('App\Models\Locality', 'municipalitie_id');
+        return $this->hasMany('App\Models\ShopDeliveryZone', 'municipalitie_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopDeliveryZones()
+    public function localities()
     {
-        return $this->hasMany('App\Models\ShopDeliveryZone', 'municipalitie_id');
+        return $this->hasMany('App\Models\Locality', 'municipalitie_id');
     }
 }

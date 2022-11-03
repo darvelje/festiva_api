@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property string $created_at
  * @property string $updated_at
- * @property Locality[] $localities
  * @property Province $province
  * @property ShopDeliveryZone[] $shopDeliveryZones
+ * @property Locality[] $localities
  */
 class Municipality extends Model
 {
@@ -21,14 +21,6 @@ class Municipality extends Model
      * @var array
      */
     protected $fillable = ['province_id', 'name', 'slug', 'created_at', 'updated_at'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function localities()
-    {
-        return $this->hasMany('App\Models\Locality', 'municipalitie_id');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -44,5 +36,13 @@ class Municipality extends Model
     public function shopDeliveryZones()
     {
         return $this->hasMany('App\Models\ShopDeliveryZone', 'municipalitie_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function localities()
+    {
+        return $this->hasMany('App\Models\Locality', 'municipalitie_id');
     }
 }

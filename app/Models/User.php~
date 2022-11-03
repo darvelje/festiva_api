@@ -15,17 +15,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email_verified_at
  * @property string $password
  * @property string $created_at
- * @property Order[] $orders
- * @property UserAddress[] $userAddresses
- * @property ShopProduct[] $shopProducts
+ * @property string $remember_token
  * @property Notification[] $notifications
+ * @property Order[] $orders
+ * @property ShopProduct[] $shopProducts
+ * @property UserAddress[] $userAddresses
  */
 class User extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['name', 'last_name', 'email', 'updated_at', 'phone', 'avatar', 'email_verified_at', 'password', 'created_at'];
+    protected $fillable = ['name', 'last_name', 'email', 'updated_at', 'phone', 'avatar', 'email_verified_at', 'password', 'created_at', 'remember_token'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -33,14 +42,6 @@ class User extends Model
     public function orders()
     {
         return $this->hasMany('App\Models\Order');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function userAddresses()
-    {
-        return $this->hasMany('App\Models\UserAddress');
     }
 
     /**
@@ -54,8 +55,8 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function notifications()
+    public function userAddresses()
     {
-        return $this->hasMany('App\Models\Notification');
+        return $this->hasMany('App\Models\UserAddress');
     }
 }

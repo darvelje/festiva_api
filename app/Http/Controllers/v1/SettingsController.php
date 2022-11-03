@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\SettingsPage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -27,6 +28,19 @@ class SettingsController extends Controller
                 'code' => 'ok',
                 'message' => 'Settings',
                 'settings' => $settings
+            ]
+        );
+
+    }//section Get_Settings_Pages
+    public function getSettingsPages(){
+
+        $settingsPages = SettingsPage::first();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Settings pages',
+                'settings_pages' => $settingsPages
             ]
         );
     }

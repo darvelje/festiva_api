@@ -28,7 +28,7 @@ class BusinessController extends Controller
     //section Get_Businesses
     public function getBusinesses(){
 
-        $businesses = Shop::with('shopProducts')->get();
+        $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->get();
 
         return response()->json(
             [

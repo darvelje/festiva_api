@@ -15,6 +15,38 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
 
+    public function getRentalhoUrl()
+    {
+        return env('SERVER_API');
+    }
+
+    protected function getUserByToken($token)
+    {
+        $response = $this->getHttpClient()->post($this->getRentalhoUrl() . '/api/oauth/token-info', [
+            'headers' => [
+                'cache-control' => 'no-cache',
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+        ]);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    //section Get_Token_User
+    public function getTokenUser(Request $request){
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'TOKEN',
+                'token' => $request->token,
+                'info' => $this->getUserByToken($request->token)
+            ]
+        );
+
+    }
+
     //section Get_Users
     public function getUsers(){
 

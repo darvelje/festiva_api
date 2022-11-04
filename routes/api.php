@@ -25,8 +25,8 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/user/view/{userId}', [UserController::class, 'getUserById']);
     Route::post('/v1/user/new', [UserController::class, 'newUser']);
     Route::post('/v1/user/update', [UserController::class, 'updateUser']);
+    Route::post('/v1/user/token', [UserController::class, 'getTokenUser']);
     Route::delete('/v1/user/delete', [UserController::class, 'deleteUser']);
-    
 
 // section Routes_Business
     Route::get('/v1/business/all', [BusinessController::class, 'getBusinesses']);

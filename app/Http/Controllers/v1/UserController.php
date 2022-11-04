@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -22,13 +23,7 @@ class UserController extends Controller
 
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->post($this->getRentalhoUrl() . '/api/oauth/token-info', [
-            'headers' => [
-                'cache-control' => 'no-cache',
-                'Authorization' => 'Bearer ' . $token,
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ],
-        ]);
+        $response = Http::withToken($token)->acceptJson()->get(env('SERVER_API')."/api/oauth/token-info");
 
         return json_decode($response->getBody()->getContents(), true);
     }

@@ -103,3 +103,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/user/address/new', [UserAddressController::class, 'newUserAddress']);
     Route::post('/v1/user/address/update', [UserAddressController::class, 'updateUserAddress']);
     Route::delete('/v1/user/address/delete', [UserAddressController::class, 'deleteUserAddress']);
+
+// section Routes_Promos
+    Route::get('/v1/promos/all', [UserAddressController::class, 'getUserAddresses']);
+    Route::get('/v1/category/promos/{categoryId}', [UserAddressController::class, 'getUserAddressById']);

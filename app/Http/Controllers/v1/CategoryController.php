@@ -151,47 +151,12 @@ class CategoryController extends Controller
 
         $categories = CategoriesProduct::with(
                 'shopProductsHasCategoriesProducts',
-                        'shopProductsHasCategoriesProducts.shopProduct',
-                        'shopProductsHasCategoriesProducts.shopProduct.shopProductPhotos',
-                        'shopProductsHasCategoriesProducts.shopProduct.shopProductsPricesrates',
-                        'shopProductsHasCategoriesProducts.shopProduct.shopProductsPricesrates.currency')->get();
-
+                        'shopProductsHasCategoriesProducts.shopProduct')->get();
 
         foreach($categories as $category){
             unset($category->created_at);
             unset($category->updated_at);
             unset($category->parent_id);
-
-            $category->products = $category->shopProductsHasCategoriesProducts;
-
-            foreach ($category->products as $product){
-                unset($product->created_at);
-                unset($product->updated_at);
-                unset($product->category_product_id);
-                unset($product->shop_product_id);
-                $product->id = $product->shopProduct->id;
-                $product->name = $product->shopProduct->name;
-                $product->slug = $product->shopProduct->slug;
-                $product->rating = $product->shopProduct->rating;
-                foreach ($product->shopProduct->shopProductPhotos as $prod){
-                    if($prod->main === true){
-                        $product->photo = $prod->path_photo;
-
-                    }
-                }
-
-                $product->prices = $product->shopProduct->shopProductsPricesrates;
-                foreach ($product->prices as $prod_prices){
-                    $prod_prices->currency_code = $prod_prices->currency->code;
-                    unset($prod_prices->currency);
-                    unset($prod_prices->created_at);
-                    unset($prod_prices->updated_at);
-                    unset($prod_prices->shop_product_id);
-                    unset($prod_prices->currency_id);
-                    unset($prod_prices->id);
-                }
-                unset($product->shopProduct);
-            }
 
             if($category->shopProductsHasCategoriesProducts->count()>0){
                 array_push($arrayCat, $category);

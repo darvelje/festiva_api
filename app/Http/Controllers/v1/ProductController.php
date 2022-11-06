@@ -24,7 +24,7 @@ class ProductController extends Controller
     //section Get_Products
     public function getProducts(){
 
-        $products = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates' )->get();
+        $products = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates',  'shopProductsPricesrates.currency' )->get();
 
         foreach ($products as $product){
             if($product->shopProductsHasCategoriesProducts->count()>0){
@@ -41,6 +41,8 @@ class ProductController extends Controller
             $product->prices = $product->shopProductsPricesrates;
 
             foreach ($product->prices as $prod_prices){
+                $prod_prices->currency_code = $prod_prices->currency->code;
+                unset($prod_prices->currency);
                 unset($prod_prices->created_at);
                 unset($prod_prices->updated_at);
             }

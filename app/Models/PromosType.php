@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $type
- * @property string $nivel
+ * @property integer $ubication
+ * @property string $category_id
  */
 class PromosType extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['id', 'type', 'nivel'];
+    protected $fillable = ['id', '$ubication', '$category_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

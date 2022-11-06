@@ -31,6 +31,33 @@ class UserController extends Controller
     //section Get_Token_User
     public function getTokenUser(Request $request){
 
+        $userDriver = $this->getUserByToken($request->token);
+
+        if ($user = User::where('email', $userDriver->email)->first()) {
+            return $this->authAndRedirect($user); // Login y redirección
+        } else {
+            if (!$userDriver->email) { //Si no hay email no nos sirve
+                return back()->withErrors(['errors' => 'Tu cuenta no tiene ningún correo asociado']);
+            }
+            else{
+//                $user = User::create([
+//                    // 'token' => $user->token;
+//                    'name' => $userDriver->getName(),
+//                    'nombre' => $userDriver->getName(),
+//                    'slug' => Str::random(10),
+//                    'tipo' => 'Usuario',
+//                    'sponsor' => $afiliado,
+//                    'email' => $social_user->getEmail(),
+//                    'password' => Hash::make($social_user->id),
+//                    'avatar' => $social_user->avatar,
+//                    'pin' => $pin,
+//                    'provider_id' => $social_user->id,
+//                    'provider' => $driver,
+//                    'email_verified_at' => now(),
+//                ]);
+            }
+        }
+
         return response()->json(
             [
                 'code' => 'ok',

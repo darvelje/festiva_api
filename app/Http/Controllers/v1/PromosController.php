@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NewCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\CategoriesProduct;
+use App\Models\Promo;
+use App\Models\PromosType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +24,7 @@ class PromosController extends Controller
     //section Get_Promos
     public function getPromos(){
 
-        $promos = CategoriesProduct::all();
+        $promos = Promo::with('promosType')->get();
 
         return response()->json(
             [
@@ -36,15 +38,27 @@ class PromosController extends Controller
     //section Get_Promos_By_Category_Id
     public function getPromosByCategoryId(Request $request){
 
-        $category = CategoriesProduct::whereSlug($request->categorySlug)->first();
+        $promo = PromosType::with('promos')->whereCategoryId($request->categoryId)->first();
 
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'Category',
-                'category' => $category
-            ]
-        );
+        if($promo){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Promo',
+                    'promo' => $promo
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Category no not found',
+                ]
+            );
+        }
+
+
     }
 
 //    //section New_Category

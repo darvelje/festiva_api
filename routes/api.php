@@ -11,6 +11,7 @@ use App\Http\Controllers\v1\ProductController;
 use App\Http\Controllers\v1\SettingsController;
 use App\Http\Controllers\v1\UserAddressController;
 use App\Http\Controllers\v1\UserController;
+use App\Http\Controllers\v1\PromosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -105,5 +106,5 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/user/address/delete', [UserAddressController::class, 'deleteUserAddress']);
 
 // section Routes_Promos
-    Route::get('/v1/promos/all', [UserAddressController::class, 'getUserAddresses']);
-    Route::get('/v1/category/promos/{categoryId}', [UserAddressController::class, 'getUserAddressById']);
+    Route::get('/v1/promos/all', [PromosController::class, 'getPromos']);
+    Route::get('/v1/promos/category/{categoryId}', [PromosController::class, 'getPromosByCategoryId']);

@@ -6,21 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $ubication
- * @property string $category_id
+ * @property string $ubication
+ * @property integer $category_id
+ * @property Promo[] $promos
  */
 class PromosType extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['id', '$ubication', '$category_id'];
+    protected $fillable = ['ubication', 'category_id'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function promo()
+    public function promos()
     {
-        return $this->hasOne('App\Models\Promo');
+        return $this->hasMany('App\Models\Promo', 'id_promo_type');
     }
 }

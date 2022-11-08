@@ -23,7 +23,7 @@ class PromosController extends Controller
     //section Get_Promos
     public function getPromos(){
 
-        $promos = Promo::with('promosType')->get();
+        $promos = PromosType::with('promos')->whereNot('ubication','category_promo')->get();
 
         return response()->json(
             [

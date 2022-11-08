@@ -16,10 +16,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $password
  * @property string $created_at
  * @property string $remember_token
- * @property Notification[] $notifications
- * @property Order[] $orders
- * @property ShopProduct[] $shopProducts
  * @property UserAddress[] $userAddresses
+ * @property Notification[] $notifications
+ * @property ShopProduct[] $shopProducts
+ * @property Order[] $orders
  */
 class User extends Model
 {
@@ -31,17 +31,17 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function notifications()
+    public function userAddresses()
     {
-        return $this->hasMany('App\Models\Notification');
+        return $this->hasMany('App\Models\UserAddress');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function orders()
+    public function notifications()
     {
-        return $this->hasMany('App\Models\Order');
+        return $this->hasMany('App\Models\Notification');
     }
 
     /**
@@ -55,8 +55,8 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function userAddresses()
+    public function orders()
     {
-        return $this->hasMany('App\Models\UserAddress');
+        return $this->hasMany('App\Models\Order');
     }
 }

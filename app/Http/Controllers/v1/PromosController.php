@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\NewCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Requests\NewPromoRequest;
 use App\Models\CategoriesProduct;
 use App\Models\Promo;
 use App\Models\PromosType;
@@ -57,41 +56,50 @@ class PromosController extends Controller
                 ]
             );
         }
-
-
     }
 
-//    //section New_Category
-//    public function newCategory(NewCategoryRequest $request){
-//
-//        try{
-//            DB::beginTransaction();
-//
-//            $category = new CategoriesProduct();
-//
-//            $category->name = $request->categoryName;
-//            $category->slug = Str::slug($request->categorySlug);
-//            if($request->categoryParentId){
-//                $category->parent_id =$request->categoryParentId;
-//            }
-//
-//            $category->save();
-//
-//            DB::commit();
-//
-//            return response()->json(
-//                [
-//                    'code' => 'ok',
-//                    'message' => 'Category created successfully'
-//                ]
-//            );
-//        }
-//        catch(\Throwable $th){
-//            return response()->json(
-//                ['code' => 'error', 'message' => $th->getMessage()]
-//            );
-//        }
-//    }
+    //section New_Promo
+    public function newPromo(NewPromoRequest $request){
+
+        try{
+            DB::beginTransaction();
+
+            $promoType = new PromosType();
+
+            $promoType->ubication = $request->promoUbication;
+            $promoType->category_id = $request->promoCategoryId;
+
+            $promoType->save();
+
+            $promo = new Promo();
+
+            if ($request->hasFile('promoPathImage')) {
+                $promo->path_image = self::uploadImage($request->promoPathImage);
+            }
+
+            $promo->path_image = $request->promoPathImage;
+            $promo->status = $request->promoStatus;
+            $promo->url = $request->promoURL;
+            $promo->id_promo_type = $promoType->id;
+
+
+            $promo->save();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Promo created successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
 //
 //    //section Update_Category
 //    public function updateCategory(UpdateCategoryRequest $request){
@@ -188,5 +196,24 @@ class PromosController extends Controller
 //            ]
 //        );
 //    }
+
+    //section Upload_image
+    public static function uploadImage($path){
+        $image = $path;
+
+        $avatarName =  'promo' . substr(uniqid(rand(), true), 7, 7) . '.png';
+
+        $img = Image::make($image->getRealPath())->encode('png', 50)->orientate();
+
+        $img->resize(null, 300, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->stream(); // <-- Key point
+
+        Storage::disk('public')->put('/promosImages' . '/' . $avatarName, $img, 'public');
+        $path = '/businessImages/' . $avatarName;
+
+        return $path;
+    }
 
 }

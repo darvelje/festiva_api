@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class NewCategoryRequest extends FormRequest
 {
@@ -27,5 +31,22 @@ class NewCategoryRequest extends FormRequest
             'categoryName' => 'required|min:3|max:255|string',
             'categorySlug' => 'required|min:3|max:255|string',
         ];
+    }
+
+    public function response(array $errors){
+        if($this->expectsJson()){
+            return new JsonResponse($errors, 422);
+        }
+        return $this->redirector->to($this->getRedirectUrl())
+            ->withInput($this->except($this->dontFlash))
+            ->withErrors($errors, $this->errorBag);
+    }
+
+    protected function failedValidation(Validator $validator){
+        $errors = (new ValidationException($validator))->errors();
+
+        throw new HttpResponseException(
+            response()->json(['errors' => $errors], Jsonresponse::HTTP_UNPROCESSABLE_ENTITY)
+        );
     }
 }

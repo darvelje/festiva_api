@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id_promo_type
  * @property string $path_image
  * @property boolean $status
+ * @property string $url
  * @property PromosType $promosType
  */
 class Promo extends Model
@@ -16,7 +17,7 @@ class Promo extends Model
     /**
      * @var array
      */
-    protected $fillable = ['id_promo_type', 'path_image', 'status'];
+    protected $fillable = ['id_promo_type', 'path_image', 'status', 'url'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

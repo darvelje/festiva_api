@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $main
  * @property string $code
  * @property float $rate
- * @property ShopDeliveryZone[] $shopDeliveryZones
- * @property ShopProductsPricesrate[] $shopProductsPricesrates
- * @property ShopCurrency[] $shopCurrencies
  * @property Order[] $orders
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
+ * @property ShopDeliveryZone[] $shopDeliveryZones
+ * @property ShopCurrency[] $shopCurrencies
  */
 class Currency extends Model
 {
@@ -27,9 +27,9 @@ class Currency extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopDeliveryZones()
+    public function orders()
     {
-        return $this->hasMany('App\Models\ShopDeliveryZone');
+        return $this->hasMany('App\Models\Order');
     }
 
     /**
@@ -43,16 +43,16 @@ class Currency extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopCurrencies()
+    public function shopDeliveryZones()
     {
-        return $this->hasMany('App\Models\ShopCurrency');
+        return $this->hasMany('App\Models\ShopDeliveryZone');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function orders()
+    public function shopCurrencies()
     {
-        return $this->hasMany('App\Models\Order');
+        return $this->hasMany('App\Models\ShopCurrency');
     }
 }

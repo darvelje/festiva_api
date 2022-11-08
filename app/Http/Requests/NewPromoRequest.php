@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class UpdateCategoryRequest extends FormRequest
+class NewPromoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,9 @@ class UpdateCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'categoryName' => 'required|min:3|max:255|string',
-            'categorySlug' => 'required|min:3|max:255|string',
+            'promoStatus' => 'required',
+            'promoURL' => 'required|min:2|max:255|string',
+            'promoUbication' => 'required|min:3|max:255|string',
         ];
     }
 

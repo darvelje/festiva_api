@@ -18,12 +18,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $discount_status
  * @property float $discount_value
  * @property integer $rating
- * @property Shop $shop
+ * @property OrderProduct[] $orderProducts
+ * @property User[] $users
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
  * @property ShopProductPhoto[] $shopProductPhotos
  * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
- * @property ShopProductsPricesrate[] $shopProductsPricesrates
- * @property User[] $users
- * @property OrderProduct[] $orderProducts
+ * @property Shop $shop
  */
 class ShopProduct extends Model
 {
@@ -33,11 +33,27 @@ class ShopProduct extends Model
     protected $fillable = ['shop_id', 'name', 'stock', 'quantity_min', 'created_at', 'updated_at', 'slug', 'status', 'description', 'discount_status', 'discount_value', 'rating'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shop()
+    public function orderProducts()
     {
-        return $this->belongsTo('App\Models\Shop');
+        return $this->hasMany('App\Models\OrderProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductsPricesrates()
+    {
+        return $this->hasMany('App\Models\ShopProductsPricesrate');
     }
 
     /**
@@ -57,26 +73,10 @@ class ShopProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shopProductsPricesrates()
+    public function shop()
     {
-        return $this->hasMany('App\Models\ShopProductsPricesrate');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function users()
-    {
-        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function orderProducts()
-    {
-        return $this->hasMany('App\Models\OrderProduct');
+        return $this->belongsTo('App\Models\Shop');
     }
 }

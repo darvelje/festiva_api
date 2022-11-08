@@ -23,13 +23,164 @@ class PromosController extends Controller
     //section Get_Promos
     public function getPromos(){
 
+        $promo1 = [];
+        $promo2 = [];
+        $promo3 = [];
+        $promo4 = [];
+        $promo5 = [];
+        $promo6 = [];
+        $promo7 = [];
+        $promo8 = [];
+        $promo9 = [];
+        $arrayGlobal = [];
+
         $promos = PromosType::with('promos')->whereNot('ubication','category_promo')->get();
+
+        foreach ($promos as $promo){
+            if($promo->ubication === 'promo1'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo1, $promo);
+            }
+            if($promo->ubication === 'promo2'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo2, $promo);
+            }
+            if($promo->ubication === 'promo3'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo3, $promo);
+            }
+            if($promo->ubication === 'promo4'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo4, $promo);
+            }
+            if($promo->ubication === 'promo5'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo5, $promo);
+            }
+            if($promo->ubication === 'promo6'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo6, $promo);
+            }
+            if($promo->ubication === 'promo7'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo7, $promo);
+            }
+            if($promo->ubication === 'promo8'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo8, $promo);
+            }
+            if($promo->ubication === 'promo9'){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+                unset($promo->category_id);
+                unset($promo->id);
+                unset($promo->ubication);
+                foreach ($promo->promos as $p){
+                    $promo->path_image = $p->path_image;
+                    $promo->url = $p->url;
+                }
+                unset($promo->promos);
+                array_push($promo9, $promo);
+            }
+        }
+        array_push($arrayGlobal, $promo1);
+        array_push($arrayGlobal, $promo2);
+        array_push($arrayGlobal, $promo3);
+        array_push($arrayGlobal, $promo4);
+        array_push($arrayGlobal, $promo5);
+        array_push($arrayGlobal, $promo6);
+        array_push($arrayGlobal, $promo7);
+        array_push($arrayGlobal, $promo8);
+        array_push($arrayGlobal, $promo9);
+//        $promos->promo1 = $promo1;
+//        $promos->promo2 = $promo2;
+//        $promos->promo3 = $promo3;
+//        $promos->promo4 = $promo4;
+//        $promos->promo5 = $promo5;
+//        $promos->promo6 = $promo6;
+//        $promos->promo7 = $promo7;
+//        $promos->promo8 = $promo8;
+//        $promos->promo9 = $promo9;
+
+
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Promos',
-                'promos' => $promos
+                'promos' => $arrayGlobal
             ]
         );
     }

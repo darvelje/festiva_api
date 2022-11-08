@@ -210,7 +210,7 @@ class PromosController extends Controller
     }
 
     //section New_Promo
-    public function newPromo(NewPromoRequest $request){
+    public function newPromo(Request $request){
 
         try{
             DB::beginTransaction();
@@ -225,10 +225,9 @@ class PromosController extends Controller
             $promo = new Promo();
 
             if ($request->hasFile('promoPathImage')) {
-                $promo->path_image = self::uploadImage($request->promoPathImage);
+                $promo->path_image = self::uploadImage($request->promoPathImage, 'promo');
             }
 
-            $promo->path_image = $request->promoPathImage;
             $promo->status = $request->promoStatus;
             $promo->url = $request->promoURL;
             $promo->id_promo_type = $promoType->id;
@@ -349,10 +348,10 @@ class PromosController extends Controller
 //    }
 
     //section Upload_image
-    public static function uploadImage($path){
+    public static function uploadImage($path, $name){
         $image = $path;
 
-        $avatarName =  'promo' . substr(uniqid(rand(), true), 7, 7) . '.png';
+        $avatarName =  $name . substr(uniqid(rand(), true), 7, 7) . '.png';
 
         $img = Image::make($image->getRealPath())->encode('png', 50)->orientate();
 
@@ -362,7 +361,7 @@ class PromosController extends Controller
         $img->stream(); // <-- Key point
 
         Storage::disk('public')->put('/promosImages' . '/' . $avatarName, $img, 'public');
-        $path = '/businessImages/' . $avatarName;
+        $path = '/promosImages/' . $avatarName;
 
         return $path;
     }

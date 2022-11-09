@@ -81,54 +81,63 @@ class PromosController extends Controller
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo1, $promo);
                 }
                 if($promo->id_promo_type === 2){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo2, $promo);
                 }
                 if($promo->id_promo_type === 3){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo3, $promo);
                 }
                 if($promo->id_promo_type === 4){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo4, $promo);
                 }
                 if($promo->id_promo_type === 5){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo5, $promo);
                 }
                 if($promo->id_promo_type === 6){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo6, $promo);
                 }
                 if($promo->id_promo_type === 7){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo7, $promo);
                 }
                 if($promo->id_promo_type === 8){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo8, $promo);
                 }
                 if($promo->id_promo_type ===9){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
+                    unset($promo->id_promo_type);
                     array_push($promo9, $promo);
                 }
 

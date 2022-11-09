@@ -18,12 +18,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $discount_status
  * @property float $discount_value
  * @property integer $rating
- * @property OrderProduct[] $orderProducts
- * @property User[] $users
- * @property ShopProductsPricesrate[] $shopProductsPricesrates
- * @property ShopProductPhoto[] $shopProductPhotos
  * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
+ * @property ShopProductPhoto[] $shopProductPhotos
+ * @property User[] $users
  * @property Shop $shop
+ * @property OrderProduct[] $orderProducts
+ * @property ShopProductsPricesrate[] $shopProductsPricesrates
  */
 class ShopProduct extends Model
 {
@@ -35,25 +35,9 @@ class ShopProduct extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function orderProducts()
+    public function shopProductsHasCategoriesProducts()
     {
-        return $this->hasMany('App\Models\OrderProduct');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function users()
-    {
-        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopProductsPricesrates()
-    {
-        return $this->hasMany('App\Models\ShopProductsPricesrate');
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
     }
 
     /**
@@ -65,11 +49,11 @@ class ShopProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function shopProductsHasCategoriesProducts()
+    public function users()
     {
-        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
+        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
     }
 
     /**
@@ -78,5 +62,21 @@ class ShopProduct extends Model
     public function shop()
     {
         return $this->belongsTo('App\Models\Shop');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderProducts()
+    {
+        return $this->hasMany('App\Models\OrderProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductsPricesrates()
+    {
+        return $this->hasMany('App\Models\ShopProductsPricesrate');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewPromoRequest;
+use App\Http\Requests\UpdatePromoRequest;
 use App\Models\CategoriesProduct;
 use App\Models\Promo;
 use App\Models\PromosType;
@@ -22,20 +23,19 @@ class PromosController extends Controller
 
     //section Get_Promos
     public function getPromos(){
-        $promos = PromosType::with('promos')->get();
+        $promos = Promo::with('promosType', 'categoriesProduct')->get();
 
         if($promos){
             foreach ($promos as $promo){
-                foreach ($promo->promos as $p){
-                    $promo->pathImage = $p->path_image;
-                    $promo->status = $p->status;
-                    $promo->url = $p->url;
-                    $promo->idPromo = $p->id;
+                $promo->ubicacion = $promo->promosType->ubication;
+                if($promo->category_id !== null){
+                    $promo->categoryname = $promo->categoriesProduct->name;
                 }
                 unset($promo->created_at);
                 unset($promo->updated_at);
-                unset($promo->promos);
-
+                unset($promo->id_promo_type);
+                unset($promo->promosType);
+                unset($promo->categoriesProduct);
             }
 
             return response()->json(
@@ -227,9 +227,11 @@ class PromosController extends Controller
     //section Get_Promos_By_Category_Id
     public function getPromosByCategoryId(Request $request){
 
-        $promo = PromosType::with('promos')->whereCategoryId($request->categoryId)->first();
+        $category = CategoriesProduct::whereId($request->categoryId)->first();
 
-        if($promo){
+        if($category) {
+            $promo = Promo::with('promosType')->whereCategoryId($request->categoryId)->first();
+
             return response()->json(
                 [
                     'code' => 'ok',
@@ -238,28 +240,21 @@ class PromosController extends Controller
                 ]
             );
         }
-        else{
-            return response()->json(
-                [
-                    'code' => 'error',
-                    'message' => 'Category no not found',
-                ]
-            );
-        }
+
+        return response()->json(
+            [
+                'code' => 'error',
+                'message' => 'Category no not found',
+            ]
+        );
+
     }
 
     //section New_Promo
-    public function newPromo(Request $request){
+    public function newPromo(NewPromoRequest $request){
 
         try{
             DB::beginTransaction();
-
-            $promoType = new PromosType();
-
-            $promoType->ubication = $request->promoUbication;
-            $promoType->category_id = $request->promoCategoryId;
-
-            $promoType->save();
 
             $promo = new Promo();
 
@@ -269,8 +264,8 @@ class PromosController extends Controller
 
             $promo->status = $request->promoStatus;
             $promo->url = $request->promoURL;
-            $promo->id_promo_type = $promoType->id;
-
+            $promo->id_promo_type = $request->promoIdType;
+            $promo->category_id = $request->promoCategoryId;
 
             $promo->save();
 
@@ -289,102 +284,89 @@ class PromosController extends Controller
             );
         }
     }
-//
-//    //section Update_Category
-//    public function updateCategory(UpdateCategoryRequest $request){
-//
-//        try{
-//            DB::beginTransaction();
-//
-//            $category = CategoriesProduct::whereId($request->categoryId)->first();
-//
-//            $category->name = $request->categoryName;
-//            $category->slug = Str::slug($request->categorySlug);
-//            if($request->categoryParentId){
-//                $category->parent_id =$request->categoryParentId;
-//            }
-//
-//            $category->update();
-//
-//            DB::commit();
-//
-//            return response()->json(
-//                [
-//                    'code' => 'ok',
-//                    'message' => 'Category updated successfully'
-//                ]
-//            );
-//        }
-//        catch(\Throwable $th){
-//            return response()->json(
-//                ['code' => 'error', 'message' => $th->getMessage()]
-//            );
-//        }
-//    }
-//
-//    // section Delete_Category
-//    public function deleteCategory(Request $request){
-//        try {
-//            DB::beginTransaction();
-//
-//            $result = CategoriesProduct::whereId($request->categoryId)->delete();
-//
-//            DB::commit();
-//
-//            if($result){
-//                return response()->json(
-//                    [
-//                        'code' => 'ok',
-//                        'message' => 'Category deleted successfully'
-//                    ]
-//                );
-//            }
-//
-//            return response()->json(
-//                [
-//                    'code' => 'error',
-//                    'message' => 'Category not found'
-//                ]
-//            );
-//
-//        }
-//        catch(\Throwable $th){
-//            return response()->json(
-//                ['code' => 'error', 'message' => $th->getMessage()]
-//            );
-//        }
-//    }
-//
-//    //section Get_Random_Categories
-//    public function getRandomCategories(){
-//
-//        $arrayCat = [];
-//
-//        $categories = CategoriesProduct::with(
-//                'shopProductsHasCategoriesProducts',
-//                        'shopProductsHasCategoriesProducts.shopProduct')->get();
-//
-//        foreach($categories as $category){
-//            unset($category->created_at);
-//            unset($category->updated_at);
-//            unset($category->parent_id);
-//
-//            if($category->shopProductsHasCategoriesProducts->count()>0){
-//                array_push($arrayCat, $category);
-//            }
-//
-//            unset($category->shopProductsHasCategoriesProducts);
-//
-//        }
-//
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'RandomCategories',
-//                'random_categories' => Arr::random($arrayCat, 3)
-//            ]
-//        );
-//    }
+
+    //section Update_Promo
+    public function updatePromo(UpdatePromoRequest $request){
+
+        try{
+            DB::beginTransaction();
+
+            $promo = Promo::whereId($request->promoId)->first();
+
+            if($promo){
+
+                if ($request->hasFile('promoPathImage')) {
+                    $promo->path_image = self::uploadImage($request->promoPathImage, 'promo');
+                }
+
+                $promo->status = $request->promoStatus;
+                $promo->url = $request->promoURL;
+                $promo->id_promo_type = $request->promoIdType;
+                $promo->category_id = $request->promoCategoryId;
+
+                $promo->update();
+
+                DB::commit();
+
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'Promo updated successfully'
+                    ]
+                );
+            }
+
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Promo not found'
+                ]
+            );
+
+
+
+
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
+    // section Delete_Promo
+    public function deletePromo(Request $request){
+        try {
+            DB::beginTransaction();
+
+            $result = Promo::whereId($request->promoId)->delete();
+
+            DB::commit();
+
+            if($result){
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'Promo deleted successfully'
+                    ]
+                );
+            }
+
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Promo not found'
+                ]
+            );
+
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
 
     //section Upload_image
     public static function uploadImage($path, $name){

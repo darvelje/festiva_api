@@ -16,10 +16,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $password
  * @property string $created_at
  * @property string $remember_token
- * @property UserAddress[] $userAddresses
  * @property Notification[] $notifications
  * @property ShopProduct[] $shopProducts
  * @property Order[] $orders
+ * @property UserAddress[] $userAddresses
  */
 class User extends Model
 {
@@ -27,14 +27,6 @@ class User extends Model
      * @var array
      */
     protected $fillable = ['name', 'last_name', 'email', 'updated_at', 'phone', 'avatar', 'email_verified_at', 'password', 'created_at', 'remember_token'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function userAddresses()
-    {
-        return $this->hasMany('App\Models\UserAddress');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -58,5 +50,13 @@ class User extends Model
     public function orders()
     {
         return $this->hasMany('App\Models\Order');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userAddresses()
+    {
+        return $this->hasMany('App\Models\UserAddress');
     }
 }

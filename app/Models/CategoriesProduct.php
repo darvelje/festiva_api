@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property integer $parent_id
  * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
+ *  * @property Promo[] $promos
  */
 class CategoriesProduct extends Model
 {
@@ -26,5 +27,13 @@ class CategoriesProduct extends Model
     public function shopProductsHasCategoriesProducts()
     {
         return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct', 'category_product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function promos()
+    {
+        return $this->hasMany('App\Models\Promo', 'category_id');
     }
 }

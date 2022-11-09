@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class NewPromoRequest extends FormRequest
+class UpdatePromoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +32,7 @@ class NewPromoRequest extends FormRequest
             'promoStatus' => 'required',
             'promoURL' => 'required|min:2|max:255|string',
             'promoUbication' => 'required|min:3|max:255|string',
-            'promoIdType' => 'required',
+            'promoId' => 'required',
         ];
     }
 

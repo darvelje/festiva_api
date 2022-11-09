@@ -7,23 +7,21 @@ use App\Http\Requests\NewUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
 
-    public function getRentalhoUrl()
-    {
-        return env('SERVER_API');
-    }
-
+    //section Get_User_By_Token_Rentalho
     protected function getUserByToken($token)
     {
-        $response = Http::withToken($token)->acceptJson()->get(env('SERVER_API')."/api/oauth/token-info");
+        $response = Http::withToken($token)->acceptJson()->get("https://apitest.rentalho.com/api/oauth/token-info");
 
         return json_decode($response->getBody()->getContents(), true);
     }
@@ -33,37 +31,48 @@ class UserController extends Controller
 
         $userDriver = $this->getUserByToken($request->token);
 
-        if ($user = User::where('email', $userDriver->email)->first()) {
-            return $this->authAndRedirect($user); // Login y redirección
+        if ($user = User::whereEmail($userDriver['data']['email'])->first()) {
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
+                'code' => 'ok',
+                'message' => 'User logged in',
+            ]);
+
         } else {
-            if (!$userDriver->email) { //Si no hay email no nos sirve
-                return back()->withErrors(['errors' => 'Tu cuenta no tiene ningún correo asociado']);
-            }
-            else{
-//                $user = User::create([
-//                    // 'token' => $user->token;
-//                    'name' => $userDriver->getName(),
-//                    'nombre' => $userDriver->getName(),
-//                    'slug' => Str::random(10),
-//                    'tipo' => 'Usuario',
-//                    'sponsor' => $afiliado,
-//                    'email' => $social_user->getEmail(),
-//                    'password' => Hash::make($social_user->id),
-//                    'avatar' => $social_user->avatar,
-//                    'pin' => $pin,
-//                    'provider_id' => $social_user->id,
-//                    'provider' => $driver,
-//                    'email_verified_at' => now(),
-//                ]);
-            }
+            $user = User::create([
+                'name' => $userDriver['data']['name'],
+                'last_name' => $userDriver['data']['name'],
+                'email' => $userDriver['data']['email'],
+                'phone' => $userDriver['data']['mobile'],
+                //'avatar' => $userDriver->avatar,
+                'password' => Hash::make($userDriver['data']['id']),
+                'email_verified_at' => now(),
+            ]);
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
+                'code' => 'ok',
+                'message' => 'User registered',
+            ]);
+
         }
+
 
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'TOKEN',
                 'token' => $request->token,
-                'info' => $this->getUserByToken($request->token)
+                'data' =>  $userDriver['data']['email']
             ]
         );
 

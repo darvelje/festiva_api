@@ -28,7 +28,6 @@ class UpdatePromoRequest extends FormRequest
     public function rules()
     {
         return [
-            'promoPathImage' => 'required',
             'promoStatus' => 'required',
             'promoURL' => 'required|min:2|max:255|string',
             'promoIdType' => 'required',

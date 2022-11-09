@@ -61,7 +61,7 @@ class PromosController extends Controller
 
     public function getPromosHome(){
 
-        $promos = Promo::whereCategoryId(null)->get();
+        $promos = Promo::with('promosType')->whereCategoryId(null)->get();
 
         if($promos){
 
@@ -77,69 +77,71 @@ class PromosController extends Controller
             $arrayGlobal = [];
 
             foreach ($promos as $promo){
-                if($promo->id_promo_type === 1){
+                if($promo->promosType->ubication === 'promo1'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo1, $promo);
                 }
-                if($promo->id_promo_type === 2){
+                if($promo->promosType->ubication === 'promo2'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo2, $promo);
                 }
-                if($promo->id_promo_type === 3){
+                if($promo->promosType->ubication === 'promo3'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo3, $promo);
                 }
-                if($promo->id_promo_type === 4){
+                if($promo->promosType->ubication === 'promo4'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo4, $promo);
                 }
-                if($promo->id_promo_type === 5){
+                if($promo->promosType->ubication === 'promo5'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo5, $promo);
                 }
-                if($promo->id_promo_type === 6){
+                if($promo->promosType->ubication === 'promo6'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo6, $promo);
                 }
-                if($promo->id_promo_type === 7){
+                if($promo->promosType->ubication === 'promo7'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo7, $promo);
                 }
-                if($promo->id_promo_type === 8){
+                if($promo->promosType->ubication === 'promo8'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo8, $promo);
                 }
-                if($promo->id_promo_type ===9){
+                if($promo->promosType->ubication === 'promo9'){
                     unset($promo->created_at);
                     unset($promo->updated_at);
                     unset($promo->category_id);
                     unset($promo->id_promo_type);
                     array_push($promo9, $promo);
                 }
+
+                //unset($promo->promosType);
 
             }
             array_push($arrayGlobal, $promo1);

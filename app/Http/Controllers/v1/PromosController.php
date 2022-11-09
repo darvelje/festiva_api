@@ -230,7 +230,7 @@ class PromosController extends Controller
         $category = CategoriesProduct::whereId($request->categoryId)->first();
 
         if($category) {
-            $promo = Promo::with('promosType')->whereCategoryId($request->categoryId)->first();
+            $promo = Promo::with('promosType')->whereCategoryId($request->categoryId)->get();
 
             return response()->json(
                 [

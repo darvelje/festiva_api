@@ -141,7 +141,7 @@ class PromosController extends Controller
                     array_push($promo9, $promo);
                 }
 
-                //unset($promo->promosType);
+                unset($promo->promosType);
 
             }
             array_push($arrayGlobal, $promo1);

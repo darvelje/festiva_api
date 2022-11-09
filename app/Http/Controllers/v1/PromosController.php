@@ -22,7 +22,7 @@ class PromosController extends Controller
 
     //section Get_Promos
     public function getPromos(){
-        $promos = PromosType::with('promos')->whereNot('ubication','category_promo')->get();
+        $promos = PromosType::with('promos')->get();
 
         if($promos){
             foreach ($promos as $promo){
@@ -46,10 +46,12 @@ class PromosController extends Controller
                 ]
             );
         }
+
         return response()->json(
             [
-                'code' => 'error',
-                'message' => 'Not promos'
+                'code' => 'ok',
+                'message' => 'Promos',
+                'promos' => $promos
             ]
         );
 
@@ -211,15 +213,14 @@ class PromosController extends Controller
                 ]
             );
         }
+
         return response()->json(
             [
-                'code' => 'error',
-                'message' => 'Not promos'
+                'code' => 'ok',
+                'message' => 'Promos',
+                'promos' => $promos
             ]
         );
-
-
-
 
     }
 

@@ -53,14 +53,14 @@ class BusinessController extends Controller
                 ]
             );
         }
-        else{
-            return response()->json(
-                [
-                    'code' => 'error',
-                    'message' => 'Business not found',
-                ]
-            );
-        }
+
+        return response()->json(
+            [
+                'code' => 'error',
+                'message' => 'Business not found',
+            ]
+        );
+
 
     }
 

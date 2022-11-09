@@ -38,11 +38,20 @@ class UserAddressController extends Controller
 
         $userAddress =  DB::table('view_useraddresses_id')->whereId($request->userAddressId)->first();
 
+        if($userAddress){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'User address',
+                    'userAddress' => $userAddress
+                ]
+            );
+        }
+
         return response()->json(
             [
-                'code' => 'ok',
-                'message' => 'User address',
-                'userAddress' => $userAddress
+                'code' => 'error',
+                'message' => 'User address not found'
             ]
         );
     }
@@ -52,24 +61,33 @@ class UserAddressController extends Controller
 
         $userAddress =  DB::table('view_useraddresses_userid')->where('user_id', $request->userId)->get();
 
-        $resultUserAddresses = collect();
+        if($userAddress){
+            $resultUserAddresses = collect();
 
-        $resultUserAddresses['user_id'] = $userAddress[0]->user_id;
+            $resultUserAddresses['user_id'] = $userAddress[0]->user_id;
 
-        $resultUserAddresses['addresses'] = $userAddress->groupBy(['addres_id'])->flatten(1);
+            $resultUserAddresses['addresses'] = $userAddress->groupBy(['addres_id'])->flatten(1);
 
-        $resultUserAddresses['addresses'] = $resultUserAddresses['addresses']->map(function ($item) {
-            return collect($item)->forget(['user_id']);
-        });
+            $resultUserAddresses['addresses'] = $resultUserAddresses['addresses']->map(function ($item) {
+                return collect($item)->forget(['user_id']);
+            });
 
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'User address',
+                    'userAddress' => $resultUserAddresses
+                ]
+            );
+        }
 
         return response()->json(
             [
-                'code' => 'ok',
-                'message' => 'User address',
-                'userAddress' => $resultUserAddresses
+                'code' => 'error',
+                'message' => 'There are no addresses for that user'
             ]
         );
+
     }
 
     //section New_UserAddress

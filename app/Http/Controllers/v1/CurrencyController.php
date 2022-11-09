@@ -32,11 +32,20 @@ class CurrencyController extends Controller
 
         $currency = Currency::whereId($request->currencyId)->first();
 
+        if($currency){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Currency',
+                    'currency' => $currency
+                ]
+            );
+        }
+
         return response()->json(
             [
-                'code' => 'ok',
-                'message' => 'Currency',
-                'currency' => $currency
+                'code' => 'error',
+                'message' => 'Currency not found'
             ]
         );
     }

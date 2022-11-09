@@ -26,34 +26,44 @@ class ProductController extends Controller
 
         $products = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates',  'shopProductsPricesrates.currency' )->get();
 
-        foreach ($products as $product){
-            if($product->shopProductsHasCategoriesProducts->count()>0){
-                $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+        if($products){
+            foreach ($products as $product){
+                if($product->shopProductsHasCategoriesProducts->count()>0){
+                    $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+                }
+
+                $product->photos = $product->shopProductPhotos;
+
+                foreach ($product->photos as $prod_photo){
+                    unset($prod_photo->created_at);
+                    unset($prod_photo->updated_at);
+                }
+
+                $product->prices = $product->shopProductsPricesrates;
+
+                foreach ($product->prices as $prod_prices){
+                    $prod_prices->currency_code = $prod_prices->currency->code;
+                    unset($prod_prices->currency);
+                    unset($prod_prices->created_at);
+                    unset($prod_prices->updated_at);
+                }
+
+                unset($product->shopProductPhotos);
+                unset($product->shopProductsHasCategoriesProducts);
+                unset($product->shopProductsPricesrates);
+                unset($product->created_at);
+                unset($product->updated_at);
+                unset($product->shop_id);
+
             }
 
-            $product->photos = $product->shopProductPhotos;
-
-            foreach ($product->photos as $prod_photo){
-                unset($prod_photo->created_at);
-                unset($prod_photo->updated_at);
-            }
-
-            $product->prices = $product->shopProductsPricesrates;
-
-            foreach ($product->prices as $prod_prices){
-                $prod_prices->currency_code = $prod_prices->currency->code;
-                unset($prod_prices->currency);
-                unset($prod_prices->created_at);
-                unset($prod_prices->updated_at);
-            }
-
-            unset($product->shopProductPhotos);
-            unset($product->shopProductsHasCategoriesProducts);
-            unset($product->shopProductsPricesrates);
-            unset($product->created_at);
-            unset($product->updated_at);
-            unset($product->shop_id);
-
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Products',
+                    'products' => $products
+                ]
+            );
         }
 
         return response()->json(
@@ -63,6 +73,7 @@ class ProductController extends Controller
                 'products' => $products
             ]
         );
+
     }
 
     //section Get_Product_By_Slug

@@ -20,12 +20,22 @@ class BusinessCouponsController extends Controller
 
         $shopCoupons = ShopCoupon::with('shop')->get();
 
-        foreach ($shopCoupons as $coupon){
-            $coupon->shop_name = $coupon->shop->name;
+        if($shopCoupons){
+            foreach ($shopCoupons as $coupon){
+                $coupon->shop_name = $coupon->shop->name;
 
-            unset($coupon->shop);
-            unset($coupon->created_at);
-            unset($coupon->updated_at);
+                unset($coupon->shop);
+                unset($coupon->created_at);
+                unset($coupon->updated_at);
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shops coupons',
+                    'shopCoupons' => $shopCoupons
+                ]
+            );
         }
 
         return response()->json(
@@ -35,6 +45,8 @@ class BusinessCouponsController extends Controller
                 'shopCoupons' => $shopCoupons
             ]
         );
+
+
     }
 
     //section Get_Business_Coupon

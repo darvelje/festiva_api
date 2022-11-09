@@ -88,11 +88,20 @@ class UserController extends Controller
 
         $user = User::whereId($request->userId)->first();
 
+        if($user){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'User',
+                    'user' => $user
+                ]
+            );
+        }
+
         return response()->json(
             [
-                'code' => 'ok',
-                'message' => 'User',
-                'user' => $user
+                'code' => 'error',
+                'message' => 'User not found'
             ]
         );
     }
@@ -172,16 +181,26 @@ class UserController extends Controller
     public function deleteUser(Request $request){
         try {
             DB::beginTransaction();
-            User::whereId($request->userId)->delete();
+            $result = User::whereId($request->userId)->delete();
+
             DB::commit();
+
+            if($result){
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'User deleted successfully'
+                    ]
+                );
+            }
 
             return response()->json(
                 [
-                    'code' => 'ok',
-                    'message' => 'User deleted successfully'
+                    'code' => 'error',
+                    'message' => 'User not found'
                 ]
             );
-
+            
         }
         catch(\Throwable $th){
             return response()->json(

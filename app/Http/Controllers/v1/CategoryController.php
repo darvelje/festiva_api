@@ -38,11 +38,21 @@ class CategoryController extends Controller
 
         $category = CategoriesProduct::whereSlug($request->categorySlug)->first();
 
+        if($category){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Category',
+                    'category' => $category
+                ]
+            );
+
+        }
+
         return response()->json(
             [
-                'code' => 'ok',
-                'message' => 'Category',
-                'category' => $category
+                'code' => 'error',
+                'message' => 'Category not found'
             ]
         );
     }
@@ -153,26 +163,36 @@ class CategoryController extends Controller
                 'shopProductsHasCategoriesProducts',
                         'shopProductsHasCategoriesProducts.shopProduct')->get();
 
-        foreach($categories as $category){
-            unset($category->created_at);
-            unset($category->updated_at);
-            unset($category->parent_id);
+        if($categories){
+            foreach($categories as $category){
+                unset($category->created_at);
+                unset($category->updated_at);
+                unset($category->parent_id);
 
-            if($category->shopProductsHasCategoriesProducts->count()>0){
-                array_push($arrayCat, $category);
+                if($category->shopProductsHasCategoriesProducts->count()>0){
+                    array_push($arrayCat, $category);
+                }
+
+                unset($category->shopProductsHasCategoriesProducts);
+
             }
 
-            unset($category->shopProductsHasCategoriesProducts);
-
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'RandomCategories',
+                    'random_categories' => Arr::random($arrayCat, 3)
+                ]
+            );
         }
 
         return response()->json(
             [
-                'code' => 'ok',
-                'message' => 'RandomCategories',
-                'random_categories' => Arr::random($arrayCat, 3)
+                'code' => 'error',
+                'message' => 'Not Categories'
             ]
         );
+
     }
 
 }

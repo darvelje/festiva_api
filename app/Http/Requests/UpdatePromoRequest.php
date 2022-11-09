@@ -31,7 +31,6 @@ class UpdatePromoRequest extends FormRequest
             'promoPathImage' => 'required',
             'promoStatus' => 'required',
             'promoURL' => 'required|min:2|max:255|string',
-            'promoUbication' => 'required|min:3|max:255|string',
             'promoId' => 'required',
         ];
     }

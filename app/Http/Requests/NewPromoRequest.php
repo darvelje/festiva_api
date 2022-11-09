@@ -28,10 +28,9 @@ class NewPromoRequest extends FormRequest
     public function rules()
     {
         return [
-            'promoPathImage' => 'required',
+          //  'promoPathImage' => 'required',
             'promoStatus' => 'required',
             'promoURL' => 'required|min:2|max:255|string',
-            'promoUbication' => 'required|min:3|max:255|string',
             'promoIdType' => 'required',
         ];
     }

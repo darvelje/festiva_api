@@ -28,7 +28,7 @@ class PromosController extends Controller
         if($promos){
             foreach ($promos as $promo){
                 $promo->ubicacion = $promo->promosType->ubication;
-                if($promo->category_id !== null){
+                if($promo->categoriesProduct !== null){
                     $promo->categoryname = $promo->categoriesProduct->name;
                 }
                 unset($promo->created_at);

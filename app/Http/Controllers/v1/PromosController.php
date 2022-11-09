@@ -21,6 +21,37 @@ use Illuminate\Support\Arr;
 class PromosController extends Controller
 {
 
+    //section Get_Promos_Type
+    public function getPromosType(){
+        $promosType = PromosType::all();
+
+        if($promosType){
+
+            foreach ($promosType as $promo){
+                unset($promo->created_at);
+                unset($promo->updated_at);
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Promos type',
+                    'promosType' => $promosType
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Promos type',
+                'promosType' => $promosType
+            ]
+        );
+
+
+    }
+
     //section Get_Promos
     public function getPromos(){
         $promos = Promo::with('promosType', 'categoriesProduct')->get();
@@ -57,8 +88,8 @@ class PromosController extends Controller
 
 
     }
-    //section Get_Promos
 
+    //section Get_Promos_HomeMarket
     public function getPromosHome(){
 
         $promos = Promo::with('promosType')->whereCategoryId(null)->get();

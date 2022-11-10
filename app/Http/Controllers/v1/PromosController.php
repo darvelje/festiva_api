@@ -96,7 +96,12 @@ class PromosController extends Controller
 
         if($promos){
             $promos->ubicacion = $promos->promosType->ubication;
-            $promos->category_name = $promos->categoriesProduct->name;
+            if($promos->category_id !== null){
+                $promos->category_name = $promos->categoriesProduct->name;
+            }
+            else{
+                $promos->category_name = null;
+            }
             $promos->promo_name = $promos->promosType->name;
             unset($promos->created_at);
             unset($promos->updated_at);

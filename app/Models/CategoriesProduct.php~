@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property integer $parent_id
  * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
- * @property Promo[] $promos
+ *  * @property Promo[] $promos
  */
 class CategoriesProduct extends Model
 {

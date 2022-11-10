@@ -89,6 +89,39 @@ class PromosController extends Controller
 
     }
 
+    //section Get_Promos
+    public function getPromoById(Request $request){
+
+        $promos = Promo::with('promosType', 'categoriesProduct')->whereId($request->promoId)->first();
+
+        if($promos){
+            $promos->ubicacion = $promos->promosType->ubication;
+            $promos->category_name = $promos->categoriesProduct->name;
+            $promos->promo_name = $promos->promosType->name;
+            unset($promos->created_at);
+            unset($promos->updated_at);
+            unset($promos->promosType);
+            unset($promos->categoriesProduct);
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Promos',
+                    'promos' => $promos
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'code' => 'error',
+                'message' => 'Promo not found'
+            ]
+        );
+
+
+    }
+
     //section Get_Promos_HomeMarket
     public function getPromosHome(){
 

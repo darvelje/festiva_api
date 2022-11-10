@@ -24,11 +24,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $user_id
  * @property string $slug
  * @property float $comission
+ * @property ShopProduct[] $shopProducts
+ * @property ShopDeliveryZone[] $shopDeliveryZones
+ * @property Order[] $orders
  * @property ShopCurrency[] $shopCurrencies
  * @property ShopCoupon[] $shopCoupons
- * @property ShopDeliveryZone[] $shopDeliveryZones
- * @property ShopProduct[] $shopProducts
- * @property Order[] $orders
  */
 class Shop extends Model
 {
@@ -36,6 +36,30 @@ class Shop extends Model
      * @var array
      */
     protected $fillable = ['name', 'description', 'cover', 'avatar', 'address', 'phone', 'email', 'facebook_link', 'instagram_link', 'twitter_link', 'wa_link', 'telegram_link', 'created_at', 'updated_at', 'url', 'user_id', 'slug', 'comission'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProducts()
+    {
+        return $this->hasMany('App\Models\ShopProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopDeliveryZones()
+    {
+        return $this->hasMany('App\Models\ShopDeliveryZone');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\Order');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -51,29 +75,5 @@ class Shop extends Model
     public function shopCoupons()
     {
         return $this->hasMany('App\Models\ShopCoupon');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopDeliveryZones()
-    {
-        return $this->hasMany('App\Models\ShopDeliveryZone');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopProducts()
-    {
-        return $this->hasMany('App\Models\ShopProduct');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function orders()
-    {
-        return $this->hasMany('App\Models\Order');
     }
 }

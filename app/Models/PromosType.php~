@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property string $ubication
- * @property integer $category_id
+ * @property string $created_at
+ * @property string $updated_at
  * @property Promo[] $promos
  */
 class PromosType extends Model
@@ -15,7 +16,7 @@ class PromosType extends Model
     /**
      * @var array
      */
-    protected $fillable = ['ubication', 'category_id'];
+    protected $fillable = ['ubication', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

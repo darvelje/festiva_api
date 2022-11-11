@@ -270,6 +270,10 @@ class ProductController extends Controller
             $product->slug = Str::slug($request->productSlug);
             $product->shop_id = $request->productShopId;
             $product->description = $request->productDescription;
+            $product->status = $request->productStatus;
+            $product->discount_status = $request->productDiscountStatus;
+            $product->discount_value = $request->productDiscountValue;
+            $product->rating = 1;
 
             $product->save();
 
@@ -328,7 +332,11 @@ class ProductController extends Controller
             $product->name = $request->productName;
             $product->stock = $request->productStock;
             $product->quantity_min = $request->productQuantityMin;
+            $product->description = $request->productDescription;
             $product->slug = Str::slug($request->productSlug);
+            $product->status = $request->productStatus;
+            $product->discount_status = $request->productDiscountStatus;
+            $product->discount_value = $request->productDiscountValue;
 
             $product->update();
 

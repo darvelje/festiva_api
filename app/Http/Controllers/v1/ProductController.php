@@ -226,10 +226,10 @@ class ProductController extends Controller
 
                 foreach ($product->product_price as $price){
                     $price->product_price = $price->price;
+                    $price->product_currency_id = $price->currency_id;
                     $price->product_currency_code = $price->currency->code;
 
                     unset($price->id);
-                    unset($price->currency_id);
                     unset($price->shop_product_id);
                     unset($price->price);
                     unset($price->created_at);

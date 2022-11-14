@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property string $slug
  * @property integer $parent_id
- * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
  * @property Promo[] $promos
+ * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
  */
 class CategoriesProduct extends Model
 {
@@ -24,16 +24,16 @@ class CategoriesProduct extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopProductsHasCategoriesProducts()
+    public function promos()
     {
-        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct', 'category_product_id');
+        return $this->hasMany('App\Models\Promo', 'category_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function promos()
+    public function shopProductsHasCategoriesProducts()
     {
-        return $this->hasMany('App\Models\Promo', 'category_id');
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct', 'category_product_id');
     }
 }

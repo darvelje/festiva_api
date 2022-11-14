@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $slug
  * @property ShopDeliveryZone[] $shopDeliveryZones
- * @property UserAddress[] $userAddresses
  * @property Municipality $municipality
+ * @property UserAddress[] $userAddresses
  */
 class Locality extends Model
 {
@@ -29,18 +29,18 @@ class Locality extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function userAddresses()
-    {
-        return $this->hasMany('App\Models\UserAddress', 'localitie_id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function municipality()
     {
         return $this->belongsTo('App\Models\Municipality', 'municipalitie_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userAddresses()
+    {
+        return $this->hasMany('App\Models\UserAddress', 'localitie_id');
     }
 }

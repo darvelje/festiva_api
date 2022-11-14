@@ -18,12 +18,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $discount_status
  * @property float $discount_value
  * @property integer $rating
- * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
- * @property ShopProductPhoto[] $shopProductPhotos
- * @property User[] $users
  * @property Shop $shop
  * @property OrderProduct[] $orderProducts
  * @property ShopProductsPricesrate[] $shopProductsPricesrates
+ * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
+ * @property ShopProductPhoto[] $shopProductPhotos
+ * @property User[] $users
  */
 class ShopProduct extends Model
 {
@@ -31,30 +31,6 @@ class ShopProduct extends Model
      * @var array
      */
     protected $fillable = ['shop_id', 'name', 'stock', 'quantity_min', 'created_at', 'updated_at', 'slug', 'status', 'description', 'discount_status', 'discount_value', 'rating'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopProductsHasCategoriesProducts()
-    {
-        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopProductPhotos()
-    {
-        return $this->hasMany('App\Models\ShopProductPhoto');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function users()
-    {
-        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -78,5 +54,29 @@ class ShopProduct extends Model
     public function shopProductsPricesrates()
     {
         return $this->hasMany('App\Models\ShopProductsPricesrate');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductsHasCategoriesProducts()
+    {
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopProductPhotos()
+    {
+        return $this->hasMany('App\Models\ShopProductPhoto');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
     }
 }

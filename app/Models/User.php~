@@ -2,11 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property integer $id
@@ -20,37 +16,17 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property string $created_at
  * @property string $remember_token
- * @property Notification[] $notifications
- * @property ShopProduct[] $shopProducts
  * @property Order[] $orders
+ * @property Notification[] $notifications
  * @property UserAddress[] $userAddresses
- *
+ * @property ShopProduct[] $shopProducts
  */
-class User extends Authenticatable
+class User extends Model
 {
-
-    use HasApiTokens, HasFactory, Notifiable;
-
     /**
      * @var array
      */
     protected $fillable = ['name', 'last_name', 'email', 'updated_at', 'phone', 'avatar', 'email_verified_at', 'password', 'created_at', 'remember_token'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function notifications()
-    {
-        return $this->hasMany('App\Models\Notification');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function shopProducts()
-    {
-        return $this->belongsToMany('App\Models\ShopProduct', 'user_favorites_has_shop_products');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -63,8 +39,24 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function userAddresses()
     {
         return $this->hasMany('App\Models\UserAddress');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function shopProducts()
+    {
+        return $this->belongsToMany('App\Models\ShopProduct', 'user_favorites_has_shop_products');
     }
 }

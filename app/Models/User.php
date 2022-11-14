@@ -16,10 +16,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $password
  * @property string $created_at
  * @property string $remember_token
- * @property Order[] $orders
  * @property Notification[] $notifications
- * @property UserAddress[] $userAddresses
  * @property ShopProduct[] $shopProducts
+ * @property Order[] $orders
+ * @property UserAddress[] $userAddresses
  */
 class User extends Model
 {
@@ -27,6 +27,22 @@ class User extends Model
      * @var array
      */
     protected $fillable = ['name', 'last_name', 'email', 'updated_at', 'phone', 'avatar', 'email_verified_at', 'password', 'created_at', 'remember_token'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function shopProducts()
+    {
+        return $this->belongsToMany('App\Models\ShopProduct', 'user_favorites_has_shop_products');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -39,24 +55,8 @@ class User extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function notifications()
-    {
-        return $this->hasMany('App\Models\Notification');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function userAddresses()
     {
         return $this->hasMany('App\Models\UserAddress');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function shopProducts()
-    {
-        return $this->belongsToMany('App\Models\ShopProduct', 'user_favorites_has_shop_products');
     }
 }

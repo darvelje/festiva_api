@@ -13,32 +13,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $slug
- * @property string $status
+ * @property boolean $status
  * @property string $description
  * @property boolean $discount_status
  * @property float $discount_value
  * @property integer $rating
- * @property Shop $shop
+ * @property string $abstract
  * @property OrderProduct[] $orderProducts
  * @property ShopProductsPricesrate[] $shopProductsPricesrates
- * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
- * @property ShopProductPhoto[] $shopProductPhotos
  * @property User[] $users
+ * @property ShopProductPhoto[] $shopProductPhotos
+ * @property ShopProductsHasCategoriesProduct[] $shopProductsHasCategoriesProducts
+ * @property Shop $shop
  */
 class ShopProduct extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['shop_id', 'name', 'stock', 'quantity_min', 'created_at', 'updated_at', 'slug', 'status', 'description', 'discount_status', 'discount_value', 'rating'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function shop()
-    {
-        return $this->belongsTo('App\Models\Shop');
-    }
+    protected $fillable = ['shop_id', 'name', 'stock', 'quantity_min', 'created_at', 'updated_at', 'slug', 'status', 'description', 'discount_status', 'discount_value', 'rating', 'abstract'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -57,11 +50,11 @@ class ShopProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function shopProductsHasCategoriesProducts()
+    public function users()
     {
-        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
+        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
     }
 
     /**
@@ -73,10 +66,18 @@ class ShopProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function users()
+    public function shopProductsHasCategoriesProducts()
     {
-        return $this->belongsToMany('App\Models\User', 'user_favorites_has_shop_products');
+        return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo('App\Models\Shop');
     }
 }

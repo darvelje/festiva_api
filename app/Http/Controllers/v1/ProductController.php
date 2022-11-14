@@ -140,9 +140,18 @@ class ProductController extends Controller
             $products =$shop->shopProducts;
 
             foreach ($products as $product){
-                if($product->shopProductsHasCategoriesProducts->count()>0){
-                    $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
-                    $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+
+                $product->categories = $product->shopProductsHasCategoriesProducts;
+
+                foreach ( $product->categories as $prod_cat){
+                    $prod_cat->category_id = $prod_cat->categoriesProduct->id;
+                    $prod_cat->category_name = $prod_cat->categoriesProduct->name;
+                    unset($prod_cat->id);
+                    unset($prod_cat->category_product_id);
+                    unset($prod_cat->shop_product_id);
+                    unset($prod_cat->created_at);
+                    unset($prod_cat->updated_at);
+                    unset($prod_cat->categoriesProduct);
                 }
 
                 $product->photos = $product->shopProductPhotos;
@@ -275,6 +284,7 @@ class ProductController extends Controller
             $product->status = $request->productStatus;
             $product->discount_status = $request->productDiscountStatus;
             $product->discount_value = $request->productDiscountValue;
+            $product->abstract = $request->productAbstract;
             $product->rating = 1;
 
             $product->save();
@@ -292,10 +302,21 @@ class ProductController extends Controller
                 }
             }
 
-            $productCategory = new ShopProductsHasCategoriesProduct();
-            $productCategory->shop_product_id = $product->id;
-            $productCategory->category_product_id = $request->productCategory;
-            $productCategory->save();
+//            $productCategory = new ShopProductsHasCategoriesProduct();
+//            $productCategory->shop_product_id = $product->id;
+//            $productCategory->category_product_id = $request->productCategory;
+//            $productCategory->save();
+
+            $lengthArrayProductCategory = count($request->productCategory);
+
+            if($lengthArrayProductCategory != 0){
+                for($i=0; $i<$lengthArrayProductCategory; $i++){
+                    $productCategory = new ShopProductsHasCategoriesProduct();
+                    $productCategory->shop_product_id = $request->productId;
+                    $productCategory->category_product_id = $request->productCategory[$i];
+                    $productCategory->save();
+                }
+            }
 
             $lengthArrayProductPrice = count($request->productPrice);
 
@@ -339,6 +360,7 @@ class ProductController extends Controller
             $product->status = $request->productStatus;
             $product->discount_status = $request->productDiscountStatus;
             $product->discount_value = $request->productDiscountValue;
+            $product->abstract = $request->productAbstract;
 
             $product->update();
 

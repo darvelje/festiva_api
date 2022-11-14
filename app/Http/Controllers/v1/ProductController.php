@@ -83,6 +83,7 @@ class ProductController extends Controller
 
         if($product){
             if($product->shopProductsHasCategoriesProducts->count()>0){
+                $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
                 $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
             }
 
@@ -140,6 +141,7 @@ class ProductController extends Controller
 
             foreach ($products as $product){
                 if($product->shopProductsHasCategoriesProducts->count()>0){
+                    $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
                     $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
                 }
 
@@ -387,9 +389,9 @@ class ProductController extends Controller
             for($i=0; $i<$lengthArrayProductPrice; $i++){
                 $productPrice = new ShopProductsPricesrate();
                 $productPrice->shop_product_id = $request->productId;
-                $productPrice->currency_code = $request->productPrice[$i]['currencyCode'];
-                $productPrice->rate = $request->productPrice[$i]['value'];
-                $productPrice->main = $request->productPrice[$i]['main'];
+                $productPrice->currency_id = $request->productPrice[$i]['currencyId'];
+                $productPrice->price = $request->productPrice[$i]['value'];
+
                 $productPrice->save();
             }
 

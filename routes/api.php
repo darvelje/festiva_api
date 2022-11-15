@@ -83,6 +83,7 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Product
     Route::get('/v1/product/all', [ProductController::class, 'getProducts']);
+    Route::get('/v1/product/most-seller', [ProductController::class, 'getProductsMostSeller']);
     Route::get('/v1/product/view/{productSlug}', [ProductController::class, 'getProductBySlug']);
     Route::get('/v1/products/category/{categorySlug}', [ProductController::class, 'getProductByCategorySlug']);
     Route::get('/v1/business/products/{businessUrl}', [ProductController::class, 'getProductByBusinessSlug']);

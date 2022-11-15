@@ -201,6 +201,7 @@ class ProductController extends Controller
                 foreach ( $product->categories as $prod_cat){
                     $prod_cat->category_id = $prod_cat->categoriesProduct->id;
                     $prod_cat->category_name = $prod_cat->categoriesProduct->name;
+                    $prod_cat->category_slug = $prod_cat->categoriesProduct->slug;
                     unset($prod_cat->id);
                     unset($prod_cat->category_product_id);
                     unset($prod_cat->shop_product_id);

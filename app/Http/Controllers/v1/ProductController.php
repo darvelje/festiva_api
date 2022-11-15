@@ -276,6 +276,7 @@ class ProductController extends Controller
                 $product->product_id = $product->shopProduct->id;
                 $product->product_name = $product->shopProduct->name;
                 $product->product_slug = $product->shopProduct->slug;
+                $product->product_discount = $product->shopProduct->discount_value ;
                 $product->product_stock = $product->shopProduct->stock;
                 $product->product_quantity_min = $product->shopProduct->quantity_min;
                 $product->product_status = $product->shopProduct->status;

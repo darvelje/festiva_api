@@ -347,7 +347,7 @@ class ProductController extends Controller
             $product->status = $request->productStatus;
             $product->discount_status = $request->productDiscountStatus;
             $product->discount_value = $request->productDiscountValue;
-            $product->abstract = $request->productAbstract;
+            $product->summary = $request->productSummary;
             $product->rating = 1;
 
             $product->save();
@@ -423,7 +423,7 @@ class ProductController extends Controller
             $product->status = $request->productStatus;
             $product->discount_status = $request->productDiscountStatus;
             $product->discount_value = $request->productDiscountValue;
-            $product->abstract = $request->productAbstract;
+            $product->summary = $request->productSummary;
 
             $product->update();
 

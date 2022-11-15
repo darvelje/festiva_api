@@ -12,6 +12,7 @@ use App\Http\Controllers\v1\SettingsController;
 use App\Http\Controllers\v1\UserAddressController;
 use App\Http\Controllers\v1\UserController;
 use App\Http\Controllers\v1\PromosController;
+use App\Http\Controllers\v1\SuscriptorsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -115,3 +116,8 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/promos/new', [PromosController::class, 'newPromo']);
     Route::post('/v1/promos/update', [PromosController::class, 'updatePromo']);
     Route::delete('/v1/promos/delete', [PromosController::class, 'deletePromo']);
+
+// section Suscriptors
+    Route::get('/v1/suscriptors/all', [SuscriptorsController::class, 'getSuscriptors']);
+    Route::post('/v1/suscriptors/new', [SuscriptorsController::class, 'newSuscriptor']);
+    Route::delete('/v1/suscriptors/delete', [SuscriptorsController::class, 'deleteSuscriptor']);

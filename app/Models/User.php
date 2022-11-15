@@ -17,8 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $remember_token
  * @property Notification[] $notifications
- * @property ShopProduct[] $shopProducts
  * @property Order[] $orders
+ * @property ShopProduct[] $shopProducts
  * @property UserAddress[] $userAddresses
  */
 class User extends Model
@@ -37,19 +37,19 @@ class User extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function shopProducts()
-    {
-        return $this->belongsToMany('App\Models\ShopProduct', 'user_favorites_has_shop_products');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orders()
     {
         return $this->hasMany('App\Models\Order');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function shopProducts()
+    {
+        return $this->belongsToMany('App\Models\ShopProduct', 'user_favorites_has_shop_products');
     }
 
     /**

@@ -24,11 +24,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $user_id
  * @property string $slug
  * @property float $comission
- * @property ShopDeliveryZone[] $shopDeliveryZones
- * @property ShopCoupon[] $shopCoupons
- * @property Order[] $orders
  * @property ShopProduct[] $shopProducts
+ * @property Order[] $orders
+ * @property ShopCoupon[] $shopCoupons
  * @property ShopCurrency[] $shopCurrencies
+ * @property ShopDeliveryZone[] $shopDeliveryZones
  */
 class Shop extends Model
 {
@@ -40,17 +40,9 @@ class Shop extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopDeliveryZones()
+    public function shopProducts()
     {
-        return $this->hasMany('App\Models\ShopDeliveryZone');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function shopCoupons()
-    {
-        return $this->hasMany('App\Models\ShopCoupon');
+        return $this->hasMany('App\Models\ShopProduct');
     }
 
     /**
@@ -64,9 +56,9 @@ class Shop extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopProducts()
+    public function shopCoupons()
     {
-        return $this->hasMany('App\Models\ShopProduct');
+        return $this->hasMany('App\Models\ShopCoupon');
     }
 
     /**
@@ -75,5 +67,13 @@ class Shop extends Model
     public function shopCurrencies()
     {
         return $this->hasMany('App\Models\ShopCurrency');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shopDeliveryZones()
+    {
+        return $this->hasMany('App\Models\ShopDeliveryZone');
     }
 }

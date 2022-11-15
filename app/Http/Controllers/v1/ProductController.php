@@ -140,6 +140,7 @@ class ProductController extends Controller
             if($product->shopProductsHasCategoriesProducts->count()>0){
                 $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
                 $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+                $product->category_slug = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->slug;
             }
 
             $product->photos = $product->shopProductPhotos;

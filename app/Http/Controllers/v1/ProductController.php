@@ -327,6 +327,74 @@ class ProductController extends Controller
             );
         }
 
+    }
+
+    //section Get_Product_Most_Saller_By_category_Slug
+    public function getProductMostSellerByCategorySlug(Request $request){
+
+        $category = CategoriesProduct::with(
+            'shopProducts',
+            'shopProducts.shopProductPhotos',
+            'shopProducts.shopProductsPricesrates',
+            'shopProducts.shopProductsPricesrates.currency')
+        ->whereSlug($request->categorySlug)->first();
+
+        if($category){
+            unset($category->created_at);
+            unset($category->updated_at);
+
+            $category->products =  $category->shopProducts;
+            
+            foreach ($category->products as $product){
+
+                $product->product_photo = $product->shopProductPhotos[0]->path_photo;
+
+                $product->product_price = $product->shopProductsPricesrates;
+
+                foreach ($product->product_price as $price){
+                    $price->product_price = $price->price;
+                    $price->product_currency_id = $price->currency_id;
+                    $price->product_currency_code = $price->currency->code;
+
+                    unset($price->id);
+                    unset($price->shop_product_id);
+                    unset($price->price);
+                    unset($price->created_at);
+                    unset($price->updated_at);
+                    unset($price->currency);
+                }
+
+                unset($product->shopProductsPricesrates);
+                unset($product->shopProductPhotos);
+
+                unset($product->category_product_id);
+                unset($product->laravel_through_key);
+                unset($product->shop_product_id);
+                unset($product->created_at);
+                unset($product->updated_at);
+                unset($product->id);
+
+            }
+
+            unset($category->shopProducts);
+
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Products',
+                    'category' => $category
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Category not found'
+                ]
+            );
+        }
 
     }
 

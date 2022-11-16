@@ -36,4 +36,8 @@ class CategoriesProduct extends Model
     {
         return $this->hasMany('App\Models\ShopProductsHasCategoriesProduct', 'category_product_id');
     }
+
+    public function shopProducts(){
+        return $this->hasManyThrough(ShopProduct::class, ShopProductsHasCategoriesProduct::class, 'category_product_id', 'id', 'id', 'shop_product_id')->orderByDesc('sales');
+    }
 }

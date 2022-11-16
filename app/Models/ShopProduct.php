@@ -81,4 +81,8 @@ class ShopProduct extends Model
     {
         return $this->hasMany('App\Models\ShopProductsPricesrate');
     }
+
+    public function categoryProducts(){
+        return $this->hasManyThrough(CategoriesProduct::class, ShopProductsHasCategoriesProduct::class, 'shop_product_id', 'id', 'id', 'category_product_id');
+    }
 }

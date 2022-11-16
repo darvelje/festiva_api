@@ -401,7 +401,7 @@ class ProductController extends Controller
 
     //section New_Product
     public function newProduct(Request $request){
-        
+
         try{
             DB::beginTransaction();
 

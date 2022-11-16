@@ -401,14 +401,7 @@ class ProductController extends Controller
 
     //section New_Product
     public function newProduct(Request $request){
-
-        return response()->json(
-            [
-                'code' => 'TEST',
-                'request' => $request->all()
-            ]
-        );
-
+        
         try{
             DB::beginTransaction();
 
@@ -447,7 +440,7 @@ class ProductController extends Controller
             if($lengthArrayProductCategory != 0){
                 for($i=0; $i<$lengthArrayProductCategory; $i++){
                     $productCategory = new ShopProductsHasCategoriesProduct();
-                    $productCategory->shop_product_id = $request->productId;
+                    $productCategory->shop_product_id = $product->id;
                     $productCategory->category_product_id = $request->productCategory[$i];
                     $productCategory->save();
                 }

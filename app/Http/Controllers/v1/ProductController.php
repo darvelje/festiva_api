@@ -344,7 +344,7 @@ class ProductController extends Controller
             unset($category->updated_at);
 
             $category->products =  $category->shopProducts;
-            
+
             foreach ($category->products as $product){
 
                 $product->product_photo = $product->shopProductPhotos[0]->path_photo;
@@ -372,7 +372,7 @@ class ProductController extends Controller
                 unset($product->shop_product_id);
                 unset($product->created_at);
                 unset($product->updated_at);
-                unset($product->id);
+               
 
             }
 

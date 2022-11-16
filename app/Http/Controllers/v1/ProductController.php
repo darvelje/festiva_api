@@ -402,6 +402,13 @@ class ProductController extends Controller
     //section New_Product
     public function newProduct(Request $request){
 
+        return response()->json(
+            [
+                'code' => 'TEST',
+                'request' => $request->all()
+            ]
+        );
+
         try{
             DB::beginTransaction();
 
@@ -433,7 +440,7 @@ class ProductController extends Controller
                     $productPhoto->save();
                 }
             }
-            
+
 
             $lengthArrayProductCategory = count($request->productCategory);
 

@@ -433,11 +433,7 @@ class ProductController extends Controller
                     $productPhoto->save();
                 }
             }
-
-//            $productCategory = new ShopProductsHasCategoriesProduct();
-//            $productCategory->shop_product_id = $product->id;
-//            $productCategory->category_product_id = $request->productCategory;
-//            $productCategory->save();
+            
 
             $lengthArrayProductCategory = count($request->productCategory);
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\v1\BusinessController;
+use App\Http\Controllers\v1\LocationController;
 use App\Http\Controllers\v1\BusinessCouponsController;
 use App\Http\Controllers\v1\BusinessCurrencyController;
 use App\Http\Controllers\v1\BusinessDeliveryZonesController;
@@ -36,6 +37,11 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/business/new', [BusinessController::class, 'newBusiness']);
     Route::post('/v1/business/update', [BusinessController::class, 'updateBusiness']);
     Route::delete('/v1/business/delete', [BusinessController::class, 'deleteBusiness']);
+
+// section Routes_Location
+    Route::get('/v1/provinces/all', [LocationController::class, 'getProvinces']);
+    Route::get('/v1/municipalities/{provinceId}', [LocationController::class, 'getMunicipalities']);
+    Route::get('/v1/localities/{municipalityId}', [LocationController::class, 'getLocalities']);
 
 // section Routes_Business_Coupons
     Route::get('/v1/business/coupons/all', [BusinessCouponsController::class, 'getShopCoupons']);

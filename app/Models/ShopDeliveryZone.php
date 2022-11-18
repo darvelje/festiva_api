@@ -10,13 +10,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $localitie_id
  * @property integer $municipalitie_id
  * @property integer $province_id
- * @property integer $currency_id
  * @property integer $time
  * @property string $time_type
- * @property float $price
  * @property string $created_at
  * @property string $updated_at
- * @property Currency $currency
+ * @property ShopZonesDeliveryPricesrate[] $shopZonesDeliveryPricesrates
  * @property Shop $shop
  * @property Locality $locality
  * @property Municipality $municipality
@@ -27,14 +25,14 @@ class ShopDeliveryZone extends Model
     /**
      * @var array
      */
-    protected $fillable = ['shop_id', 'localitie_id', 'municipalitie_id', 'province_id', 'currency_id', 'time', 'time_type', 'price', 'created_at', 'updated_at'];
+    protected $fillable = ['shop_id', 'localitie_id', 'municipalitie_id', 'province_id', 'time', 'time_type', 'created_at', 'updated_at'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function currency()
+    public function shopZonesDeliveryPricesrates()
     {
-        return $this->belongsTo('App\Models\Currency');
+        return $this->hasMany('App\Models\ShopZonesDeliveryPricesrate', 'shop_zones_delivery_id');
     }
 
     /**

@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property string $created_at
  * @property string $updated_at
- * @property Municipality[] $municipalities
  * @property ShopDeliveryZone[] $shopDeliveryZones
+ * @property Municipality[] $municipalities
  */
 class Province extends Model
 {
@@ -23,16 +23,16 @@ class Province extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function municipalities()
+    public function shopDeliveryZones()
     {
-        return $this->hasMany('App\Models\Municipality');
+        return $this->hasMany('App\Models\ShopDeliveryZone');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopDeliveryZones()
+    public function municipalities()
     {
-        return $this->hasMany('App\Models\ShopDeliveryZone');
+        return $this->hasMany('App\Models\Municipality');
     }
 }

@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email
  * @property string $name
  * @property string $category
+ * @property string $created_at
+ * @property string $updated_at
  */
 class Suscription extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['email', 'name', 'category'];
+    protected $fillable = ['email', 'name', 'category', 'created_at', 'updated_at'];
 }

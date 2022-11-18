@@ -96,8 +96,7 @@ class BusinessDeliveryZonesController extends Controller
                 'businessDeliveryZoneProvinceId' => 'required',
                 'businessDeliveryZoneTime' => 'required',
                 'businessDeliveryZoneTimeType' => 'required',
-                'businessDeliveryZoneCurrencyId' => 'required',
-                'businessDeliveryZonePrice' => 'required',
+                'businessDeliveryZonePrices' => 'required',
             ]);
 
             if($validateRequest->fails()){
@@ -120,7 +119,7 @@ class BusinessDeliveryZonesController extends Controller
             $shopDeliveryZone->save();
 
             $lengthArrayDeliveryZonesPrices = count($request->businessDeliveryZonePrices);
-            
+
             if($lengthArrayDeliveryZonesPrices != 0){
                 for($i=0; $i<$lengthArrayDeliveryZonesPrices; $i++){
                     $shopDeliveryZonePricesrate = new ShopZonesDeliveryPricesrate();

@@ -71,7 +71,7 @@ class BusinessDeliveryZonesController extends Controller
     //section Get_BusinessDeliveryZonesById
     public function getBusinessDeliveryZoneById(Request $request){
 
-        $shopDeliveryZone = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province', 'shopDeliveryZones.shopZonesDeliveryPricesrates', 'shopDeliveryZones.shopZonesDeliveryPricesrates.currency')->whereId($request->businessDeliveryZoneId)->first();
+        $shopDeliveryZone = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province', 'shopZonesDeliveryPricesrates', 'shopZonesDeliveryPricesrates.currency')->whereId($request->businessDeliveryZoneId)->first();
 
        if($shopDeliveryZone){
            $shopDeliveryZone->localitie = $shopDeliveryZone->locality->name;

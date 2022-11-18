@@ -34,6 +34,6 @@ class ShopZonesDeliveryPricesrate extends Model
      */
     public function currency()
     {
-        return $this->belongsTo('App\Models\Currency', 'curency_id');
+        return $this->belongsTo('App\Models\Currency', 'currency_id');
     }
 }

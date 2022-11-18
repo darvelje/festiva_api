@@ -94,7 +94,7 @@ class BusinessDeliveryZonesController extends Controller
                 'businessDeliveryZoneProvinceId' => 'required',
                 'businessDeliveryZoneTime' => 'required',
                 'businessDeliveryZoneTimeType' => 'required',
-                'businessDeliveryZoneCurrencyCode' => 'required',
+                'businessDeliveryZoneCurrencyId' => 'required',
                 'businessDeliveryZonePrice' => 'required',
             ]);
 
@@ -149,7 +149,7 @@ class BusinessDeliveryZonesController extends Controller
             $shopDeliveryZone->province_id = $request->businessDeliveryZoneProvinceId;
             $shopDeliveryZone->time = $request->businessDeliveryZoneTime;
             $shopDeliveryZone->time_type = $request->businessDeliveryZoneTimeType;
-            $shopDeliveryZone->currency_code = $request->businessDeliveryZoneCurrencyCode;
+            $shopDeliveryZone->currency_id = $request->businessDeliveryZoneCurrencyId;
             $shopDeliveryZone->price= $request->businessDeliveryZonePrice;
 
             $shopDeliveryZone->update();

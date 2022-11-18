@@ -17,7 +17,7 @@ class BusinessDeliveryZonesController extends Controller
     //section Get_Business_Delivery_Zones
     public function getBusinessDeliveryZonesByBusinessSlug(Request $request){
 
-        $shop= Shop::with('shopDeliveryZones', 'shopDeliveryZones.locality', 'shopDeliveryZones.locality.municipality', 'shopDeliveryZones.locality.municipality.province', 'shopDeliveryZones.shopZonesDeliveryPricesrates')->whereSlug($request->businessUrl)->first();
+        $shop= Shop::with('shopDeliveryZones', 'shopDeliveryZones.locality', 'shopDeliveryZones.locality.municipality', 'shopDeliveryZones.locality.municipality.province', 'shopDeliveryZones.shopZonesDeliveryPricesrates', 'shopDeliveryZones.shopZonesDeliveryPricesrates.currency')->whereSlug($request->businessUrl)->first();
 
         if($shop){
 
@@ -28,6 +28,23 @@ class BusinessDeliveryZonesController extends Controller
                 $zone->localitie = $zone->locality->name;
                 $zone->municipalitie = $zone->locality->municipality->name;
                 $zone->province = $zone->locality->municipality->province->name;
+
+                $zone->prices = $zone->shopZonesDeliveryPricesrates;
+
+                foreach ($zone->prices as $price){
+//                    $price->price = $price->price;
+                    $price->product_currency_id = $price->currency_id;
+                    $price->product_currency_code = $price->currency->code;
+
+//                    unset($price->id);
+//                    unset($price->shop_product_id);
+//                    unset($price->price);
+                    unset($price->created_at);
+                    unset($price->updated_at);
+                    unset($price->currency);
+                }
+
+                unset($zone->shopZonesDeliveryPricesrates);
 
                 unset($zone->locality);
                 unset($zone->created_at);

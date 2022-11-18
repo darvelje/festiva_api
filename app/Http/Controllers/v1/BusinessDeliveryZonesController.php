@@ -91,7 +91,7 @@ class BusinessDeliveryZonesController extends Controller
                unset($price->updated_at);
            }
 
-           unset($zone->shopZonesDeliveryPricesrates);
+           unset($shopDeliveryZone->shopZonesDeliveryPricesrates);
 
            unset($shopDeliveryZone->locality);
            unset($shopDeliveryZone->created_at);

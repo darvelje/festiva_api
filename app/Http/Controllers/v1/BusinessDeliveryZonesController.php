@@ -31,19 +31,19 @@ class BusinessDeliveryZonesController extends Controller
 
                 $zone->prices = $zone->shopZonesDeliveryPricesrates;
 
-                foreach ($zone->prices as $price){
-//                    $price->price = $price->price;
-                    $price->product_currency_id = $price->currency_id;
-                    $price->product_currency_code = $price->currency->code;
-
-//                    unset($price->id);
-//                    unset($price->shop_product_id);
-//                    unset($price->price);
-                    unset($price->created_at);
-                    unset($price->updated_at);
-                    unset($price->currency);
-                }
-
+//                foreach ($zone->prices as $price){
+////                    $price->price = $price->price;
+//                    $price->product_currency_id = $price->currency_id;
+//                    $price->product_currency_code = $price->currency->code;
+//
+////                    unset($price->id);
+////                    unset($price->shop_product_id);
+////                    unset($price->price);
+//                    unset($price->created_at);
+//                    unset($price->updated_at);
+//                    unset($price->currency);
+//                }
+//
                 unset($zone->shopZonesDeliveryPricesrates);
 
                 unset($zone->locality);

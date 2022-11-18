@@ -160,10 +160,22 @@ class BusinessDeliveryZonesController extends Controller
             $shopDeliveryZone->province_id = $request->businessDeliveryZoneProvinceId;
             $shopDeliveryZone->time = $request->businessDeliveryZoneTime;
             $shopDeliveryZone->time_type = $request->businessDeliveryZoneTimeType;
-            $shopDeliveryZone->currency_id = $request->businessDeliveryZoneCurrencyId;
-            $shopDeliveryZone->price= $request->businessDeliveryZonePrice;
 
             $shopDeliveryZone->update();
+
+            ShopZonesDeliveryPricesrate::where('shop_zones_delivery_id', $request->businessDeliveryZoneId)->delete();
+
+            $lengthArrayDeliveryZonesPrices = count($request->businessDeliveryZonePrices);
+
+            if($lengthArrayDeliveryZonesPrices != 0){
+                for($i=0; $i<$lengthArrayDeliveryZonesPrices; $i++){
+                    $shopDeliveryZonePricesrate = new ShopZonesDeliveryPricesrate();
+                    $shopDeliveryZonePricesrate->shop_zones_delivery_id = $shopDeliveryZone->id;
+                    $shopDeliveryZonePricesrate->currency_id = $request->businessDeliveryZonePrices[$i]['currencyId'];
+                    $shopDeliveryZonePricesrate->price = $request->businessDeliveryZonePrices[$i]['price'];
+                    $shopDeliveryZonePricesrate->save();
+                }
+            }
 
             DB::commit();
 

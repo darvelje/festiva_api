@@ -123,15 +123,6 @@ class BusinessCurrencyController extends Controller
     //section Update_Business_Currency
     public function updateBusinessCurrency(Request $request){
 
-        $shopCurrency = ShopCurrency::whereId($request->shopCurrencyId)->first();
-
-        return response()->json(
-            [
-                'code' => 'test',
-                'ver' => $shopCurrency
-            ]
-        );
-
         try{
             DB::beginTransaction();
 

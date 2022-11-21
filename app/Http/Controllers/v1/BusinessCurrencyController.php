@@ -32,7 +32,7 @@ class BusinessCurrencyController extends Controller
     //section Get_Business_Currency
     public function getBusinessCurrencyById(Request $request){
 
-        $shopCurrency = ShopCurrency::find($request->shopCurrencyId);
+        $shopCurrency = ShopCurrency::with('currency')->find($request->shopCurrencyId);
 
         if($shopCurrency){
             return response()->json(

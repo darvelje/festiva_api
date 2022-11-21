@@ -121,8 +121,6 @@ class BusinessDeliveryZonesController extends Controller
 
             $validateRequest = Validator::make($request->all(), [
                 'businessDeliveryZoneShopId' => 'required',
-                'businessDeliveryZoneLocalitieId' => 'required',
-                'businessDeliveryZoneMunicipalitieId' => 'required',
                 'businessDeliveryZoneProvinceId' => 'required',
                 'businessDeliveryZoneTime' => 'required',
                 'businessDeliveryZoneTimeType' => 'required',

@@ -123,6 +123,13 @@ class BusinessCurrencyController extends Controller
     //section Update_Business_Currency
     public function updateBusinessCurrency(Request $request){
 
+        return response()->json(
+            [
+                'code' => 'test',
+                'request' => $request->all()
+            ]
+        );
+
         try{
             DB::beginTransaction();
 

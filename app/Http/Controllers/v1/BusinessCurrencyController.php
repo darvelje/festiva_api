@@ -128,8 +128,8 @@ class BusinessCurrencyController extends Controller
 
             $shopCurrency = ShopCurrency::whereId($request->shopCurrencyId)->first();
 
-            $shopCurrency->shop_id = $request->shopCurrencyShopId;
-            $shopCurrency->currency_id = $request->shopCurrencyId;
+//            $shopCurrency->shop_id = $request->shopCurrencyShopId;
+//            $shopCurrency->currency_id = $request->shopCurrencyId;
             $shopCurrency->rate = $request->shopCurrencyRate;
             $shopCurrency->main = $request->shopCurrencyMain;
 

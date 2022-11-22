@@ -19,6 +19,7 @@ class BusinessDeliveryZonesController extends Controller
 
         $shop= Shop::with('shopDeliveryZones', 'shopDeliveryZones.locality', 'shopDeliveryZones.locality.municipality', 'shopDeliveryZones.locality.municipality.province', 'shopDeliveryZones.shopZonesDeliveryPricesrates', 'shopDeliveryZones.shopZonesDeliveryPricesrates.currency')->whereSlug($request->businessUrl)->first();
 
+        
         if($shop){
 
             $shopDeliveryZone = $shop->shopDeliveryZones;

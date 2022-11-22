@@ -21,9 +21,7 @@ class CategoryController extends Controller
 
     //section Get_Categories
     public function getCategories(){
-
-        //$categories = CategoriesProduct::all();
-
+        
         $categories = CategoriesProduct::with(
             'shopProductsHasCategoriesProducts',
             'shopProductsHasCategoriesProducts.shopProduct')->get();
@@ -37,9 +35,6 @@ class CategoryController extends Controller
             unset($category->created_at);
             unset($category->updated_at);
             unset($category->parent_id);
-
-
-
             }
 
         return response()->json(

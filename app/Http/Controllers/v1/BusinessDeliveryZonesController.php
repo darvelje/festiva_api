@@ -17,16 +17,8 @@ class BusinessDeliveryZonesController extends Controller
     //section Get_Business_Delivery_Zones
     public function getBusinessDeliveryZonesByBusinessSlug(Request $request){
 
-        return response()->json(
-            [
-                'code' => 'test',
-                'message' => 'aqui estoy llegando'
-            ]
-        );
-
         $shop= Shop::with('shopDeliveryZones', 'shopDeliveryZones.locality', 'shopDeliveryZones.locality.municipality', 'shopDeliveryZones.locality.municipality.province', 'shopDeliveryZones.shopZonesDeliveryPricesrates', 'shopDeliveryZones.shopZonesDeliveryPricesrates.currency')->whereSlug($request->businessUrl)->first();
-
-
+        
         if($shop){
 
             $shopDeliveryZone = $shop->shopDeliveryZones;

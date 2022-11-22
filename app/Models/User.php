@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property integer $id
@@ -21,8 +25,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property ShopProduct[] $shopProducts
  * @property Order[] $orders
  */
-class User extends Model
+class User extends  Authenticatable
 {
+
+    use HasFactory, Notifiable, HasApiTokens;
+
     /**
      * @var array
      */

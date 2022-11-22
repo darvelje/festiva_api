@@ -17,22 +17,35 @@ class BusinessDeliveryZonesController extends Controller
     //section Get_Business_Delivery_Zones
     public function getBusinessDeliveryZonesByBusinessSlug(Request $request){
 
-        $shop= Shop::with('shopDeliveryZones', 'shopDeliveryZones.locality', 'shopDeliveryZones.locality.municipality', 'shopDeliveryZones.locality.municipality.province', 'shopDeliveryZones.shopZonesDeliveryPricesrates', 'shopDeliveryZones.shopZonesDeliveryPricesrates.currency')->whereSlug($request->businessUrl)->first();
-        
+        $shop= Shop::whereSlug($request->businessUrl)->first();
+
         if($shop){
 
-            $shopDeliveryZone = $shop->shopDeliveryZones;
+            $allZones = collect();
 
-            foreach ($shopDeliveryZone as $zone){
+            $zonesShop = ShopDeliveryZone::with('shopZonesDeliveryPricesrates', 'shopZonesDeliveryPricesrates.currency')->where('shop_id', $shop->id)->get();
 
-                $zone->localitie = $zone->locality->name;
-                $zone->municipalitie = $zone->locality->municipality->name;
-                $zone->province = $zone->locality->municipality->province->name;
+            foreach ($zonesShop as $zone) {
+                $allZones->push($zone);
+            }
+
+            $allZones->map(function ($zone) {
+                if($zone->localitie_id === null && $zone->municipalitie_id === null){
+                   $zone->province_name = $zone->province->name;
+                }
+                else if($zone->localitie_id === null && $zone->municipalitie_id !== null){
+                    $zone->municipalitie_name = $zone->municipality->name;
+                    $zone->province_name = $zone->province->name;
+                }
+                else if($zone->localitie_id !== null){
+                    $zone->localitie_name = $zone->locality->name;
+                    $zone->municipalitie_name = $zone->municipality->name;
+                    $zone->province_name = $zone->province->name;
+                }
 
                 $zone->prices = $zone->shopZonesDeliveryPricesrates;
 
                 foreach ($zone->prices as $price){
-
                     $price->currency_code = $price->currency->code;
 
                     unset($price->shop_zones_delivery_id);
@@ -43,17 +56,20 @@ class BusinessDeliveryZonesController extends Controller
                 }
 
                 unset($zone->shopZonesDeliveryPricesrates);
-
-                unset($zone->locality);
                 unset($zone->created_at);
                 unset($zone->updated_at);
-            }
+                unset($zone->created_at);
+                unset($zone->municipality);
+                unset($zone->locality);
+                unset($zone->province);
+
+            });
 
             return response()->json(
                 [
                     'code' => 'ok',
                     'message' => 'Business delivery zones',
-                    'shopDeliveryZones' => $shopDeliveryZone
+                    'shopDeliveryZones' => $allZones
                 ]
             );
         }

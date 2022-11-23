@@ -21,7 +21,7 @@ class CategoryController extends Controller
 
     //section Get_Categories
     public function getCategories(){
-        
+
         $categories = CategoriesProduct::with(
             'shopProductsHasCategoriesProducts',
             'shopProductsHasCategoriesProducts.shopProduct')->get();
@@ -83,6 +83,7 @@ class CategoryController extends Controller
             if($request->categoryParentId){
                 $category->parent_id =$request->categoryParentId;
             }
+            $category->icon = $request->categoryIcon;
 
             $category->save();
 
@@ -115,6 +116,7 @@ class CategoryController extends Controller
             if($request->categoryParentId){
                 $category->parent_id =$request->categoryParentId;
             }
+            $category->icon = $request->categoryIcon;
 
             $category->update();
 

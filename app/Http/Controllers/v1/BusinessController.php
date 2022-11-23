@@ -64,6 +64,60 @@ class BusinessController extends Controller
 
     }
 
+    //section change_Status_Delivery
+    public function changeStatusDelivery(Request $request){
+        try{
+            DB::beginTransaction();
+
+            $business = Shop::whereId($request->businessId)->first();
+
+            $business->delivery = $request->businessDelivery;
+
+            $business->update();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Business delivery updated successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
+    //section change_Status_Pick
+    public function changeStatusPick(Request $request){
+        try{
+            DB::beginTransaction();
+
+            $business = Shop::whereId($request->businessId)->first();
+
+            $business->pick = $request->businessPick;
+
+            $business->update();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Business pick updated successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
     //section New_Business
     public function newBusiness(Request $request){
 
@@ -96,6 +150,8 @@ class BusinessController extends Controller
             $business->email = $request->businessEmail;
             $business->url = $request->businessUrl;
             $business->comission = $request->businessComission;
+            $business->delivery = false;
+            $business->pick = false;
             if ($request->hasFile('businessAvatar')) {
                 $business->avatar = self::uploadImage($request->businessAvatar, $request->businessName);
             }

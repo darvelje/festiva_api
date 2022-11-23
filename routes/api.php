@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/business/view/{businessSlug}', [BusinessController::class, 'getBusinessBySlug']);
     Route::post('/v1/business/new', [BusinessController::class, 'newBusiness']);
     Route::post('/v1/business/update', [BusinessController::class, 'updateBusiness']);
+    Route::post('/v1/business/update/delivery', [BusinessController::class, 'changeStatusDelivery']);
+    Route::post('/v1/business/update/pick', [BusinessController::class, 'changeStatusPick']);
     Route::delete('/v1/business/delete', [BusinessController::class, 'deleteBusiness']);
 
 // section Routes_Location

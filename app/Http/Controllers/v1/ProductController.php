@@ -37,6 +37,8 @@ class ProductController extends Controller
                     $prod_cat->parent_id = $prod_cat->categoriesProduct->parent_id;
                     $prod_cat->icon = $prod_cat->categoriesProduct->icon;
                     unset($prod_cat->categoriesProduct);
+                    unset($prod_cat->shop_product_id);
+                    unset($prod_cat->category_product_id);
                     unset($prod_cat->created_at);
                     unset($prod_cat->updated_at);
                 }

@@ -28,10 +28,18 @@ class ProductController extends Controller
 
         if($products){
             foreach ($products as $product){
-//                if($product->shopProductsHasCategoriesProducts->count()>0){
-//                    $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
-//                    $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
-//                }
+
+                $product->categories = $product->shopProductsHasCategoriesProducts;
+
+                foreach ($product->categories as $prod_cat){
+                    $prod_cat->id = $prod_cat->categoriesProduct->id;
+                    $prod_cat->name = $prod_cat->categoriesProduct->name;
+                    $prod_cat->parent_id = $prod_cat->categoriesProduct->parent_id;
+                    $prod_cat->icon = $prod_cat->categoriesProduct->icon;
+                    unset($prod_cat->categoriesProduct);
+                    unset($prod_cat->created_at);
+                    unset($prod_cat->updated_at);
+                }
 
                 $product->photos = $product->shopProductPhotos;
 

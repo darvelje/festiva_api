@@ -60,7 +60,7 @@ class ProductController extends Controller
                 }
 
                 unset($product->shopProductPhotos);
-//                unset($product->shopProductsHasCategoriesProducts);
+                unset($product->shopProductsHasCategoriesProducts);
                 unset($product->shopProductsPricesrates);
                 unset($product->created_at);
                 unset($product->updated_at);

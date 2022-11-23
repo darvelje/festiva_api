@@ -28,10 +28,10 @@ class ProductController extends Controller
 
         if($products){
             foreach ($products as $product){
-                if($product->shopProductsHasCategoriesProducts->count()>0){
-                    $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
-                    $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
-                }
+//                if($product->shopProductsHasCategoriesProducts->count()>0){
+//                    $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+//                    $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
+//                }
 
                 $product->photos = $product->shopProductPhotos;
 
@@ -50,7 +50,7 @@ class ProductController extends Controller
                 }
 
                 unset($product->shopProductPhotos);
-                unset($product->shopProductsHasCategoriesProducts);
+//                unset($product->shopProductsHasCategoriesProducts);
                 unset($product->shopProductsPricesrates);
                 unset($product->created_at);
                 unset($product->updated_at);

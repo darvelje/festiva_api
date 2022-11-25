@@ -114,16 +114,9 @@ class OrderController extends Controller
     //section Get_OrderByUser
     public function getOrdersByUser(Request $request){
 
-        $user = $request->user();
+        $userDb = $request->user();
 
-        return response()->json(
-            [
-                'code' => 'TEST',
-                'TEST' => $user
-            ]
-        );
-
-        $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($request->userId)->first();
+        $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductPhotos', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($userDb->id)->first();
 
         if($user){
             $orders = $user->orders;
@@ -134,14 +127,18 @@ class OrderController extends Controller
                 unset($order->created_at);
                 unset($order->updated_at);
                 unset($order->user_address_id);
-
-
+                
                 $order->products = $order->orderProducts;
 
                 foreach($order->products as $product){
 
                     $product->product_id = $product->shopProduct->id;
                     $product->name = $product->shopProduct->name;
+
+                    foreach($product->shopProduct->shopProductPhotos as $photo){
+                        $product->photo = $photo->path_photo;
+                        break;
+                    }
 
                     unset($product->id);
                     unset($product->order_id);

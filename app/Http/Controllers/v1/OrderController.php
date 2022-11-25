@@ -116,16 +116,10 @@ class OrderController extends Controller
 
         $userDb = $request->user();
 
-        $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductPhotos', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($userDb->id)->first();
+        $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.orderProducts.shopProduct.shopProductPhotos', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($userDb->id)->first();
 
         if($user){
-            return response()->json(
-                [
-                    'code' => 'ok',
-                    'message' => 'TEST',
-                    'test' => $user
-                ]
-            );
+           
             $orders = $user->orders;
 
             foreach($orders as $order){

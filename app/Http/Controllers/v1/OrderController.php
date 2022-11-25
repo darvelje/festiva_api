@@ -129,6 +129,8 @@ class OrderController extends Controller
                 unset($order->updated_at);
                 unset($order->user_address_id);
 
+                $order->currency_code = $order->currency->code;
+
                 $order->products = $order->orderProducts;
 
                 foreach($order->products as $product){
@@ -151,6 +153,7 @@ class OrderController extends Controller
                 }
 
                 unset($order->orderProducts);
+                unset($order->currency);
 
                 $order->deliver_address = $order->userAddress;
 

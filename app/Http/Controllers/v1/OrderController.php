@@ -24,7 +24,7 @@ class OrderController extends Controller
     //section Get_Order
     public function getOrders(){
 
-        $orders = Order::with('user', 'shop', 'orderProducts', 'orderProducts.shopProduct', 'userAddress' ,'userAddress.locality', 'userAddress.locality.municipality',  'userAddress.locality.municipality.province')->get();
+        $orders = Order::with('user', 'shop', 'orderProducts', 'orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductPhotos', 'userAddress' ,'userAddress.locality', 'userAddress.locality.municipality',  'userAddress.locality.municipality.province')->get();
 
         if($orders){
             foreach($orders as $order){
@@ -35,6 +35,10 @@ class OrderController extends Controller
 
                     $product->product_id = $product->shopProduct->id;
                     $product->name = $product->shopProduct->name;
+                    foreach($product->shopProduct->shopProductPhotos as $photo){
+                        $product->photo = $photo->path_photo;
+                        break;
+                    }
 
                     unset($product->id);
                     unset($product->order_id);
@@ -42,6 +46,7 @@ class OrderController extends Controller
                     unset($product->created_at);
                     unset($product->updated_at);
                     unset($product->shopProduct);
+
 
                 }
 
@@ -106,8 +111,88 @@ class OrderController extends Controller
         );
     }
 
-    //section Get_OrderByUserId
-    public function getOrdersByUserId(Request $request){
+    //section Get_OrderByUser
+    public function getOrdersByUser(Request $request){
+
+        $user = $request->user();
+
+        return response()->json(
+            [
+                'code' => 'TEST',
+                'TEST' => $user
+            ]
+        );
+
+        $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($request->userId)->first();
+
+        if($user){
+            $orders = $user->orders;
+
+            foreach($orders as $order){
+                unset($order->shop_id);
+                unset($order->user_id);
+                unset($order->created_at);
+                unset($order->updated_at);
+                unset($order->user_address_id);
+
+
+                $order->products = $order->orderProducts;
+
+                foreach($order->products as $product){
+
+                    $product->product_id = $product->shopProduct->id;
+                    $product->name = $product->shopProduct->name;
+
+                    unset($product->id);
+                    unset($product->order_id);
+                    unset($product->shop_product_id);
+                    unset($product->created_at);
+                    unset($product->updated_at);
+                    unset($product->shopProduct);
+
+                }
+
+                unset($order->orderProducts);
+
+                $order->deliver_address = $order->userAddress;
+
+                unset($order->deliver_address->user_id);
+                unset($order->deliver_address->created_at);
+                unset($order->deliver_address->updated_at);
+
+                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+
+                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+
+                unset($order->deliver_address->locality);
+                unset($order->userAddress);
+
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Order',
+                    'order' => $orders
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'code' => 'error',
+                'message' => 'There are no order for that user'
+            ]
+        );
+
+
+    }
+
+    //section Get_OrderByBusinessSlug
+    public function getOrdersByBusinessSlug(Request $request){
 
         $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($request->userId)->first();
 

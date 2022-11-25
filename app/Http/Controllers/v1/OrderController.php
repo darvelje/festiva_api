@@ -120,54 +120,54 @@ class OrderController extends Controller
 
         if($user){
             $orders = $user->orders;
-
-            foreach($orders as $order){
-                unset($order->shop_id);
-                unset($order->user_id);
-                unset($order->created_at);
-                unset($order->updated_at);
-                unset($order->user_address_id);
-                
-                $order->products = $order->orderProducts;
-
-                foreach($order->products as $product){
-
-                    $product->product_id = $product->shopProduct->id;
-                    $product->name = $product->shopProduct->name;
-
-                    foreach($product->shopProduct->shopProductPhotos as $photo){
-                        $product->photo = $photo->path_photo;
-                        break;
-                    }
-
-                    unset($product->id);
-                    unset($product->order_id);
-                    unset($product->shop_product_id);
-                    unset($product->created_at);
-                    unset($product->updated_at);
-                    unset($product->shopProduct);
-
-                }
-
-                unset($order->orderProducts);
-
-                $order->deliver_address = $order->userAddress;
-
-                unset($order->deliver_address->user_id);
-                unset($order->deliver_address->created_at);
-                unset($order->deliver_address->updated_at);
-
-                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
-
-                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
-                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
-                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
-                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
-
-                unset($order->deliver_address->locality);
-                unset($order->userAddress);
-
-            }
+//
+//            foreach($orders as $order){
+//                unset($order->shop_id);
+//                unset($order->user_id);
+//                unset($order->created_at);
+//                unset($order->updated_at);
+//                unset($order->user_address_id);
+//
+//                $order->products = $order->orderProducts;
+//
+//                foreach($order->products as $product){
+//
+//                    $product->product_id = $product->shopProduct->id;
+//                    $product->name = $product->shopProduct->name;
+//
+//                    foreach($product->shopProduct->shopProductPhotos as $photo){
+//                        $product->photo = $photo->path_photo;
+//                        break;
+//                    }
+//
+//                    unset($product->id);
+//                    unset($product->order_id);
+//                    unset($product->shop_product_id);
+//                    unset($product->created_at);
+//                    unset($product->updated_at);
+//                    unset($product->shopProduct);
+//
+//                }
+//
+//                unset($order->orderProducts);
+//
+//                $order->deliver_address = $order->userAddress;
+//
+//                unset($order->deliver_address->user_id);
+//                unset($order->deliver_address->created_at);
+//                unset($order->deliver_address->updated_at);
+//
+//                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+//
+//                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+//                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+//                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+//                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+//
+//                unset($order->deliver_address->locality);
+//                unset($order->userAddress);
+//
+//            }
 
             return response()->json(
                 [

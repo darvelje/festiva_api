@@ -126,11 +126,11 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Orders
     Route::get('/v1/orders/all', [OrderController::class, 'getOrders']);
-    Route::get('/v1/orders/view/{orderId}', [OrderController::class, 'getOrderById']);
+    Route::get('/v1/orders/view/{orderId}', [OrderController::class, 'getOrderById'])->middleware('auth:sanctum');
     Route::get('/v1/orders/user', [OrderController::class, 'getOrdersByUser'])->middleware('auth:sanctum');
     Route::get('/v1/orders/business/{businessSlug}', [OrderController::class, 'getOrdersByBusinessSlug']);
-    Route::post('/v1/orders/new', [OrderController::class, 'newOrder']);
-    Route::delete('/v1/orders/delete', [OrderController::class, 'deleteOrder']);
+    Route::post('/v1/orders/new', [OrderController::class, 'newOrder'])->middleware('auth:sanctum');
+    Route::delete('/v1/orders/delete', [OrderController::class, 'deleteOrder'])->middleware('auth:sanctum');
 
 // section Suscriptors
     Route::get('/v1/suscriptors/all', [SuscriptorsController::class, 'getSuscriptors']);

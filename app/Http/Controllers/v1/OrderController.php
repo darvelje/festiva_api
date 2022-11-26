@@ -113,6 +113,113 @@ class OrderController extends Controller
         );
     }
 
+    //section Get_Order_By_Status
+    public function getOrdersByStatus(){
+
+        $orders = Order::with('user', 'shop', 'currency', 'orderProducts', 'orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductPhotos', 'userAddress' ,'userAddress.locality', 'userAddress.locality.municipality',  'userAddress.locality.municipality.province')->get();
+
+        $pendingStatusTemp = [];
+        $activeStatusTemp = [];
+        $completeStatusTemp = [];
+        if($orders){
+            foreach($orders as $order){
+
+                $order->products = $order->orderProducts;
+                $order->currency_code = $order->currency->code;
+
+                foreach($order->products as $product){
+
+                    $product->product_id = $product->shopProduct->id;
+                    $product->name = $product->shopProduct->name;
+                    foreach($product->shopProduct->shopProductPhotos as $photo){
+                        $product->photo = $photo->path_photo;
+                        break;
+                    }
+
+                    unset($product->id);
+                    unset($product->order_id);
+                    unset($product->shop_product_id);
+                    unset($product->created_at);
+                    unset($product->updated_at);
+                    unset($product->shopProduct);
+
+
+                }
+
+                $order->deliver_address = $order->userAddress;
+
+                unset($order->deliver_address->user_id);
+                unset($order->deliver_address->created_at);
+                unset($order->deliver_address->updated_at);
+
+                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+
+                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+
+                unset($order->deliver_address->locality);
+
+                unset($order->created_at);
+                unset($order->updated_at);
+                unset($order->user_id);
+                unset($order->shop_id);
+
+                unset($order->user->created_at);
+                unset($order->user->updated_at);
+                unset($order->user->email_verified_at);
+                unset($order->user->password);
+                unset($order->currency);
+
+                unset($order->shop->created_at);
+                unset($order->shop->updated_at);
+                unset($order->shop->description);
+                unset($order->shop->cover);
+                unset($order->shop->avatar);
+                unset($order->shop->facebook_link);
+                unset($order->shop->instagram_link);
+                unset($order->shop->twitter_link);
+                unset($order->shop->wa_link);
+                unset($order->shop->telegram_link);
+                unset($order->shop->user_id);
+                unset($order->shop->comission);
+
+                unset($order->orderProducts);
+                unset($order->userAddress);
+
+                if($order->status_payment === 1){
+                    array_push($pendingStatusTemp, $order);
+                }
+                else if($order->status_payment === 2){
+                    array_push($activeStatusTemp, $order);
+                }
+                else if($order->status_payment === 3){
+                    array_push($completeStatusTemp, $order);
+                }
+
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Orders by status',
+                    'orders_pending' => $pendingStatusTemp,
+                    'orders_active' => $activeStatusTemp,
+                    'orders_completed' => $completeStatusTemp
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Orders',
+                'orders' => $orders
+            ]
+        );
+    }
+
     //section Get_OrderByUser
     public function getOrdersByUser(Request $request){
 

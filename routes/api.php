@@ -99,13 +99,6 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/product/update', [ProductController::class, 'updateProduct']);
     Route::delete('/v1/product/delete', [ProductController::class, 'deleteProduct']);
 
-// section Routes_Order
-    Route::get('/v1/order/all', [OrderController::class, 'getOrders']);
-    Route::get('/v1/order/user/{userId}', [OrderController::class, 'getOrdersByUserId']);
-    Route::get('/v1/order/view/{orderId}', [OrderController::class, 'getOrderById']);
-    Route::post('/v1/order/new', [OrderController::class, 'newOrder']);
-    Route::delete('/v1/order/delete', [OrderController::class, 'deleteOrder']);
-
 // section Routes_User_Address
     Route::get('/v1/user/address/all', [UserAddressController::class, 'getUserAddresses']);
     Route::get('/v1/user/address/view/{userAddressId}', [UserAddressController::class, 'getUserAddressById']);
@@ -125,12 +118,13 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/promos/delete', [PromosController::class, 'deletePromo']);
 
 // section Routes_Orders
-    Route::get('/v1/orders/all', [OrderController::class, 'getOrders']);
-    Route::get('/v1/orders/view/{orderId}', [OrderController::class, 'getOrderById'])->middleware('auth:sanctum');
-    Route::get('/v1/orders/user', [OrderController::class, 'getOrdersByUser'])->middleware('auth:sanctum');
-    Route::get('/v1/orders/business/{businessSlug}', [OrderController::class, 'getOrdersByBusinessSlug']);
-    Route::post('/v1/orders/new', [OrderController::class, 'newOrder'])->middleware('auth:sanctum');
-    Route::delete('/v1/orders/delete', [OrderController::class, 'deleteOrder'])->middleware('auth:sanctum');
+    Route::get('/v1/order/all', [OrderController::class, 'getOrders']);
+    Route::get('/v1/order/status/all', [OrderController::class, 'getOrdersByStatus']);
+    Route::get('/v1/order/view/{orderId}', [OrderController::class, 'getOrderById'])->middleware('auth:sanctum');
+    Route::get('/v1/order/user', [OrderController::class, 'getOrdersByUser'])->middleware('auth:sanctum');
+    Route::get('/v1/order/business/{businessSlug}', [OrderController::class, 'getOrdersByBusinessSlug']);
+    Route::post('/v1/order/new', [OrderController::class, 'newOrder'])->middleware('auth:sanctum');
+    Route::delete('/v1/order/delete', [OrderController::class, 'deleteOrder'])->middleware('auth:sanctum');
 
 // section Suscriptors
     Route::get('/v1/suscriptors/all', [SuscriptorsController::class, 'getSuscriptors']);

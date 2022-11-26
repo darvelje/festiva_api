@@ -87,9 +87,47 @@ class BusinessDeliveryZonesController extends Controller
     //section Get_BusinessDeliveryZonesById
     public function getBusinessDeliveryZoneById(Request $request){
 
-        $shopDeliveryZone = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province', 'shopZonesDeliveryPricesrates', 'shopZonesDeliveryPricesrates.currency')->whereId($request->businessDeliveryZoneId)->first();
+        $shopDeliveryZone = ShopDeliveryZone::with('shopZonesDeliveryPricesrates', 'shopZonesDeliveryPricesrates.currency')->whereId($request->businessDeliveryZoneId)->first();
 
        if($shopDeliveryZone){
+
+           $shopDeliveryZone->map(function ($zone) {
+               if($zone->localitie_id === null && $zone->municipalitie_id === null){
+                   $zone->province_name = $zone->province->name;
+               }
+               else if($zone->localitie_id === null && $zone->municipalitie_id !== null){
+                   $zone->municipalitie_name = $zone->municipality->name;
+                   $zone->province_name = $zone->province->name;
+               }
+               else if($zone->localitie_id !== null){
+                   $zone->localitie_name = $zone->locality->name;
+                   $zone->municipalitie_name = $zone->municipality->name;
+                   $zone->province_name = $zone->province->name;
+               }
+
+               $zone->prices = $zone->shopZonesDeliveryPricesrates;
+
+               foreach ($zone->prices as $price){
+                   $price->currency_code = $price->currency->code;
+
+                   unset($price->shop_zones_delivery_id);
+                   unset($price->id);
+                   unset($price->currency);
+                   unset($price->created_at);
+                   unset($price->updated_at);
+               }
+
+               unset($zone->shopZonesDeliveryPricesrates);
+               unset($zone->created_at);
+               unset($zone->updated_at);
+               unset($zone->created_at);
+               unset($zone->municipality);
+               unset($zone->locality);
+               unset($zone->province);
+
+           });
+
+
 //           $shopDeliveryZone->localitie = $shopDeliveryZone->locality->name;
 //           $shopDeliveryZone->municipalitie = $shopDeliveryZone->locality->municipality->name;
 //           $shopDeliveryZone->province = $shopDeliveryZone->locality->municipality->province->name;

@@ -90,28 +90,28 @@ class BusinessDeliveryZonesController extends Controller
         $shopDeliveryZone = ShopDeliveryZone::with('locality', 'locality.municipality', 'locality.municipality.province', 'shopZonesDeliveryPricesrates', 'shopZonesDeliveryPricesrates.currency')->whereId($request->businessDeliveryZoneId)->first();
 
        if($shopDeliveryZone){
-           $shopDeliveryZone->localitie = $shopDeliveryZone->locality->name;
-           $shopDeliveryZone->municipalitie = $shopDeliveryZone->locality->municipality->name;
-           $shopDeliveryZone->province = $shopDeliveryZone->locality->municipality->province->name;
-
-           $shopDeliveryZone->prices = $shopDeliveryZone->shopZonesDeliveryPricesrates;
-
-           foreach ($shopDeliveryZone->prices as $price){
-
-               $price->currency_code = $price->currency->code;
-
-               unset($price->shop_zones_delivery_id);
-               unset($price->id);
-               unset($price->currency);
-               unset($price->created_at);
-               unset($price->updated_at);
-           }
-
-           unset($shopDeliveryZone->shopZonesDeliveryPricesrates);
-
-           unset($shopDeliveryZone->locality);
-           unset($shopDeliveryZone->created_at);
-           unset($shopDeliveryZone->updated_at);
+//           $shopDeliveryZone->localitie = $shopDeliveryZone->locality->name;
+//           $shopDeliveryZone->municipalitie = $shopDeliveryZone->locality->municipality->name;
+//           $shopDeliveryZone->province = $shopDeliveryZone->locality->municipality->province->name;
+//
+//           $shopDeliveryZone->prices = $shopDeliveryZone->shopZonesDeliveryPricesrates;
+//
+//           foreach ($shopDeliveryZone->prices as $price){
+//
+//               $price->currency_code = $price->currency->code;
+//
+//               unset($price->shop_zones_delivery_id);
+//               unset($price->id);
+//               unset($price->currency);
+//               unset($price->created_at);
+//               unset($price->updated_at);
+//           }
+//
+//           unset($shopDeliveryZone->shopZonesDeliveryPricesrates);
+//
+//           unset($shopDeliveryZone->locality);
+//           unset($shopDeliveryZone->created_at);
+//           unset($shopDeliveryZone->updated_at);
 
            return response()->json(
                [

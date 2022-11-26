@@ -91,23 +91,22 @@ class BusinessDeliveryZonesController extends Controller
 
        if($shopDeliveryZone){
 
-           $shopDeliveryZone->map(function ($zone) {
-               if($zone->localitie_id === null && $zone->municipalitie_id === null){
-                   $zone->province_name = $zone->province->name;
+               if($shopDeliveryZone->localitie_id === null && $shopDeliveryZone->municipalitie_id === null){
+                   $shopDeliveryZone->province_name = $shopDeliveryZone->province->name;
                }
-               else if($zone->localitie_id === null && $zone->municipalitie_id !== null){
-                   $zone->municipalitie_name = $zone->municipality->name;
-                   $zone->province_name = $zone->province->name;
+               else if($shopDeliveryZone->localitie_id === null && $shopDeliveryZone->municipalitie_id !== null){
+                   $shopDeliveryZone->municipalitie_name = $shopDeliveryZone->municipality->name;
+                   $shopDeliveryZone->province_name = $shopDeliveryZone->province->name;
                }
-               else if($zone->localitie_id !== null){
-                   $zone->localitie_name = $zone->locality->name;
-                   $zone->municipalitie_name = $zone->municipality->name;
-                   $zone->province_name = $zone->province->name;
+               else if($shopDeliveryZone->localitie_id !== null){
+                   $shopDeliveryZone->localitie_name = $shopDeliveryZone->locality->name;
+                   $shopDeliveryZone->municipalitie_name = $shopDeliveryZone->municipality->name;
+                   $shopDeliveryZone->province_name = $shopDeliveryZone->province->name;
                }
 
-               $zone->prices = $zone->shopZonesDeliveryPricesrates;
+               $shopDeliveryZone->prices = $shopDeliveryZone->shopZonesDeliveryPricesrates;
 
-               foreach ($zone->prices as $price){
+               foreach ($shopDeliveryZone->prices as $price){
                    $price->currency_code = $price->currency->code;
 
                    unset($price->shop_zones_delivery_id);
@@ -117,15 +116,13 @@ class BusinessDeliveryZonesController extends Controller
                    unset($price->updated_at);
                }
 
-               unset($zone->shopZonesDeliveryPricesrates);
-               unset($zone->created_at);
-               unset($zone->updated_at);
-               unset($zone->created_at);
-               unset($zone->municipality);
-               unset($zone->locality);
-               unset($zone->province);
-
-           });
+               unset($shopDeliveryZone->shopZonesDeliveryPricesrates);
+               unset($shopDeliveryZone->created_at);
+               unset($shopDeliveryZone->updated_at);
+               unset($shopDeliveryZone->created_at);
+               unset($shopDeliveryZone->municipality);
+               unset($shopDeliveryZone->locality);
+               unset($shopDeliveryZone->province);
 
 
 //           $shopDeliveryZone->localitie = $shopDeliveryZone->locality->name;

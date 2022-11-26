@@ -24,12 +24,13 @@ class OrderController extends Controller
     //section Get_Order
     public function getOrders(){
 
-        $orders = Order::with('user', 'shop', 'orderProducts', 'orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductPhotos', 'userAddress' ,'userAddress.locality', 'userAddress.locality.municipality',  'userAddress.locality.municipality.province')->get();
+        $orders = Order::with('user', 'shop', 'currency', 'orderProducts', 'orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductPhotos', 'userAddress' ,'userAddress.locality', 'userAddress.locality.municipality',  'userAddress.locality.municipality.province')->get();
 
         if($orders){
             foreach($orders as $order){
 
                 $order->products = $order->orderProducts;
+                $order->currency_code = $order->currency->code;
 
                 foreach($order->products as $product){
 
@@ -74,6 +75,7 @@ class OrderController extends Controller
                 unset($order->user->updated_at);
                 unset($order->user->email_verified_at);
                 unset($order->user->password);
+                unset($order->currency);
 
                 unset($order->shop->created_at);
                 unset($order->shop->updated_at);

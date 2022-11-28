@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NewCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\CategoriesProduct;
+use App\Models\Locality;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -44,6 +45,45 @@ class CategoryController extends Controller
                 'categories' => $categories
             ]
         );
+    }
+
+    //section Get_Categories_By_Ubication
+    public function getCategoriesByCity(Request $request)
+    {
+        $locality = Locality::whereId($request->locality_id)->first();
+
+        if ($locality) {
+            //get all shop in this zone, use:shop_zones
+            $shopsArrayIds = ShopZones::where('municipalitie_id', $municipality->id)->pluck('shop_id')->unique();
+            //get all categories of the shops of yours products actives
+            $shops = Shop::whereIn('id', $shopsArrayIds)->with('products')->get();
+            $categories = [];
+            foreach ($shops as $shop) {
+                $products = $shop->products()->where('status', 'active')->get();
+                foreach ($products as $product) {
+                    if (!in_array($product->category_id, $categories)) {
+                        array_push($categories, $product->category_id);
+                    }
+                }
+            }
+
+            $categories = ShopCategories::with('products')->where('type_id', 2)->whereIn('id', $categories)->get();
+
+            $categories = $categories->each(function ($category) use ($shopsArrayIds) {
+                $category->count = ShopProduct::where('type_id', 2)->where('category_id', $category->id)->whereIn('shop_id', $shopsArrayIds)->where('status', 'active')->count();
+            });
+
+            //Get the number of products for each category where the status is active and the shop is in the same zone of the city
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Success',
+                    'categories' => $categories
+                ]
+            );
+        } else {
+            return response()->json(['code' => 'error', 'message' => 'City not found'], 404);
+        }
     }
 
     //section Get_Category

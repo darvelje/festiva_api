@@ -304,10 +304,10 @@ class OrderController extends Controller
     //section Get_OrderByBusinessSlug
     public function getOrdersByBusinessSlug(Request $request){
 
-        $user = User::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereId($request->userId)->first();
+        $shop = Shop::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
 
-        if($user){
-            $orders = $user->orders;
+        if($shop){
+            $orders = $shop->orders;
 
             foreach($orders as $order){
                 unset($order->shop_id);
@@ -365,7 +365,7 @@ class OrderController extends Controller
         return response()->json(
             [
                 'code' => 'error',
-                'message' => 'There are no order for that user'
+                'message' => 'There are no order for that business'
             ]
         );
 

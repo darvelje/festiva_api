@@ -7,6 +7,9 @@ use App\Http\Requests\NewCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\CategoriesProduct;
 use App\Models\Locality;
+use App\Models\Shop;
+use App\Models\ShopDeliveryZone;
+use App\Models\ShopProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -48,30 +51,26 @@ class CategoryController extends Controller
     }
 
     //section Get_Categories_By_Ubication
-    public function getCategoriesByCity(Request $request)
+    public function getCategoriesByLocality(Request $request)
     {
-        $locality = Locality::whereId($request->locality_id)->first();
+        $locality = Locality::whereSlug($request->localitySlug)->first();
 
         if ($locality) {
-            //get all shop in this zone, use:shop_zones
-            $shopsArrayIds = ShopZones::where('municipalitie_id', $municipality->id)->pluck('shop_id')->unique();
+            $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->pluck('shop_id')->unique();
             //get all categories of the shops of yours products actives
-            $shops = Shop::whereIn('id', $shopsArrayIds)->with('products')->get();
+            $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
             $categories = [];
-            foreach ($shops as $shop) {
-                $products = $shop->products()->where('status', 'active')->get();
-                foreach ($products as $product) {
-                    if (!in_array($product->category_id, $categories)) {
-                        array_push($categories, $product->category_id);
+            $categoriesId = [];
+            foreach ($products as $prod) {
+                foreach ($prod->shopProductsHasCategoriesProducts as $cat) {
+                    if (!in_array($cat->categoriesProduct->id, $categoriesId)) {
+                        array_push($categoriesId, $cat->categoriesProduct->id);
+                        array_push($categories, $cat->categoriesProduct);
                     }
+
                 }
             }
 
-            $categories = ShopCategories::with('products')->where('type_id', 2)->whereIn('id', $categories)->get();
-
-            $categories = $categories->each(function ($category) use ($shopsArrayIds) {
-                $category->count = ShopProduct::where('type_id', 2)->where('category_id', $category->id)->whereIn('shop_id', $shopsArrayIds)->where('status', 'active')->count();
-            });
 
             //Get the number of products for each category where the status is active and the shop is in the same zone of the city
             return response()->json(

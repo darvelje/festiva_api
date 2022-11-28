@@ -53,7 +53,7 @@ class CategoryController extends Controller
     //section Get_Categories_By_Ubication
     public function getCategoriesByLocality(Request $request)
     {
-        $locality = Locality::whereSlug($request->localitySlug)->first();
+        $locality = Locality::whereId($request->localityId)->first();
 
         if ($locality) {
             $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->pluck('shop_id')->unique();

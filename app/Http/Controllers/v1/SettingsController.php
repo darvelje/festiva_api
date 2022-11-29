@@ -31,7 +31,9 @@ class SettingsController extends Controller
             ]
         );
 
-    }//section Get_Settings_Pages
+    }
+
+    //section Get_Settings_Pages
     public function getSettingsPages(){
 
         $settingsPages = SettingsPage::first();
@@ -185,6 +187,90 @@ class SettingsController extends Controller
                 ]
             );
 
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
+    //section Update_Province_Delivery_Setting
+    public function updateProvinceDeliverySetting(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $setting = Setting::first();
+
+            $setting->delivery_province = $request->deliveryProvince;
+
+            $setting->update();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Delivery province in setting updated successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
+    //section Update_Municipality_Delivery_Settings
+    public function updateMunicipalityDeliverySetting(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $setting = Setting::first();
+
+            $setting->delivery_municipality = $request->deliveryMunicipality;
+
+            $setting->update();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Delivery municipality in setting updated successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
+    //section Update_Locality_Delivery_Settings
+    public function updateLocalityDeliverySetting(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $setting = Setting::first();
+
+            $setting->delivery_locality = $request->deliveryLocality;
+
+            $setting->update();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Delivery locality in setting updated successfully'
+                ]
+            );
         }
         catch(\Throwable $th){
             return response()->json(

@@ -80,6 +80,9 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/settings/all', [SettingsController::class, 'getSettings']);
     Route::get('/v1/settings/pages', [SettingsController::class, 'getSettingsPages']);
     Route::post('/v1/settings/set', [SettingsController::class, 'setSettings']);
+    Route::post('/v1/settings/delivery/province', [SettingsController::class, 'updateProvinceDeliverySetting']);
+    Route::post('/v1/settings/delivery/municipality', [SettingsController::class, 'updateMunicipalityDeliverySetting']);
+    Route::post('/v1/settings/delivery/locality', [SettingsController::class, 'updateLocalityDeliverySetting']);
     Route::post('/v1/settings/update', [SettingsController::class, 'updateSettings']);
     Route::delete('/v1/settings/delete', [SettingsController::class, 'deleteSettings']);
 

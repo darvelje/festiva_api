@@ -78,6 +78,7 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Settings
     Route::get('/v1/settings/all', [SettingsController::class, 'getSettings']);
+    Route::get('/v1/settings/delivery', [SettingsController::class, 'getSettingsDelivery']);
     Route::get('/v1/settings/pages', [SettingsController::class, 'getSettingsPages']);
     Route::post('/v1/settings/set', [SettingsController::class, 'setSettings']);
     Route::post('/v1/settings/delivery/province', [SettingsController::class, 'updateProvinceDeliverySetting']);

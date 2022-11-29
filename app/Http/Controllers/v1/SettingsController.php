@@ -33,6 +33,23 @@ class SettingsController extends Controller
 
     }
 
+    //section Get_Settings
+    public function getSettingsDelivery(){
+
+        $settings = Setting::first();
+
+
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Settings',
+                'settings' => $settings
+            ]
+        );
+
+    }
+
     //section Get_Settings_Pages
     public function getSettingsPages(){
 

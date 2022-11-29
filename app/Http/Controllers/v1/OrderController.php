@@ -304,7 +304,7 @@ class OrderController extends Controller
     //section Get_OrderByBusinessSlug
     public function getOrdersByBusinessSlug(Request $request){
 
-        $shop = Shop::with('orders.currency','orders.user', 'orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct','orders.orderProducts.shopProduct.shopProductPhotos', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
+        $shop = Shop::with('orders.currency','orders.user', 'orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
 
         if($shop){
             $orders = $shop->orders;
@@ -325,6 +325,12 @@ class OrderController extends Controller
 
                     $product->product_id = $product->shopProduct->id;
                     $product->name = $product->shopProduct->name;
+                    foreach ($product->shopProduct->shopProductPhotos as $photo){
+                        if($photo->main === true){
+                            $product->photo = $photo->path_photo;
+                            break;
+                        }
+                    }
 
                     unset($product->id);
                     unset($product->order_id);

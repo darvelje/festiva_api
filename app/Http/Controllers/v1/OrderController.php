@@ -315,6 +315,8 @@ class OrderController extends Controller
                 unset($order->created_at);
                 unset($order->updated_at);
                 unset($order->user_address_id);
+                
+                $order->currency_code = $order->currency;
 
 
                 $order->products = $order->orderProducts;
@@ -338,6 +340,7 @@ class OrderController extends Controller
                 $order->deliver_address = $order->userAddress;
 
                 unset($order->deliver_address->user_id);
+                unset($order->currency);
                 unset($order->deliver_address->created_at);
                 unset($order->deliver_address->updated_at);
 

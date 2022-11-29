@@ -38,12 +38,22 @@ class SettingsController extends Controller
 
         $settings = Setting::first();
 
-
+        unset($settings->id);
+        unset($settings->app_name);
+        unset($settings->app_favicon);
+        unset($settings->app_logo);
+        unset($settings->shop_comission);
+        unset($settings->phone);
+        unset($settings->email);
+        unset($settings->address);
+        unset($settings->description);
+        unset($settings->created_at);
+        unset($settings->updated_at);
 
         return response()->json(
             [
                 'code' => 'ok',
-                'message' => 'Settings',
+                'message' => 'Settings delivery',
                 'settings' => $settings
             ]
         );

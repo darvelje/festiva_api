@@ -56,7 +56,7 @@ class CategoryController extends Controller
         $municipality = Municipality::whereSlug($request->municipalitySlug)->first();
 
         if ($municipality) {
-            $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->pluck('shop_id')->unique()->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
+            $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
             $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
             $categories = [];
             $categoriesId = [];

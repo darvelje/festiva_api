@@ -83,11 +83,11 @@ class CategoryController extends Controller
     }
 
     //section Get_Categories_By_Ubication_Random
-    public function getCategoriesByLocalityRandom(Request $request){
-        $locality = Locality::whereId($request->localityId)->first();
+    public function getCategoriesByMunicipalityRandom(Request $request){
+        $municipality = Municipality::whereSlug($request->municipalitySlug)->first();
 
-        if ($locality) {
-            $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->pluck('shop_id')->unique();
+        if ($municipality) {
+            $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
             $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
             $categories = [];
             $categoriesId = [];

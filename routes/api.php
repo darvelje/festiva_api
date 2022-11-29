@@ -70,7 +70,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/category/all', [CategoryController::class, 'getCategories']);    //obsolete
     Route::get('/v1/category/all/{municipalitySlug}', [CategoryController::class, 'getCategoriesByMunicipality']);
     Route::get('/v1/category/random', [CategoryController::class, 'getRandomCategories']);      //obsolete
-    Route::get('/v1/category/random/{localityId}', [CategoryController::class, 'getCategoriesByLocalityRandom']);
+    Route::get('/v1/category/random/{municipalitySlug}', [CategoryController::class, 'getCategoriesByMunicipalityRandom']);
     Route::get('/v1/category/view/{categorySlug}', [CategoryController::class, 'getCategoryBySlug']);
     Route::post('/v1/category/new', [CategoryController::class, 'newCategory']);
     Route::post('/v1/category/update', [CategoryController::class, 'updateCategory']);

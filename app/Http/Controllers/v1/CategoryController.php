@@ -7,6 +7,7 @@ use App\Http\Requests\NewCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\CategoriesProduct;
 use App\Models\Locality;
+use App\Models\Municipality;
 use App\Models\Shop;
 use App\Models\ShopDeliveryZone;
 use App\Models\ShopProduct;
@@ -51,11 +52,11 @@ class CategoryController extends Controller
     }
 
     //section Get_Categories_By_Ubication
-    public function getCategoriesByLocality(Request $request){
-        $locality = Locality::whereId($request->localityId)->first();
+    public function getCategoriesByMunicipality(Request $request){
+        $municipality = Municipality::whereSlug($request->municipalitySlug)->first();
 
-        if ($locality) {
-            $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->pluck('shop_id')->unique();
+        if ($municipality) {
+            $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->pluck('shop_id')->unique()->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
             $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
             $categories = [];
             $categoriesId = [];

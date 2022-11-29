@@ -304,7 +304,7 @@ class OrderController extends Controller
     //section Get_OrderByBusinessSlug
     public function getOrdersByBusinessSlug(Request $request){
 
-        $shop = Shop::with('orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
+        $shop = Shop::with('currency','user', 'orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
 
         if($shop){
             $orders = $shop->orders;

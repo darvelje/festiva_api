@@ -51,13 +51,11 @@ class CategoryController extends Controller
     }
 
     //section Get_Categories_By_Ubication
-    public function getCategoriesByLocality(Request $request)
-    {
+    public function getCategoriesByLocality(Request $request){
         $locality = Locality::whereId($request->localityId)->first();
 
         if ($locality) {
             $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->pluck('shop_id')->unique();
-            //get all categories of the shops of yours products actives
             $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
             $categories = [];
             $categoriesId = [];
@@ -71,13 +69,45 @@ class CategoryController extends Controller
                 }
             }
 
-
-            //Get the number of products for each category where the status is active and the shop is in the same zone of the city
             return response()->json(
                 [
                     'code' => 'ok',
                     'message' => 'Success',
                     'categories' => $categories
+                ]
+            );
+        } else {
+            return response()->json(['code' => 'error', 'message' => 'City not found'], 404);
+        }
+    }
+
+    //section Get_Categories_By_Ubication_Random
+    public function getCategoriesByLocalityRandom(Request $request){
+        $locality = Locality::whereId($request->localityId)->first();
+
+        if ($locality) {
+            $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->pluck('shop_id')->unique();
+            $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
+            $categories = [];
+            $categoriesId = [];
+            foreach ($products as $prod) {
+                foreach ($prod->shopProductsHasCategoriesProducts as $cat) {
+                    if (!in_array($cat->categoriesProduct->id, $categoriesId)) {
+                        array_push($categoriesId, $cat->categoriesProduct->id);
+                        array_push($categories, $cat->categoriesProduct);
+                    }
+
+                }
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Success',
+                    'categories' => count($categories) > 3
+                                        ? Arr::random($categories, 3)
+                                        : $categories
+
                 ]
             );
         } else {

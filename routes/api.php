@@ -67,9 +67,10 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/business/delivery/zones/delete', [BusinessDeliveryZonesController::class, 'deleteBusinessDeliveryZone']);
 
 // section Routes_Category
-    Route::get('/v1/category/all', [CategoryController::class, 'getCategories']);
+    Route::get('/v1/category/all', [CategoryController::class, 'getCategories']);    //obsolete
     Route::get('/v1/category/all/{localityId}', [CategoryController::class, 'getCategoriesByLocality']);
-    Route::get('/v1/category/random', [CategoryController::class, 'getRandomCategories']);
+    Route::get('/v1/category/random', [CategoryController::class, 'getRandomCategories']);      //obsolete
+    Route::get('/v1/category/random/{localityId}', [CategoryController::class, 'getCategoriesByLocalityRandom']);
     Route::get('/v1/category/view/{categorySlug}', [CategoryController::class, 'getCategoryBySlug']);
     Route::post('/v1/category/new', [CategoryController::class, 'newCategory']);
     Route::post('/v1/category/update', [CategoryController::class, 'updateCategory']);

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\CategoriesProduct;
 use App\Models\Locality;
 use App\Models\Municipality;
+use App\Models\Province;
 use App\Models\Shop;
 use App\Models\ShopDeliveryZone;
 use App\Models\ShopProduct;
@@ -52,34 +53,86 @@ class CategoryController extends Controller
     }
 
     //section Get_Categories_By_Ubication
-    public function getCategoriesByMunicipality(Request $request){
-        $municipality = Municipality::whereSlug($request->municipalitySlug)->first();
+    public function getAllCategories(Request $request){
 
-        if ($municipality) {
-            $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
-            $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
-            $categories = [];
-            $categoriesId = [];
-            foreach ($products as $prod) {
-                foreach ($prod->shopProductsHasCategoriesProducts as $cat) {
-                    if (!in_array($cat->categoriesProduct->id, $categoriesId)) {
-                        array_push($categoriesId, $cat->categoriesProduct->id);
-                        array_push($categories, $cat->categoriesProduct);
+        $categories = [];
+        
+        $categoriesId = [];
+
+        if($request->provinceId && $request->municipalityId !== null && $request->localityId !== null){
+
+            $locality = Locality::whereId($request->localityId)->first();
+
+            $municipality = Municipality::whereId($locality->municipalitie_id)->first();
+
+            if ($locality) {
+                $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->orwhere('municipalitie_id',$locality->municipalitie_id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
+                $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
+
+                foreach ($products as $prod) {
+                    foreach ($prod->shopProductsHasCategoriesProducts as $cat) {
+                        if (!in_array($cat->categoriesProduct->id, $categoriesId)) {
+                            array_push($categoriesId, $cat->categoriesProduct->id);
+                            array_push($categories, $cat->categoriesProduct);
+                        }
                     }
-
                 }
-            }
 
-            return response()->json(
-                [
-                    'code' => 'ok',
-                    'message' => 'Success',
-                    'categories' => $categories
-                ]
-            );
-        } else {
-            return response()->json(['code' => 'error', 'message' => 'City not found'], 404);
+            } else {
+                return response()->json(['code' => 'error', 'message' => 'Locality not found'], 404);
+            }
         }
+        else if($request->provinceId && $request->municipalityId !== null && $request->localityId === null){
+
+            $municipality = Municipality::whereId($request->municipalityId)->first();
+
+            if ($municipality) {
+                $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
+                $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
+
+                foreach ($products as $prod) {
+                    foreach ($prod->shopProductsHasCategoriesProducts as $cat) {
+                        if (!in_array($cat->categoriesProduct->id, $categoriesId)) {
+                            array_push($categoriesId, $cat->categoriesProduct->id);
+                            array_push($categories, $cat->categoriesProduct);
+                        }
+                    }
+                }
+
+            } else {
+                return response()->json(['code' => 'error', 'message' => 'Municipality not found'], 404);
+            }
+        }
+        else if($request->provinceId && $request->municipalityId === null && $request->localityId === null){
+
+            $province = Province::whereId($request->provinceId)->first();
+
+            if ($province) {
+                $shopsArrayIds = ShopDeliveryZone::whereProvinceId($province->id)->pluck('shop_id')->unique();
+                $products = ShopProduct::with('shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
+
+                foreach ($products as $prod) {
+                    foreach ($prod->shopProductsHasCategoriesProducts as $cat) {
+                        if (!in_array($cat->categoriesProduct->id, $categoriesId)) {
+                            array_push($categoriesId, $cat->categoriesProduct->id);
+                            array_push($categories, $cat->categoriesProduct);
+                        }
+                    }
+                }
+
+            } else {
+                return response()->json(['code' => 'error', 'message' => 'Province not found'], 404);
+            }
+        }
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Success',
+                'categories' => $categories
+            ]
+        );
+
     }
 
     //section Get_Categories_By_Ubication_Random

@@ -97,6 +97,7 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Product
     Route::get('/v1/product/all', [ProductController::class, 'getProducts']);
+    Route::post('/v1/product/all/front', [ProductController::class, 'getAllProducts']);
     Route::get('/v1/product/most-seller', [ProductController::class, 'getProductsMostSeller']);
     Route::get('/v1/product/most-seller/category/{categorySlug}', [ProductController::class, 'getProductMostSellerByCategorySlug']);
     Route::get('/v1/product/view/{productSlug}', [ProductController::class, 'getProductBySlug']);

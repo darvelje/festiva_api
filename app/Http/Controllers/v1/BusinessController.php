@@ -32,6 +32,20 @@ class BusinessController extends Controller
 
     //section Get_Businesses
     public function getBusinesses(Request $request){
+
+        $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->get();
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Businesses',
+                'businesses' => $businesses
+            ]
+        );
+    }
+
+    //section Get_Businesses_by_Ubication
+    public function getAllBusinesses(Request $request){
         $businesses = [];
 
         if($request->provinceId && $request->municipalityId !== null && $request->localityId !== null){

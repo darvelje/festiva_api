@@ -25,32 +25,32 @@ use Illuminate\Support\Arr;
 class CategoryController extends Controller
 {
 
-//    //section Get_Categories
-//    public function getCategories(){
-//
-//        $categories = CategoriesProduct::with(
-//            'shopProductsHasCategoriesProducts',
-//            'shopProductsHasCategoriesProducts.shopProduct')->get();
-//
-//        if($categories){
-//            foreach($categories as $category){
-//                $category->products_count = $category->shopProductsHasCategoriesProducts->count();
-//                unset($category->shopProductsHasCategoriesProducts);
-//            }
-//
-//            unset($category->created_at);
-//            unset($category->updated_at);
-//            unset($category->parent_id);
-//            }
-//
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Categories',
-//                'categories' => $categories
-//            ]
-//        );
-//    }
+    //section Get_Categories
+    public function getCategories(){
+
+        $categories = CategoriesProduct::with(
+            'shopProductsHasCategoriesProducts',
+            'shopProductsHasCategoriesProducts.shopProduct')->get();
+
+        if($categories){
+            foreach($categories as $category){
+                $category->products_count = $category->shopProductsHasCategoriesProducts->count();
+                unset($category->shopProductsHasCategoriesProducts);
+            }
+
+            unset($category->created_at);
+            unset($category->updated_at);
+            unset($category->parent_id);
+            }
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Categories',
+                'categories' => $categories
+            ]
+        );
+    }
 
     //section Get_Categories_By_Ubication
     public function getAllCategories(Request $request){

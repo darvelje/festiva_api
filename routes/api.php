@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Business
     Route::post('/v1/business/all', [BusinessController::class, 'getBusinesses']);
+    Route::get('/v1/business/all/front', [BusinessController::class, 'getAllBusinesses']);
     Route::get('/v1/business/view/{businessSlug}', [BusinessController::class, 'getBusinessBySlug']);
     Route::post('/v1/business/new', [BusinessController::class, 'newBusiness']);
     Route::post('/v1/business/update', [BusinessController::class, 'updateBusiness']);
@@ -67,8 +68,8 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/business/delivery/zones/delete', [BusinessDeliveryZonesController::class, 'deleteBusinessDeliveryZone']);
 
 // section Routes_Category
-    //    Route::get('/v1/category/all', [CategoryController::class, 'getCategories']);
-    Route::post('/v1/category/all', [CategoryController::class, 'getAllCategories']);
+    Route::get('/v1/category/all', [CategoryController::class, 'getCategories']);
+    Route::post('/v1/category/all/front', [CategoryController::class, 'getAllCategories']);
     Route::post('/v1/category/random', [CategoryController::class, 'getCategoriesByMunicipalityRandom']);
 
     Route::get('/v1/category/view/{categorySlug}', [CategoryController::class, 'getCategoryBySlug']);

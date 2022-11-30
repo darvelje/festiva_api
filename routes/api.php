@@ -131,6 +131,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/order/user', [OrderController::class, 'getOrdersByUser'])->middleware('auth:sanctum');
     Route::get('/v1/order/business/{businessSlug}', [OrderController::class, 'getOrdersByBusinessSlug']);
     Route::post('/v1/order/new', [OrderController::class, 'newOrder'])->middleware('auth:sanctum');
+    Route::post('/v1/order/change-status', [OrderController::class, 'changeStatus'])->middleware('auth:sanctum');
     Route::delete('/v1/order/delete', [OrderController::class, 'deleteOrder'])->middleware('auth:sanctum');
 
 // section Suscriptors

@@ -469,9 +469,11 @@ class OrderController extends Controller
         try{
             DB::beginTransaction();
 
+            $userDb = $request->user();
+
             $order = new Order();
 
-            $order->user_id = $request->orderUserId;
+            $order->user_id = $userDb->id;
             $length = count($request->order);
             for($i = 0; $i < $length; $i++)
             {
@@ -494,6 +496,36 @@ class OrderController extends Controller
                 [
                     'code' => 'ok',
                     'message' => 'Order created successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
+    //section Change_Status
+    public function changeStatus(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $userDb = $request->user();
+
+            $order = Order::whereId($request->orderId)->where('user_id', $userDb->id)->first();
+
+            $order->status_payment = $request->orderStatus;
+
+            $order->update();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Order status changed successfully'
                 ]
             );
         }

@@ -119,7 +119,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/promos/view/{promoId}', [PromosController::class, 'getPromoById']);
     Route::get('/v1/promos/types', [PromosController::class, 'getPromosType']);
     Route::post('/v1/promos/home', [PromosController::class, 'getPromosHome']);
-    Route::get('/v1/promos/category/{categoryId}', [PromosController::class, 'getPromosByCategoryId']);
+    Route::post('/v1/promos/category', [PromosController::class, 'getPromosByCategoryId']);
     Route::post('/v1/promos/new', [PromosController::class, 'newPromo']);
     Route::post('/v1/promos/update', [PromosController::class, 'updatePromo']);
     Route::delete('/v1/promos/delete', [PromosController::class, 'deletePromo']);

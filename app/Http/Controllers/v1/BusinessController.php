@@ -44,7 +44,7 @@ class BusinessController extends Controller
 
                 $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->orwhere('municipalitie_id',$locality->municipalitie_id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
 
-                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('shop_id', $shopsArrayIds)->get();
+                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('id', $shopsArrayIds)->get();
 
             } else {
                 return response()->json(['code' => 'error', 'message' => 'Locality not found'], 404);
@@ -57,7 +57,7 @@ class BusinessController extends Controller
             if ($municipality) {
                 $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
 
-                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('shop_id', $shopsArrayIds)->get();
+                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('id', $shopsArrayIds)->get();
 
             } else {
                 return response()->json(['code' => 'error', 'message' => 'Municipality not found'], 404);
@@ -70,7 +70,7 @@ class BusinessController extends Controller
             if ($province) {
                 $shopsArrayIds = ShopDeliveryZone::whereProvinceId($province->id)->pluck('shop_id')->unique();
 
-                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('shop_id', $shopsArrayIds)->get();
+                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('id', $shopsArrayIds)->get();
 
             } else {
                 return response()->json(['code' => 'error', 'message' => 'Province not found'], 404);

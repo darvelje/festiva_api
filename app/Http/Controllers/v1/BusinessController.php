@@ -4,7 +4,12 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewBusinessRequest;
+use App\Models\Locality;
+use App\Models\Municipality;
+use App\Models\Province;
 use App\Models\Shop;
+use App\Models\ShopDeliveryZone;
+use App\Models\ShopProduct;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -26,9 +31,51 @@ class BusinessController extends Controller
 {
 
     //section Get_Businesses
-    public function getBusinesses(){
+    public function getBusinesses(Request $request){
+        $businesses = [];
 
-        $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->get();
+        if($request->provinceId && $request->municipalityId !== null && $request->localityId !== null){
+
+            $locality = Locality::whereId($request->localityId)->first();
+
+            $municipality = Municipality::whereId($locality->municipalitie_id)->first();
+
+            if ($locality) {
+
+                $shopsArrayIds = ShopDeliveryZone::whereLocalitieId($locality->id)->orwhere('municipalitie_id',$locality->municipalitie_id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
+
+                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('shop_id', $shopsArrayIds)->get();
+
+            } else {
+                return response()->json(['code' => 'error', 'message' => 'Locality not found'], 404);
+            }
+        }
+        else if($request->provinceId && $request->municipalityId !== null && $request->localityId === null){
+
+            $municipality = Municipality::whereId($request->municipalityId)->first();
+
+            if ($municipality) {
+                $shopsArrayIds = ShopDeliveryZone::whereMunicipalitieId($municipality->id)->orWhere('province_id', $municipality->province_id)->pluck('shop_id')->unique();
+
+                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('shop_id', $shopsArrayIds)->get();
+
+            } else {
+                return response()->json(['code' => 'error', 'message' => 'Municipality not found'], 404);
+            }
+        }
+        else if($request->provinceId && $request->municipalityId === null && $request->localityId === null){
+
+            $province = Province::whereId($request->provinceId)->first();
+
+            if ($province) {
+                $shopsArrayIds = ShopDeliveryZone::whereProvinceId($province->id)->pluck('shop_id')->unique();
+
+                $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->whereIn('shop_id', $shopsArrayIds)->get();
+
+            } else {
+                return response()->json(['code' => 'error', 'message' => 'Province not found'], 404);
+            }
+        }
 
         return response()->json(
             [

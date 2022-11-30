@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $id_promo_type
  * @property integer $category_id
+ * @property integer $province_id
  * @property string $path_image
  * @property boolean $status
  * @property string $url
@@ -21,7 +22,7 @@ class Promo extends Model
     /**
      * @var array
      */
-    protected $fillable = ['id_promo_type', 'category_id', 'path_image', 'status', 'url', 'created_at', 'updated_at'];
+    protected $fillable = ['province_id', 'id_promo_type', 'category_id', 'path_image', 'status', 'url', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

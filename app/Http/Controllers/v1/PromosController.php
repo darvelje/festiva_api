@@ -288,6 +288,7 @@ class PromosController extends Controller
             $promo->url = $request->promoURL;
             $promo->id_promo_type = $request->promoIdType;
             $promo->category_id = $request->promoCategoryId;
+            $promo->province_id = $request->promoProvinceId;
 
             $promo->save();
 
@@ -325,6 +326,7 @@ class PromosController extends Controller
                 $promo->url = $request->promoURL;
                 $promo->id_promo_type = $request->promoIdType;
                 $promo->category_id = $request->promoCategoryId;
+                $promo->province_id = $request->promoProvinceId;
 
                 $promo->update();
 

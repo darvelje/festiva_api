@@ -100,6 +100,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/product/all/front', [ProductController::class, 'getAllProducts']);
     Route::get('/v1/product/most-seller', [ProductController::class, 'getProductsMostSeller']);
     Route::get('/v1/product/most-seller/category/{categorySlug}', [ProductController::class, 'getProductMostSellerByCategorySlug']);
+    Route::post('/v1/product/most-seller/category', [ProductController::class, 'getAllProductMostSellerByCategorySlug']);
     Route::get('/v1/product/view/{productSlug}', [ProductController::class, 'getProductBySlug']);
     Route::get('/v1/products/category/{categorySlug}', [ProductController::class, 'getProductByCategorySlug']);
     Route::post('/v1/products/category/front', [ProductController::class, 'getAllProductsByCategorySlug']);

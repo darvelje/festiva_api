@@ -346,7 +346,7 @@ class OrderController extends Controller
                 $order->deliver_address = $order->userAddress;
 
                 unset($order->deliver_address->user_id);
-                unset($order->currency);
+                //unset($order->currency);
                 unset($order->deliver_address->created_at);
                 unset($order->deliver_address->updated_at);
 

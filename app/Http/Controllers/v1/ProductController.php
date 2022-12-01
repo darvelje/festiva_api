@@ -691,7 +691,7 @@ class ProductController extends Controller
                 [
                     'code' => 'ok',
                     'message' => 'Products',
-                    'category' => $array_products
+                    'products' => $array_products
                 ]
             );
         }

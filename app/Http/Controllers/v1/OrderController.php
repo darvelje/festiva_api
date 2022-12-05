@@ -191,10 +191,10 @@ class OrderController extends Controller
                 if($order->status_payment === 1){
                     array_push($pendingStatusTemp, $order);
                 }
-                else if($order->status_payment === 2){
+                else if($order->status_payment >= 2  && $order->status_payment <=5 ){
                     array_push($activeStatusTemp, $order);
                 }
-                else if($order->status_payment === 3){
+                else if($order->status_payment === 6){
                     array_push($completeStatusTemp, $order);
                 }
 
@@ -309,6 +309,11 @@ class OrderController extends Controller
         if($shop){
             $orders = $shop->orders;
 
+            $pendingStatusTemp = [];
+            $activeStatusTemp = [];
+            $completeStatusTemp = [];
+
+
             foreach($orders as $order){
                 unset($order->shop_id);
                 unset($order->user_id);
@@ -360,13 +365,25 @@ class OrderController extends Controller
                 unset($order->deliver_address->locality);
                 unset($order->userAddress);
 
+                if($order->status_payment === 1){
+                    array_push($pendingStatusTemp, $order);
+                }
+                else if($order->status_payment >= 2  && $order->status_payment <=5 ){
+                    array_push($activeStatusTemp, $order);
+                }
+                else if($order->status_payment === 6){
+                    array_push($completeStatusTemp, $order);
+                }
+
             }
 
             return response()->json(
                 [
                     'code' => 'ok',
-                    'message' => 'Order',
-                    'order' => $orders
+                    'message' => 'Orders by business group by status payments',
+                    'orders_pending' => $pendingStatusTemp,
+                    'orders_active' => $activeStatusTemp,
+                    'orders_completed' => $completeStatusTemp
                 ]
             );
         }

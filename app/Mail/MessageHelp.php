@@ -28,7 +28,6 @@ class MessageHelp extends Mailable
         $this->date = $date;
     }
 
-
     /**
      * Get the message envelope.
      *

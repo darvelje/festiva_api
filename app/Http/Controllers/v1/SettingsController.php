@@ -92,6 +92,7 @@ class SettingsController extends Controller
                 'code' => 'ok',
                 'message' => 'Chart sold data',
                 'ordersTotals' => $ordersTotals,
+                'array_categories_id' => $array_categories_id,
                 'array_categories' => $array_categories,
                 'array_count' => $array_count,
             ]

@@ -70,22 +70,20 @@ class SettingsController extends Controller
         $array_categories = [];
         $array_count = [];
 
-
-
-//
-//        foreach ($products as $product){
-//            if($product->sales !== null){
-//                $key = array_search($product->shopProductsHasCategoriesProducts->categoriesProduct->name, $array_categories);
-//                if($key){
-//                    $array_count[$key] = $array_count[$key] + $product->sales;
-//                }
-//                else{
-//                    array_push($array_categories, $product->shopProductsHasCategoriesProducts->categoriesProduct->name);
-//                    array_push($array_count, $product->sales);
-//                }
-//            }
-//
-//        }
+        foreach ($products as $product){
+            foreach ($product->shopProductsHasCategoriesProducts as $category){
+                if($product->sales !== null){
+                    $key = array_search($category->categoriesProduct->name, $array_categories);
+                    if($key){
+                        $array_count[$key] = $array_count[$key] + $product->sales;
+                    }
+                    else{
+                        array_push($array_categories, $category->categoriesProduct->name);
+                        array_push($array_count, $product->sales);
+                    }
+                }
+            }
+        }
 
         return response()->json(
             [
@@ -94,7 +92,6 @@ class SettingsController extends Controller
                 'ordersTotals' => $ordersTotals,
                 'array_categories' => $array_categories,
                 'array_count' => $array_count,
-                '$array_products' => $products,
             ]
         );
 

@@ -22,7 +22,7 @@ class MessageHelp extends Mailable
      */
     public function __construct($data)
     {
-        $this->name = $data['name'];
+        $this->name = json_encode($data['name']);
         $this->email = $data['email'];
         $this->message = $data['messages'];
     }

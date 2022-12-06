@@ -52,7 +52,7 @@ class SettingsController extends Controller
         return response()->json(
             [
                 'code' => 'ok',
-                'message' => 'Settings delivery',
+                'message' => 'Chart orders data by days',
                 'ordersTotals' => $ordersTotals,
                 'ordersCompleted' => $ordersCompleted,
                 'labels' => $days,

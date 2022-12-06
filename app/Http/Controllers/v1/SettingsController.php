@@ -75,7 +75,7 @@ class SettingsController extends Controller
             foreach ($product->shopProductsHasCategoriesProducts as $category){
                 if($product->sales !== null){
                     $key = array_search($category->categoriesProduct->id, $array_categories_id);
-                    if(!$key){
+                    if($key === false){
                         array_push($array_categories, $category->categoriesProduct->name);
                         array_push($array_count, $product->sales);
                         array_push($array_categories_id, $category->categoriesProduct->id);

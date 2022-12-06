@@ -33,7 +33,7 @@ class BusinessController extends Controller
     //section Get_Businesses
     public function getBusinesses(){
 
-        $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos' )->get();
+        $businesses = Shop::with('shopProducts','shopProducts.shopProductPhotos', 'orders' )->get();
 
         return response()->json(
             [

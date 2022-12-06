@@ -77,12 +77,14 @@ class SettingsController extends Controller
                 if($product->sales !== null){
                     $key = array_search($category->categoriesProduct->id, $array_categories_id);
                     array_push($array_key, $key);
-//                    if($key){
-//                        $array_count[$key] = $array_count[$key] + $product->sales;
-//                    }
+                    if(!$key){
+                       // $array_count[$key] = $array_count[$key] + $product->sales;
+                        array_push($array_categories_id, $category->categoriesProduct->id);
+                    }
 //                    else{
 //                        array_push($array_categories, $category->categoriesProduct->name);
 //                        array_push($array_count, $product->sales);
+
 //                    }
                 }
             }

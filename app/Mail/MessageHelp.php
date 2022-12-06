@@ -24,7 +24,7 @@ class MessageHelp extends Mailable
     {
         $this->name = $data['name'];
         $this->email = $data['email'];
-        $this->message = $data['message'];
+        $this->message = $data['messages'];
     }
 
 

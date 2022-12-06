@@ -61,6 +61,26 @@ class SettingsController extends Controller
 
     }
 
+    //section Get_Chart_Products_Sold_By_Categories
+    public function getChartProductsSoldByCategories()
+    {
+
+        $orders =  Order::with('orderProducts', 'orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductsHasCategoriesProducts.categoriesProduct')->get();
+        $ordersTotals = $orders->count();
+       // $cateories = collect();
+
+        
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Chart sold data',
+                'ordersTotals' => $ordersTotals,
+                'orders' => $orders,
+            ]
+        );
+
+    }
+
     //section Get_Settings
     public function getSettingsDelivery(){
 

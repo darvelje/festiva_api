@@ -98,7 +98,7 @@ class SettingsController extends Controller
             [
                 'code' => 'ok',
                 'message' => 'Chart sold data',
-                'array_final' => $array_final
+                'sold_data' => $array_final
             ]
         );
 

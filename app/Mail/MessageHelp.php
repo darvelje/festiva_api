@@ -20,11 +20,11 @@ class MessageHelp extends Mailable
      *
      * @return void
      */
-    public function __construct($message, $email, $name)
+    public function __construct($data)
     {
-        $this->name = $name;
-        $this->email = $email;
-        $this->message = $message;
+        $this->name = $data['name'];
+        $this->email = $data['email'];
+        $this->message = $data['message'];
     }
 
 

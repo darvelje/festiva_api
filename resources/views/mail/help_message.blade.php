@@ -146,7 +146,7 @@
                                                                 </table></td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-top:5px;padding-bottom:5px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:40px;color:#666666;font-size:20px">Fecha: <strong>{{date}}</strong></p></td>
+                                                            <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-top:5px;padding-bottom:5px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:40px;color:#666666;font-size:20px">Fecha: <strong>{{$date}}</strong></p></td>
                                                         </tr>
                                                     </table></td>
                                             </tr>

@@ -42,7 +42,7 @@ class SettingsController extends Controller
         $ordersTotals = collect();
         $ordersCompleted = collect();
 
-        for ($i = $request->days+1; $i > 0; $i--) {
+        for ($i = $request->days-1; $i > 0; $i--) {
             //reverse
             $days->add(Carbon::now()->subDays($i)->format('d-m-Y'));
             $ordersTotals->add(Order::whereDate('created_at', '=', Carbon::now()->subDays($i))->count());

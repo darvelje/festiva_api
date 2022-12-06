@@ -46,7 +46,7 @@ class SettingsController extends Controller
             //reverse
             $days->add(Carbon::now()->subDays($i)->format('d-m-Y'));
             $ordersTotals->add(Order::whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
-            $ordersCompleted->add(Order::where('status',6)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
+            $ordersCompleted->add(Order::where('status_payment',6)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
         }
 
         return response()->json(

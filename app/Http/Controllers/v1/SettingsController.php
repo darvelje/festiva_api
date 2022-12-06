@@ -69,18 +69,20 @@ class SettingsController extends Controller
         $ordersTotals = Order::all()->count();
         $array_categories = [];
         $array_count = [];
+        $array_key = [];
 
         foreach ($products as $product){
             foreach ($product->shopProductsHasCategoriesProducts as $category){
                 if($product->sales !== null){
                     $key = array_search($category->categoriesProduct->name, $array_categories);
-                    if(!$key){
-                        $array_count[$key] = $array_count[$key] + $product->sales;
-                    }
-                    else{
-                        array_push($array_categories, $category->categoriesProduct->name);
-                        array_push($array_count, $product->sales);
-                    }
+                    array_push($array_key, $key);
+//                    if(!$key){
+//                        $array_count[$key] = $array_count[$key] + $product->sales;
+//                    }
+//                    else{
+//                        array_push($array_categories, $category->categoriesProduct->name);
+//                        array_push($array_count, $product->sales);
+//                    }
                 }
             }
         }
@@ -92,6 +94,7 @@ class SettingsController extends Controller
                 'ordersTotals' => $ordersTotals,
                 'array_categories' => $array_categories,
                 'array_count' => $array_count,
+                'array_key' => $array_key,
             ]
         );
 

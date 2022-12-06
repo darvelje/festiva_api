@@ -224,6 +224,13 @@ class UserController extends Controller
 
     // section Send_Help_Message
     public function sendHelpMessage(Request $request){
+        return response()->json(
+            [
+                'code' => 'test',
+                'request' => $request->all()
+            ]
+        );
+
         try {
             DB::beginTransaction();
 

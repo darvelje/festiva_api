@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Setting;
 use App\Models\SettingsPage;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -28,6 +30,32 @@ class SettingsController extends Controller
                 'code' => 'ok',
                 'message' => 'Settings',
                 'settings' => $settings
+            ]
+        );
+
+    }
+
+    //section Get_Chart_Orders_Stats
+    public function getChartOrdersStats(Request $request)
+    {
+        $days = collect();
+        $ordersTotals = collect();
+        $ordersCompleted = collect();
+
+        for ($i = $request->days; $i > 0; $i--) {
+            //reverse
+            $days->add(Carbon::now()->subDays($i)->format('d-m-Y'));
+            $ordersTotals->add(Order::whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
+            $ordersCompleted->add(Order::where('status',6)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
+        }
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Settings delivery',
+                'ordersTotals' => $ordersTotals,
+                'ordersCompleted' => $ordersCompleted,
+                'labels' => $days,
             ]
         );
 

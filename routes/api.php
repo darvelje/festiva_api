@@ -87,6 +87,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/settings/delivery/municipality', [SettingsController::class, 'updateMunicipalityDeliverySetting']);
     Route::post('/v1/settings/delivery/locality', [SettingsController::class, 'updateLocalityDeliverySetting']);
     Route::post('/v1/settings/update', [SettingsController::class, 'updateSettings']);
+    Route::post('/v1/settings/data-chart', [SettingsController::class, 'getChartOrdersStats']);
     Route::delete('/v1/settings/delete', [SettingsController::class, 'deleteSettings']);
 
 // section Routes_Currency

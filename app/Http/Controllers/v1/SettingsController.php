@@ -69,7 +69,9 @@ class SettingsController extends Controller
         $ordersTotals = Order::all()->count();
         $array_categories = [];
         $array_count = [];
-        $array_products = $products->shopProductsHasCategoriesProducts;
+
+
+
 //
 //        foreach ($products as $product){
 //            if($product->sales !== null){
@@ -92,7 +94,7 @@ class SettingsController extends Controller
                 'ordersTotals' => $ordersTotals,
                 'array_categories' => $array_categories,
                 'array_count' => $array_count,
-                '$array_products' => $array_products,
+                '$array_products' => $products,
             ]
         );
 

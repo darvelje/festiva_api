@@ -13,18 +13,19 @@ class MessageHelp extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $message, $email, $name;
+    public $data, $email, $name, $date;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $email, $name, $date)
     {
-        $this->name = json_encode($data['name']);
-        $this->email = $data['email'];
-        $this->message = $data['messages'];
+        $this->name = $name;
+        $this->email = $email;
+        $this->data = $data;
+        $this->date = $date;
     }
 
 

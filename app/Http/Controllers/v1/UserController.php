@@ -233,15 +233,7 @@ class UserController extends Controller
 
             $date = now();
 
-
-
-            $data = array(
-                'messages' => $request->message,
-                'email' => $request->email,
-                'name' => $request->name,
-            );
-
-            Mail::to($settings->email)->send(new MessageHelp($data));
+            Mail::to($settings->email)->send(new MessageHelp($request->message, $request->email, $request->name,$date));
 
             DB::commit();
 

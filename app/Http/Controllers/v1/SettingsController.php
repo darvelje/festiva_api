@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\CategoriesProduct;
 use App\Models\Order;
 use App\Models\Setting;
 use App\Models\SettingsPage;
@@ -67,15 +68,16 @@ class SettingsController extends Controller
 
         $orders =  Order::with('orderProducts', 'orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductsHasCategoriesProducts.categoriesProduct')->get();
         $ordersTotals = $orders->count();
-       // $cateories = collect();
+        $cateories = CategoriesProduct::all();
 
-        
+
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Chart sold data',
                 'ordersTotals' => $ordersTotals,
                 'orders' => $orders,
+                'cateories' => $cateories,
             ]
         );
 

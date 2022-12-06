@@ -74,7 +74,7 @@ class SettingsController extends Controller
             foreach ($product->shopProductsHasCategoriesProducts as $category){
                 if($product->sales !== null){
                     $key = array_search($category->categoriesProduct->name, $array_categories);
-                    if($key){
+                    if(!$key){
                         $array_count[$key] = $array_count[$key] + $product->sales;
                     }
                     else{

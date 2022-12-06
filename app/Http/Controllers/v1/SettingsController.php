@@ -7,6 +7,7 @@ use App\Models\CategoriesProduct;
 use App\Models\Order;
 use App\Models\Setting;
 use App\Models\SettingsPage;
+use App\Models\ShopProduct;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -37,8 +38,7 @@ class SettingsController extends Controller
     }
 
     //section Get_Chart_Orders_Stats
-    public function getChartOrdersStats(Request $request)
-    {
+    public function getChartOrdersStats(Request $request){
         $days = collect();
         $ordersTotals = collect();
         $ordersCompleted = collect();
@@ -63,21 +63,34 @@ class SettingsController extends Controller
     }
 
     //section Get_Chart_Products_Sold_By_Categories
-    public function getChartProductsSoldByCategories()
-    {
+    public function getChartProductsSoldByCategories(){
 
-        $orders =  Order::with('orderProducts', 'orderProducts.shopProduct', 'orderProducts.shopProduct.shopProductsHasCategoriesProducts.categoriesProduct')->get();
-        $ordersTotals = $orders->count();
-        $cateories = CategoriesProduct::all();
+        $products =  ShopProduct::with('shopProductsHasCategoriesProducts.categoriesProduct')->get();
+        $ordersTotals = Order::all()->count();
+        $array_categories = [];
+        $array_count = [];
 
+        foreach ($products as $product){
+            if($product->sales !== null){
+                $key = array_search($product->shopProductsHasCategoriesProducts->categoriesProduct->name, $array_categories);
+                if($key){
+                    $array_count[$key] = $array_count[$key] + $product->sales;
+                }
+                else{
+                    array_push($array_categories, $product->shopProductsHasCategoriesProducts->categoriesProduct->name);
+                    array_push($array_count, $product->sales);
+                }
+            }
 
+        }
+        
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Chart sold data',
                 'ordersTotals' => $ordersTotals,
-                'orders' => $orders,
-                'cateories' => $cateories,
+                'array_categories' => $array_categories,
+                'array_count' => $array_count,
             ]
         );
 

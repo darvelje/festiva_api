@@ -229,7 +229,7 @@ class UserController extends Controller
 
             $settings = Setting::first();
 
-            $date = now()->format('d-m-Y');
+            $date = now();
 
             Mail::to($settings->email)->send(new MessageHelp($request->message, $request->email, $request->name, $date));
 

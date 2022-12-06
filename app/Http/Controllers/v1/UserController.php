@@ -5,6 +5,8 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Mail\MessageHelp;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,8 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Laravel\Sanctum\PersonalAccessToken;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -218,6 +222,34 @@ class UserController extends Controller
         }
     }
 
+    // section Send_Help_Message
+    public function sendHelpMessage(Request $request){
+        try {
+            DB::beginTransaction();
+
+            $settings = Setting::first();
+
+            $date = now()->format('d-m-Y');
+
+            Mail::to($settings->email)->send(new MessageHelp($request->message, $request->email, $request->name, $date));
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Help message sended successfully'
+                ]
+            );
+
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
     //section Upload_image
     public static function uploadImage($path, $name){
         $image = $path;
@@ -238,4 +270,6 @@ class UserController extends Controller
 
         return $path;
     }
+
+
 }

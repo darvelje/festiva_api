@@ -82,6 +82,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/settings/delivery', [SettingsController::class, 'getSettingsDelivery']);
     Route::get('/v1/settings/pages', [SettingsController::class, 'getSettingsPages']);
     Route::post('/v1/settings/set', [SettingsController::class, 'setSettings']);
+    Route::post('/v1/settings/send-message-help', [UserController::class, 'sendHelpMessage']);
     Route::post('/v1/settings/delivery/province', [SettingsController::class, 'updateProvinceDeliverySetting']);
     Route::post('/v1/settings/delivery/municipality', [SettingsController::class, 'updateMunicipalityDeliverySetting']);
     Route::post('/v1/settings/delivery/locality', [SettingsController::class, 'updateLocalityDeliverySetting']);

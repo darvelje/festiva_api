@@ -66,10 +66,10 @@ class SettingsController extends Controller
     public function getChartProductsSoldByCategories(){
 
         $products =  ShopProduct::with('shopProductsHasCategoriesProducts.categoriesProduct')->get();
-        $ordersTotals = Order::all()->count();
         $array_categories = [];
         $array_categories_id = [];
         $array_count = [];
+        $array_final = [];
 
         foreach ($products as $product){
             foreach ($product->shopProductsHasCategoriesProducts as $category){
@@ -87,14 +87,18 @@ class SettingsController extends Controller
             }
         }
 
+        for($i=0; $i<count($array_categories); $i++){
+            array_push($array_final, (object)[
+                'name' => $array_categories[$i],
+                'value' =>$array_count[$i]]);
+        }
+
+
         return response()->json(
             [
                 'code' => 'ok',
                 'message' => 'Chart sold data',
-                'ordersTotals' => $ordersTotals,
-                'array_categories_id' => $array_categories_id,
-                'array_categories' => $array_categories,
-                'array_count' => $array_count,
+                'array_final' => $array_final
             ]
         );
 

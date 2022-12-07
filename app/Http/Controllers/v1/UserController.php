@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Mail\MessageHelp;
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\UserFavoritesHasShopProduct;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -117,6 +119,120 @@ class UserController extends Controller
                 'message' => 'User not found'
             ]
         );
+    }
+
+    //section Get_User_Favorites_Products
+    public function getUserFavoritesProducts(Request $request){
+
+        $userDb = $request->user();
+
+        $userFavoritesProducts = UserFavoritesHasShopProduct::with('shopProduct',
+            'shopProduct.shopProductsHasCategoriesProducts',
+            'shopProduct.shopProductPhotos',
+            'shopProduct.shopProductsHasCategoriesProducts.categoriesProduct',
+            'shopProduct.shopProductsPricesrates',
+            'shopProduct.shopProductsPricesrates.currency',
+        )->where('user_id', $userDb->id)->get();
+
+        if($userFavoritesProducts){
+
+            foreach ($userFavoritesProducts as $product){
+
+                unset($userFavoritesProducts->id);
+                unset($userFavoritesProducts->user_id);
+                unset($userFavoritesProducts->shop_product_id);
+                unset($userFavoritesProducts->created_at);
+                unset($userFavoritesProducts->updated_at);
+
+                $product->product = $product->shopProducts;
+
+//                $product->product = $product->shopProductsHasCategoriesProducts;
+//
+//                foreach ($product->categories as $prod_cat){
+//                    $prod_cat->id = $prod_cat->categoriesProduct->id;
+//                    $prod_cat->name = $prod_cat->categoriesProduct->name;
+//                    $prod_cat->parent_id = $prod_cat->categoriesProduct->parent_id;
+//                    $prod_cat->icon = $prod_cat->categoriesProduct->icon;
+//                    unset($prod_cat->categoriesProduct);
+//                    unset($prod_cat->shop_product_id);
+//                    unset($prod_cat->category_product_id);
+//                    unset($prod_cat->created_at);
+//                    unset($prod_cat->updated_at);
+//                }
+//
+//                $product->photos = $product->shopProductPhotos;
+//
+//                foreach ($product->photos as $prod_photo){
+//                    unset($prod_photo->created_at);
+//                    unset($prod_photo->updated_at);
+//                }
+//
+//                $product->prices = $product->shopProductsPricesrates;
+//
+//                foreach ($product->prices as $prod_prices){
+//                    $prod_prices->currency_code = $prod_prices->currency->code;
+//                    unset($prod_prices->currency);
+//                    unset($prod_prices->created_at);
+//                    unset($prod_prices->updated_at);
+//                }
+//
+//                unset($product->shopProductPhotos);
+//                unset($product->shopProductsHasCategoriesProducts);
+//                unset($product->shopProductsPricesrates);
+//                unset($product->created_at);
+//                unset($product->updated_at);
+//                unset($product->shop_id);
+
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Favorites products',
+                    'favorites_products' => $userFavoritesProducts
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'User not found'
+                ]
+            );
+        }
+
+    }
+
+    //section Add_User_Favorites_Products
+    public function addUserFavoritesProducts(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $userDb = $request->user();
+
+            $userFavoritesProducts = new UserFavoritesHasShopProduct();
+
+            $userFavoritesProducts->user_id =  $userDb->id;
+            $userFavoritesProducts->shop_product_id = $request->favoriteProductId;
+
+            $userFavoritesProducts->save();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Product added favorite successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
     }
 
     //section New_User

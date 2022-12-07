@@ -28,6 +28,9 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/user/update', [UserController::class, 'updateUser']);
     Route::post('/v1/user/token', [UserController::class, 'getTokenUser']);
     Route::delete('/v1/user/delete', [UserController::class, 'deleteUser']);
+    Route::post('/v1/user/add-favorite', [UserController::class, 'addUserFavoritesProducts'])->middleware('auth:sanctum');
+    Route::get('/v1/user/favorites', [UserController::class, 'getUserFavoritesProducts'])->middleware('auth:sanctum');
+
 
 // section Routes_Business
     Route::get('/v1/business/all', [BusinessController::class, 'getBusinesses']);
@@ -122,8 +125,6 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/user/address/view/{userAddressId}', [UserAddressController::class, 'getUserAddressById']);
     Route::get('/v1/user/address/{userId}', [UserAddressController::class, 'getUserAddressByUserId']);
     Route::post('/v1/user/address/new', [UserAddressController::class, 'newUserAddress']);
-    Route::post('/v1/user/add-favorite', [UserAddressController::class, 'addUserFavoritesProducts'])->middleware('auth:sanctum');
-    Route::get('/v1/user/favorites', [UserAddressController::class, 'getUserFavoritesProducts'])->middleware('auth:sanctum');
     Route::post('/v1/user/address/update', [UserAddressController::class, 'updateUserAddress']);
     Route::delete('/v1/user/address/delete', [UserAddressController::class, 'deleteUserAddress']);
 

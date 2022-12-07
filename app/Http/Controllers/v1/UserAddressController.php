@@ -91,69 +91,6 @@ class UserAddressController extends Controller
 
     }
 
-    //section Get_User_Favorites_Products
-    public function getUserFavoritesProducts(Request $request){
-
-        $userDb = $request->user();
-
-        $userFavoritesProducts = UserFavoritesHasShopProduct::with('shopProduct',
-            'shopProduct.shopProductsHasCategoriesProducts',
-            'shopProduct.shopProductsHasCategoriesProducts.categoriesProduct',
-            'shopProduct.shopProductsPricesrates',
-            'shopProduct.shopProductsPricesrates.currency',
-        )->where('user_id', $userDb->id)->get();
-
-        if($userFavoritesProducts){
-            return response()->json(
-                [
-                    'code' => 'ok',
-                    'message' => 'Favorites products',
-                    'favorites_products' => $userFavoritesProducts
-                ]
-            );
-        }
-        else{
-            return response()->json(
-                [
-                    'code' => 'error',
-                    'message' => 'User not found'
-                ]
-            );
-        }
-
-    }
-
-    //section Add_User_Favorites_Products
-    public function addUserFavoritesProducts(Request $request){
-
-        try{
-            DB::beginTransaction();
-
-            $userDb = $request->user();
-
-            $userFavoritesProducts = new UserFavoritesHasShopProduct();
-
-            $userFavoritesProducts->user_id =  $userDb->id;
-            $userFavoritesProducts->shop_product_id = $request->favoriteProductId;
-
-            $userFavoritesProducts->save();
-
-            DB::commit();
-
-            return response()->json(
-                [
-                    'code' => 'ok',
-                    'message' => 'Product added favorite successfully'
-                ]
-            );
-        }
-        catch(\Throwable $th){
-            return response()->json(
-                ['code' => 'error', 'message' => $th->getMessage()]
-            );
-        }
-    }
-
     //section New_UserAddress
     public function newUserAddress(Request $request){
 

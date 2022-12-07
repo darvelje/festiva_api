@@ -94,12 +94,14 @@ class UserAddressController extends Controller
     //section Get_User_Favorites_Products
     public function getUserFavoritesProducts(Request $request){
 
+        $userDb = $request->user();
+
         $userFavoritesProducts = UserFavoritesHasShopProduct::with('shopProduct',
             'shopProduct.shopProductsHasCategoriesProducts',
             'shopProduct.shopProductsHasCategoriesProducts.categoriesProduct',
             'shopProduct.shopProductsPricesrates',
             'shopProduct.shopProductsPricesrates.currency',
-        )->where('user_id', $request->favoriteUserId)->get();
+        )->where('user_id', $userDb->id)->get();
 
         if($userFavoritesProducts){
             return response()->json(
@@ -127,9 +129,11 @@ class UserAddressController extends Controller
         try{
             DB::beginTransaction();
 
+            $userDb = $request->user();
+
             $userFavoritesProducts = new UserFavoritesHasShopProduct();
 
-            $userFavoritesProducts->user_id = $request->favoriteUserId;
+            $userFavoritesProducts->user_id =  $userDb->id;
             $userFavoritesProducts->shop_product_id = $request->favoriteProductId;
 
             $userFavoritesProducts->save();

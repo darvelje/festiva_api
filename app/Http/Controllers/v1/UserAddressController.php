@@ -7,6 +7,7 @@ use App\Http\Requests\NewBusinessRequest;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Models\UserFavoritesHasShopProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -88,6 +89,65 @@ class UserAddressController extends Controller
             ]
         );
 
+    }
+
+    //section Get_User_Favorites_Products
+    public function getUserFavoritesProducts(Request $request){
+
+        $userFavoritesProducts = UserFavoritesHasShopProduct::with('shopProduct',
+            'shopProduct.shopProductsHasCategoriesProducts',
+            'shopProduct.shopProductsHasCategoriesProducts.categoriesProduct',
+            'shopProduct.shopProductsPricesrates',
+            'shopProduct.shopProductsPricesrates.currency',
+        )->where('user_id', $request->favoriteUserId)->get();
+
+        if($userFavoritesProducts){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Favorites products',
+                    'favorites_products' => $userFavoritesProducts
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'User not found'
+                ]
+            );
+        }
+
+    }
+
+    //section Add_User_Favorites_Products
+    public function addUserFavoritesProducts(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $userFavoritesProducts = new UserFavoritesHasShopProduct();
+
+            $userFavoritesProducts->user_id = $request->favoriteUserId;
+            $userFavoritesProducts->shop_product_id = $request->favoriteProductId;
+
+            $userFavoritesProducts->save();
+
+            DB::commit();
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Product added favorite successfully'
+                ]
+            );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
     }
 
     //section New_UserAddress

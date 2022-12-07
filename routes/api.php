@@ -45,7 +45,9 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/provinces/all', [LocationController::class, 'getProvinces']);
     Route::get('/v1/provinces/delivery-zones/', [LocationController::class, 'getProvincesWithShop']);
     Route::get('/v1/municipalities/{provinceId}', [LocationController::class, 'getMunicipalities']);
+    Route::get('/v1/municipalities/delivery-zones/{provinceId}', [LocationController::class, 'getMunicipalitiesWithShop']);
     Route::get('/v1/localities/{municipalityId}', [LocationController::class, 'getLocalities']);
+    Route::get('/v1/localities/delivery-zones/{municipalityId}', [LocationController::class, 'getLocalitiesWithShop']);
 
 // section Routes_Business_Coupons
     Route::get('/v1/business/coupons/all', [BusinessCouponsController::class, 'getShopCoupons']);

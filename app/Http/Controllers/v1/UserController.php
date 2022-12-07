@@ -138,13 +138,13 @@ class UserController extends Controller
 
             foreach ($userFavoritesProducts as $product){
 
-                unset($userFavoritesProducts->id);
-                unset($userFavoritesProducts->user_id);
-                unset($userFavoritesProducts->shop_product_id);
-                unset($userFavoritesProducts->created_at);
-                unset($userFavoritesProducts->updated_at);
+                unset($product->id);
+                unset($product->user_id);
+                unset($product->shop_product_id);
+                unset($product->created_at);
+                unset($product->updated_at);
 
-                $product->product = $product->shopProducts;
+                $product->product = $product->shopProduct;
 
 //                $product->product = $product->shopProductsHasCategoriesProducts;
 //
@@ -182,6 +182,8 @@ class UserController extends Controller
 //                unset($product->created_at);
 //                unset($product->updated_at);
 //                unset($product->shop_id);
+
+                unset($product->shopProduct);
 
             }
 

@@ -122,8 +122,8 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/user/address/view/{userAddressId}', [UserAddressController::class, 'getUserAddressById']);
     Route::get('/v1/user/address/{userId}', [UserAddressController::class, 'getUserAddressByUserId']);
     Route::post('/v1/user/address/new', [UserAddressController::class, 'newUserAddress']);
-    Route::post('/v1/user/address/add-favorite', [UserAddressController::class, 'addUserFavoritesProducts']);
-    Route::post('/v1/user/address/favorites', [UserAddressController::class, 'getUserFavoritesProducts']);
+    Route::post('/v1/user/add-favorite', [UserAddressController::class, 'addUserFavoritesProducts']);
+    Route::post('/v1/user/favorites', [UserAddressController::class, 'getUserFavoritesProducts']);
     Route::post('/v1/user/address/update', [UserAddressController::class, 'updateUserAddress']);
     Route::delete('/v1/user/address/delete', [UserAddressController::class, 'deleteUserAddress']);
 

@@ -146,7 +146,7 @@ class UserController extends Controller
 
                 $product->product = $product->shopProduct;
 
-                $product->categories = $product->shopProductsHasCategoriesProducts;
+                $product->categories = $product->product->shopProductsHasCategoriesProducts;
 
                 foreach ($product->categories as $prod_cat){
                     $prod_cat->id = $prod_cat->categoriesProduct->id;
@@ -160,14 +160,14 @@ class UserController extends Controller
                     unset($prod_cat->updated_at);
                 }
 
-                $product->photos = $product->shopProductPhotos;
+                $product->photos = $product->product->shopProductPhotos;
 
                 foreach ($product->photos as $prod_photo){
                     unset($prod_photo->created_at);
                     unset($prod_photo->updated_at);
                 }
 
-                $product->prices = $product->shopProductsPricesrates;
+                $product->prices = $product->product->shopProductsPricesrates;
 
                 foreach ($product->prices as $prod_prices){
                     $prod_prices->currency_code = $prod_prices->currency->code;

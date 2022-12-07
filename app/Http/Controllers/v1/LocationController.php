@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Locality;
 use App\Models\Municipality;
 use App\Models\Province;
+use App\Models\ShopDeliveryZone;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
@@ -14,6 +15,37 @@ class LocationController extends Controller
     public function getProvinces(){
 
         $provinces = Province::all();
+
+        if($provinces){
+
+            unset($provinces->updated_at);
+            unset($provinces->created_at);
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Provinces',
+                    'provinces' => $provinces
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'code' => 'ok',
+                'message' => 'Provinces',
+                'provinces' => $provinces
+            ]
+        );
+
+    }
+
+    //section Get_Provinces what include shop delivery zones
+    public function getProvincesWithShop(){
+
+        $shopsArrayIds = ShopDeliveryZone::pluck('province_id')->unique();
+
+        $provinces = Province::whereIn('id', $shopsArrayIds)->get();
 
         if($provinces){
 

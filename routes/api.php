@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\Route;
 
 // section Routes_Location
     Route::get('/v1/provinces/all', [LocationController::class, 'getProvinces']);
+    Route::get('/v1/provinces/delivery-zones/', [LocationController::class, 'getProvincesWithShop']);
     Route::get('/v1/municipalities/{provinceId}', [LocationController::class, 'getMunicipalities']);
     Route::get('/v1/localities/{municipalityId}', [LocationController::class, 'getLocalities']);
 

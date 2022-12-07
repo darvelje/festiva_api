@@ -323,6 +323,7 @@ class BusinessController extends Controller
             $days = collect();
             $ordersTotals = collect();
             $ordersCompleted = collect();
+            $array_final = [];
 
             for ($i = $request->days; $i > 0; $i--) {
                 //reverse
@@ -331,13 +332,18 @@ class BusinessController extends Controller
                 $ordersCompleted->add(Order::where('shop_id', $shop->id)->where('status_payment',6)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
             }
 
+            for($i=0; $i<count($ordersTotals); $i++){
+                array_push($array_final, (object)[
+                    'date' => $days[$i],
+                    'orders_completed' => $ordersCompleted[$i],
+                    'orders' => $ordersTotals[$i]]);
+            }
+
             return response()->json(
                 [
                     'code' => 'ok',
                     'message' => 'Chart orders data by days',
-                    'ordersTotals' => $ordersTotals,
-                    'ordersCompleted' => $ordersCompleted,
-                    'labels' => $days,
+                    'orders' => $array_final
                 ]
             );
         }

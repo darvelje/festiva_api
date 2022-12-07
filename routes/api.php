@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/business/all', [BusinessController::class, 'getBusinesses']);
     Route::post('/v1/business/all/front', [BusinessController::class, 'getAllBusinesses']);
     Route::get('/v1/business/view/{businessSlug}', [BusinessController::class, 'getBusinessBySlug']);
+    Route::get('/v1/business/data-pie-chart/{businessSlug}', [BusinessController::class, 'getChartProductsSoldByCategoriesByBusinessSlug']);
+    Route::post('/v1/business/data-canva-chart', [BusinessController::class, 'getChartOrdersStatsByBusinessSlug']);
     Route::post('/v1/business/new', [BusinessController::class, 'newBusiness']);
     Route::post('/v1/business/update', [BusinessController::class, 'updateBusiness']);
     Route::post('/v1/business/update/delivery', [BusinessController::class, 'changeStatusDelivery']);

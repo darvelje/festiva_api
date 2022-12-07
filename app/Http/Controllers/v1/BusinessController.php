@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NewBusinessRequest;
 use App\Models\Locality;
 use App\Models\Municipality;
+use App\Models\Order;
 use App\Models\Province;
 use App\Models\Shop;
 use App\Models\ShopDeliveryZone;
 use App\Models\ShopProduct;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -310,6 +312,99 @@ class BusinessController extends Controller
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
         }
+    }
+
+    //section Get_Chart_Orders_Stats
+    public function getChartOrdersStatsByBusinessSlug(Request $request){
+
+        $shop = Shop::whereSlug($request->businessSlug)->first();
+
+        if($shop){
+            $days = collect();
+            $ordersTotals = collect();
+            $ordersCompleted = collect();
+
+            for ($i = $request->days; $i > 0; $i--) {
+                //reverse
+                $days->add(Carbon::now()->subDays($i)->format('d-m-Y'));
+                $ordersTotals->add(Order::where('shop_id', $shop->id)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
+                $ordersCompleted->add(Order::where('shop_id', $shop->id)->where('status_payment',6)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
+            }
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Chart orders data by days',
+                    'ordersTotals' => $ordersTotals,
+                    'ordersCompleted' => $ordersCompleted,
+                    'labels' => $days,
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Business not found'
+                ]
+            );
+        }
+
+    }
+
+    //section Get_Chart_Products_Sold_By_Categories
+    public function getChartProductsSoldByCategoriesByBusinessSlug(Request $request){
+
+        $shop = Shop::whereSlug($request->businessSlug)->first();
+
+        if($shop){
+            $products =  ShopProduct::with('shopProductsHasCategoriesProducts.categoriesProduct')->where('shop_id', $shop->id)->get();
+
+            $array_categories = [];
+            $array_categories_id = [];
+            $array_count = [];
+            $array_final = [];
+
+            foreach ($products as $product){
+                foreach ($product->shopProductsHasCategoriesProducts as $category){
+                    if($product->sales !== null){
+                        $key = array_search($category->categoriesProduct->id, $array_categories_id);
+                        if($key === false){
+                            array_push($array_categories, $category->categoriesProduct->name);
+                            array_push($array_count, $product->sales);
+                            array_push($array_categories_id, $category->categoriesProduct->id);
+                        }
+                        else{
+                            $array_count[$key] = $array_count[$key] + $product->sales;
+                        }
+                    }
+                }
+            }
+
+            for($i=0; $i<count($array_categories); $i++){
+                array_push($array_final, (object)[
+                    'name' => $array_categories[$i],
+                    'value' =>$array_count[$i]]);
+            }
+
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Chart sold data',
+                    'sold_data' => $array_final
+                ]
+            );
+        }
+        else{
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Business not found'
+                ]
+            );
+        }
+
     }
 
     //section Upload_image

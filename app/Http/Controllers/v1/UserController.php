@@ -146,42 +146,42 @@ class UserController extends Controller
 
                 $product->product = $product->shopProduct;
 
-//                $product->product = $product->shopProductsHasCategoriesProducts;
-//
-//                foreach ($product->categories as $prod_cat){
-//                    $prod_cat->id = $prod_cat->categoriesProduct->id;
-//                    $prod_cat->name = $prod_cat->categoriesProduct->name;
-//                    $prod_cat->parent_id = $prod_cat->categoriesProduct->parent_id;
-//                    $prod_cat->icon = $prod_cat->categoriesProduct->icon;
-//                    unset($prod_cat->categoriesProduct);
-//                    unset($prod_cat->shop_product_id);
-//                    unset($prod_cat->category_product_id);
-//                    unset($prod_cat->created_at);
-//                    unset($prod_cat->updated_at);
-//                }
-//
-//                $product->photos = $product->shopProductPhotos;
-//
-//                foreach ($product->photos as $prod_photo){
-//                    unset($prod_photo->created_at);
-//                    unset($prod_photo->updated_at);
-//                }
-//
-//                $product->prices = $product->shopProductsPricesrates;
-//
-//                foreach ($product->prices as $prod_prices){
-//                    $prod_prices->currency_code = $prod_prices->currency->code;
-//                    unset($prod_prices->currency);
-//                    unset($prod_prices->created_at);
-//                    unset($prod_prices->updated_at);
-//                }
-//
-//                unset($product->shopProductPhotos);
-//                unset($product->shopProductsHasCategoriesProducts);
-//                unset($product->shopProductsPricesrates);
-//                unset($product->created_at);
-//                unset($product->updated_at);
-//                unset($product->shop_id);
+                $product->categories = $product->shopProductsHasCategoriesProducts;
+
+                foreach ($product->categories as $prod_cat){
+                    $prod_cat->id = $prod_cat->categoriesProduct->id;
+                    $prod_cat->name = $prod_cat->categoriesProduct->name;
+                    $prod_cat->parent_id = $prod_cat->categoriesProduct->parent_id;
+                    $prod_cat->icon = $prod_cat->categoriesProduct->icon;
+                    unset($prod_cat->categoriesProduct);
+                    unset($prod_cat->shop_product_id);
+                    unset($prod_cat->category_product_id);
+                    unset($prod_cat->created_at);
+                    unset($prod_cat->updated_at);
+                }
+
+                $product->photos = $product->shopProductPhotos;
+
+                foreach ($product->photos as $prod_photo){
+                    unset($prod_photo->created_at);
+                    unset($prod_photo->updated_at);
+                }
+
+                $product->prices = $product->shopProductsPricesrates;
+
+                foreach ($product->prices as $prod_prices){
+                    $prod_prices->currency_code = $prod_prices->currency->code;
+                    unset($prod_prices->currency);
+                    unset($prod_prices->created_at);
+                    unset($prod_prices->updated_at);
+                }
+
+                unset($product->product->shopProductPhotos);
+                unset($product->product->shopProductsHasCategoriesProducts);
+                unset($product->product->shopProductsPricesrates);
+                unset($product->product->created_at);
+                unset($product->product->updated_at);
+                unset($product->product->shop_id);
 
                 unset($product->shopProduct);
 

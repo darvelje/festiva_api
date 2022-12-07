@@ -237,6 +237,42 @@ class UserController extends Controller
         }
     }
 
+    //section Delete_User_Favorites_Products
+    public function deleteUserFavoritesProducts(Request $request){
+
+        try{
+            DB::beginTransaction();
+
+            $userDb = $request->user();
+
+            $result = UserFavoritesHasShopProduct::where('user_id', $userDb->id)->where('shop_product_id', $request->favoriteProduct_Id)->delete();
+
+            DB::commit();
+
+            if($result){
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'Product deleted of favorites successfully'
+                    ]
+                );
+            }
+
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Product not found'
+                ]
+            );
+            
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
     //section New_User
     public function newUser(NewUserRequest $request){
 

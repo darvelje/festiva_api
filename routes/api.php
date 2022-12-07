@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/user/delete', [UserController::class, 'deleteUser']);
     Route::post('/v1/user/add-favorite', [UserController::class, 'addUserFavoritesProducts'])->middleware('auth:sanctum');
     Route::get('/v1/user/favorites', [UserController::class, 'getUserFavoritesProducts'])->middleware('auth:sanctum');
+    Route::delete('/v1/user/delete-favorite', [UserController::class, 'deleteUserFavoritesProducts'])->middleware('auth:sanctum');
 
 
 // section Routes_Business

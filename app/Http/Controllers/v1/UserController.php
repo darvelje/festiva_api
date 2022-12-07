@@ -245,7 +245,7 @@ class UserController extends Controller
 
             $userDb = $request->user();
 
-            $result = UserFavoritesHasShopProduct::where('user_id', $userDb->id)->where('shop_product_id', $request->favoriteProduct_Id)->delete();
+            $result = UserFavoritesHasShopProduct::where('user_id', $userDb->id)->where('shop_product_id', $request->favoriteProductId)->delete();
 
             DB::commit();
 
@@ -264,7 +264,7 @@ class UserController extends Controller
                     'message' => 'Product not found'
                 ]
             );
-            
+
         }
         catch(\Throwable $th){
             return response()->json(

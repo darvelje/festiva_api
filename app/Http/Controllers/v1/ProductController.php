@@ -626,7 +626,6 @@ class ProductController extends Controller
                         unset($product->shopProductsPricesrates);
                         unset($product->created_at);
                         unset($product->updated_at);
-                        unset($product->shop_id);
                         unset($product->categories);
 
                     }
@@ -675,7 +674,6 @@ class ProductController extends Controller
                         unset($product->shopProductsPricesrates);
                         unset($product->created_at);
                         unset($product->updated_at);
-                        unset($product->shop_id);
                         unset($product->categories);
 
                     }

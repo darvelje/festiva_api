@@ -123,7 +123,7 @@ class BusinessController extends Controller
                 'message' => 'Business not found',
             ]
         );
-        
+
     }
 
     //section Get_Business_By_Id

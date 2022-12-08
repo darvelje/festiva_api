@@ -188,13 +188,13 @@ class OrderController extends Controller
                 unset($order->orderProducts);
                 unset($order->userAddress);
 
-                if($order->status_payment === 1){
+                if($order->status === 1){
                     array_push($pendingStatusTemp, $order);
                 }
-                else if($order->status_payment >= 2  && $order->status_payment <=5 ){
+                else if($order->status >= 2  && $order->status <=5 ){
                     array_push($activeStatusTemp, $order);
                 }
-                else if($order->status_payment === 6){
+                else if($order->status === 6){
                     array_push($completeStatusTemp, $order);
                 }
 
@@ -365,13 +365,13 @@ class OrderController extends Controller
                 unset($order->deliver_address->locality);
                 unset($order->userAddress);
 
-                if($order->status_payment === 1){
+                if($order->status === 1){
                     array_push($pendingStatusTemp, $order);
                 }
-                else if($order->status_payment >= 2  && $order->status_payment <=5 ){
+                else if($order->status >= 2  && $order->status <=5 ){
                     array_push($activeStatusTemp, $order);
                 }
-                else if($order->status_payment === 6){
+                else if($order->status === 6){
                     array_push($completeStatusTemp, $order);
                 }
 
@@ -481,46 +481,165 @@ class OrderController extends Controller
     }
 
     //section New_Order
-    public function newOrder(Request $request){
+//    public function newOrder(Request $request){
+//
+//        try{
+//            DB::beginTransaction();
+//
+//            $userDb = $request->user();
+//
+//            $order = new Order();
+//
+//            $order->user_id = $userDb->id;
+//            $length = count($request->order);
+//
+//                $order->shop_id = $request->order['idShop'];
+//                $order->save();
+//                $idOrder = $order->id;
+//                $lengthProducts = count($request->order['products']);
+//                for($j = 0; $j < $lengthProducts; $j++)
+//                {
+//                    $orderProduct = new OrderProduct();
+//                    $orderProduct->order_id = $idOrder;
+//                    $orderProduct->shop_product_id = $request->order['products'][$j]['idProduct'];
+//                    $orderProduct->amount = $request->order['products'][$j]['amount'];
+//                    $orderProduct->save();
+//                }
+//
+//            DB::commit();
+//
+//            return response()->json(
+//                [
+//                    'code' => 'ok',
+//                    'message' => 'Order created successfully'
+//                ]
+//            );
+//        }
+//        catch(\Throwable $th){
+//            return response()->json(
+//                ['code' => 'error', 'message' => $th->getMessage()]
+//            );
+//        }
+//    }
+    public static function newOrder(
 
-        try{
-            DB::beginTransaction();
+        $cart,
+        $userId = null,
+        $pointToDelivery,
+        $deliveryCost,
 
-            $userDb = $request->user();
+        $userName,
+        $userEmail,
+        $userPhone,
+        $schedule,
+        $dayDelivery,
+        $restaurantId,
+        $ownerPhone,
+        $ownerName,
+        $ownerEmail,
+        $userNote,
+        $userAddress,
+        $methodDelivery
 
-            $order = new Order();
+    ) {
+        //  DB::beginTransaction();
+        $order = new Order();
 
-            $order->user_id = $userDb->id;
-            $length = count($request->order);
-            for($i = 0; $i < $length; $i++)
-            {
-                $order->shop_id = $request->order[$i]['idShop'];
-                $order->save();
-                $idOrder = $order->id;
-                $lengthProducts = count($request->order[$i]['products']);
-                for($j = 0; $j < $lengthProducts; $j++)
-                {
-                    $orderProduct = new OrderProduct();
-                    $orderProduct->order_id = $idOrder;
-                    $orderProduct->shop_product_id = $request->order[$i]['products'][$j]['idProduct'];
-                    $orderProduct->amount = $request->order[$i]['products'][$j]['amount'];
-                    $orderProduct->save();
+        if ($userId) {
+            $order->user_id = $userId;
+        }
+
+        //Schedule delivery or Pick
+        //Hora
+        $order->schedule_id = $schedule;
+        //Dia
+        $order->date_delivery = $dayDelivery;
+
+        //Receptor
+        $order->user_name = $userName;
+        $order->user_note = $userNote;
+        $order->user_email = $userEmail;
+        $order->user_phone = $userPhone;
+        $order->user_address = $userAddress;
+        //Cleinte
+        $order->client_phone = $ownerPhone;
+        $order->client_name = $ownerName;
+        $order->client_email = $ownerEmail;
+
+        $order->save();
+
+
+
+        if (Restaurant::find($restaurantId)) {
+            $restaurant = Restaurant::find($restaurantId);
+            $order->restaurant_id = $restaurant->id;
+            $codeProvince = $restaurant->codeProvince();
+            $restaurantId = $restaurant->id;
+        }
+
+        // if ($pointToDelivery) {
+        //     $order->point_id = $pointToDelivery;
+        //     $order->delivery = 'delivery';
+        //     $point = DeliveryPoint::find($pointToDelivery);
+        //     if ($point) {
+        //         $order->user_name = $point->name;
+        //         $order->user_phone = $point->phone;
+        //     }
+        // } else {
+        //     $order->delivery = 'pick';
+        // }
+
+        $order->delivery = $methodDelivery;
+
+
+        $total = 0;
+        if ($model == 'product') {
+            //Add each product to order
+            foreach ($cart as $model) {
+                if (Product::find($model['id'])) {
+                    $productInOrder = new OrderProduct();
+                    $productInOrder->product_id = $model['id'];
+                    $productInOrder->order_id = $order->id;
+                    $productInOrder->amount = $model['quantity'];
+                    $productInOrder->save();
+                    $total = $total + $model['price'] * $model['quantity'];
                 }
             }
-            DB::commit();
+            //+ Cost delivery
+            $total = $total + $deliveryCost;
+            //Find the price total sum each price total
+            $order->price = $total;
+        }
 
-            return response()->json(
-                [
-                    'code' => 'ok',
-                    'message' => 'Order created successfully'
-                ]
-            );
+        $order->fee = $total * Setting::first()->fee_restaurants / 100;
+        $newTotal = $order->fee + $total;
+
+        if($newTotal < 20){
+            $order->fee = $order->fee + 0.50;
         }
-        catch(\Throwable $th){
-            return response()->json(
-                ['code' => 'error', 'message' => $th->getMessage()]
-            );
-        }
+
+        $order->total = $order->fee + $total;
+        $order->delivery_cost = $deliveryCost;
+        $order->update();
+
+
+        $invoice = InvoiceController::newInvoice(
+            $userId,
+            $order->total,
+            'pending',
+            'Nuevo Pedido para: ' . $restaurant->name . ' con ID: ' . $restaurant->id,
+            $order->id,
+            $codeProvince ?? 'H',
+            '01',
+            $restaurantId ?? 00
+        );
+
+        $order->ref = $invoice->invoice_id;
+        $order->update();
+
+
+
+        return $order;
     }
 
     //section Change_Status
@@ -533,7 +652,7 @@ class OrderController extends Controller
 
             $order = Order::whereId($request->orderId)->where('user_id', $userDb->id)->first();
 
-            $order->status_payment = $request->orderStatus;
+            $order->status = $request->orderStatus;
 
             $order->update();
 
@@ -545,6 +664,26 @@ class OrderController extends Controller
                     'message' => 'Order status changed successfully'
                 ]
             );
+        }
+        catch(\Throwable $th){
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
+
+    //section Change_Status
+    public static function changeStatusOrderPayed($order, $orderStatus){
+
+        try{
+
+            $order->status = $orderStatus;
+
+            $order->update();
+
+            return $order;
+
+
         }
         catch(\Throwable $th){
             return response()->json(

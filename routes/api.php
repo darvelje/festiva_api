@@ -8,12 +8,14 @@ use App\Http\Controllers\v1\BusinessDeliveryZonesController;
 use App\Http\Controllers\v1\CategoryController;
 use App\Http\Controllers\v1\CurrencyController;
 use App\Http\Controllers\v1\OrderController;
+use App\Http\Controllers\v1\PaymentController;
 use App\Http\Controllers\v1\ProductController;
 use App\Http\Controllers\v1\SettingsController;
 use App\Http\Controllers\v1\UserAddressController;
 use App\Http\Controllers\v1\UserController;
 use App\Http\Controllers\v1\PromosController;
 use App\Http\Controllers\v1\SuscriptorsController;
+use App\Http\Controllers\v1\TropiPayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +39,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/business/all', [BusinessController::class, 'getBusinesses']);
     Route::post('/v1/business/all/front', [BusinessController::class, 'getAllBusinesses']);
     Route::get('/v1/business/view/{businessSlug}', [BusinessController::class, 'getBusinessBySlug']);
+    Route::get('/v1/business/view/{businessId}', [BusinessController::class, 'getBusinessById']);
     Route::get('/v1/business/data-pie-chart/{businessSlug}', [BusinessController::class, 'getChartProductsSoldByCategoriesByBusinessSlug']);
     Route::post('/v1/business/data-canva-chart', [BusinessController::class, 'getChartOrdersStatsByBusinessSlug']);
     Route::post('/v1/business/new', [BusinessController::class, 'newBusiness']);
@@ -153,3 +156,10 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/suscriptors/all', [SuscriptorsController::class, 'getSuscriptors']);
     Route::post('/v1/suscriptors/new', [SuscriptorsController::class, 'newSuscriptor']);
     Route::delete('/v1/suscriptors/delete', [SuscriptorsController::class, 'deleteSuscriptor']);
+
+// section Tropipay
+    Route::post('/v1/tropipay/api/notification', [TropiPayController::class, 'responseNotification']);
+
+// section Payments
+    Route::post('/v1/payment/new', [PaymentController::class, 'newPayment'])->middleware('auth:sanctum');
+

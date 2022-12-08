@@ -102,7 +102,7 @@ class BusinessController extends Controller
         );
     }
 
-    //section Get_Business
+    //section Get_Business_by_Slug
     public function getBusinessBySlug(Request $request){
 
         $business = Shop::whereSlug($request->businessSlug)->first();
@@ -123,8 +123,30 @@ class BusinessController extends Controller
                 'message' => 'Business not found',
             ]
         );
+        
+    }
 
+    //section Get_Business_By_Id
+    public function getBusinessById(Request $request){
 
+        $business = Shop::whereId($request->businessId)->first();
+
+        if($business){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Business',
+                    'business' => $business
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'code' => 'error',
+                'message' => 'Business not found',
+            ]
+        );
     }
 
     //section change_Status_Delivery
@@ -329,7 +351,7 @@ class BusinessController extends Controller
                 //reverse
                 $days->add(Carbon::now()->subDays($i)->format('d-m-Y'));
                 $ordersTotals->add(Order::where('shop_id', $shop->id)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
-                $ordersCompleted->add(Order::where('shop_id', $shop->id)->where('status_payment',6)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
+                $ordersCompleted->add(Order::where('shop_id', $shop->id)->where('status',6)->whereDate('created_at', '=', Carbon::now()->subDays($i))->count());
             }
 
             for($i=0; $i<count($ordersTotals); $i++){

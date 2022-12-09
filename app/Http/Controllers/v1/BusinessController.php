@@ -142,7 +142,6 @@ class BusinessController extends Controller
 
                     unset($price->id);
                     unset($price->shop_zones_delivery_id);
-                    unset($price->currency_id);
                     unset($price->currency);
                     unset($price->created_at);
                     unset($price->updated_at);

@@ -129,7 +129,7 @@ class BusinessController extends Controller
     //section Get_Business_By_Id
     public function getBusinessById(Request $request){
 
-        $business = Shop::whereId($request->businessId)->first();
+        $business = Shop::with('shopDeliveryZones', 'shopDeliveryZones.shopZonesDeliveryPricesrates')->whereId($request->businessId)->first();
 
         if($business){
             return response()->json(

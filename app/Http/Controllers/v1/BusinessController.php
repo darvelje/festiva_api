@@ -137,8 +137,8 @@ class BusinessController extends Controller
                 $business->deliver_price = $deliver_price->shopZonesDeliveryPricesrates;
 
                 foreach($business->deliver_price as $price){
-                    
-                    $price->currency_code = $price->currency->currency_code;
+
+                    $price->currency_code = $price->currency->code;
 
                     unset($price->id);
                     unset($price->shop_zones_delivery_id);

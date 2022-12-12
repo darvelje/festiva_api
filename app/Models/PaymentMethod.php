@@ -21,7 +21,7 @@ class PaymentMethod extends Model
      *
      * @var string
      */
-    protected $table = 'payment_method';
+    protected $table = 'payment_methods';
 
     /**
      * @var array

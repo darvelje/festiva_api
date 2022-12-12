@@ -549,13 +549,8 @@ class OrderController extends Controller
 //        clientCountry: data.clientCountry,
 //      },
 //      currencyId: currencyMarket
-        return response()->json([
-            'code' => 'test order',
-            'data' => $orderInfo,
-        ]);
 
-
-        $order->shop_id = $orderInfo->idShop;
+        $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $orderInfo['methodDelivery'];
         $order->status_payment = 'pending';
         $order->status = 1;

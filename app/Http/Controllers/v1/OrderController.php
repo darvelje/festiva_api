@@ -524,6 +524,8 @@ class OrderController extends Controller
 //    }
     public static function newOrder($orderInfo, $userId) {
 
+
+
         $order = new Order();
 
         if ($userId) {
@@ -550,7 +552,7 @@ class OrderController extends Controller
 //      },
 //      currencyId: currencyMarket
 
-        return $orderInfo;
+        return $userId;
 
         $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $orderInfo['methodDelivery'];

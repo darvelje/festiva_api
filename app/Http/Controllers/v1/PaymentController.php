@@ -23,7 +23,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'code' => 'test order',
-            'data' => $request->all(),
+            'data' =>$order,
         ]);
 
 

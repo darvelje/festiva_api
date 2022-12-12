@@ -11,12 +11,6 @@ class PaymentController extends Controller
     public function newPayment(Request $request)
     {
 
-         return response()->json([
-             'code' => 'test',
-             'request' => $request->all(),
-
-         ]);
-
         DB::beginTransaction();
 
         $userDb = $request->user();
@@ -25,6 +19,13 @@ class PaymentController extends Controller
             $request->order,
             $userDb->id,
         );
+
+
+        return response()->json([
+            'code' => 'test order',
+            'data' => $order,
+        ]);
+
 
         if ($order == '501' || $order == '500' || $order == '499' || $order == '498') {
             switch ($order) {

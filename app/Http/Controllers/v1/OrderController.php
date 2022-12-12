@@ -567,7 +567,7 @@ class OrderController extends Controller
             $total_price = $total_price +( $orderInfo['products'][$j]['quantity'] * $orderInfo['products'][$j]['price']);
         }
 
-        $order->total_price = $total_price;
+        $order->total_price = $total_price + $orderInfo['deliveryCost'];
 
         $userAddress = new UserAddress();
 
@@ -597,64 +597,6 @@ class OrderController extends Controller
             $orderProduct->amount = $orderInfo['products'][$j]['quantity'];
             $orderProduct->save();
         }
-
-
-//        if (Restaurant::find($restaurantId)) {
-//            $restaurant = Restaurant::find($restaurantId);
-//            $order->restaurant_id = $restaurant->id;
-//            $codeProvince = $restaurant->codeProvince();
-//            $restaurantId = $restaurant->id;
-//        }
-//
-//        $order->delivery = $methodDelivery;
-//
-//
-//        $total = 0;
-//        if ($model == 'product') {
-//            //Add each product to order
-//            foreach ($cart as $model) {
-//                if (Product::find($model['id'])) {
-//                    $productInOrder = new OrderProduct();
-//                    $productInOrder->product_id = $model['id'];
-//                    $productInOrder->order_id = $order->id;
-//                    $productInOrder->amount = $model['quantity'];
-//                    $productInOrder->save();
-//                    $total = $total + $model['price'] * $model['quantity'];
-//                }
-//            }
-//            //+ Cost delivery
-//            $total = $total + $deliveryCost;
-//            //Find the price total sum each price total
-//            $order->price = $total;
-//        }
-//
-//        $order->fee = $total * Setting::first()->fee_restaurants / 100;
-//        $newTotal = $order->fee + $total;
-//
-//        if($newTotal < 20){
-//            $order->fee = $order->fee + 0.50;
-//        }
-//
-//        $order->total = $order->fee + $total;
-//        $order->delivery_cost = $deliveryCost;
-//        $order->update();
-//
-//
-//        $invoice = InvoiceController::newInvoice(
-//            $userId,
-//            $order->total,
-//            'pending',
-//            'Nuevo Pedido para: ' . $restaurant->name . ' con ID: ' . $restaurant->id,
-//            $order->id,
-//            $codeProvince ?? 'H',
-//            '01',
-//            $restaurantId ?? 00
-//        );
-//
-//        $order->ref = $invoice->invoice_id;
-//        $order->update();
-
-
 
         return $order;
     }

@@ -263,42 +263,120 @@ class TropiPayController extends Controller
         }
     }
 
+//    public function responseNotification(Request $request){
+//        // $data = json_decode($request->getContent(), true);
+//
+//        DB::beginTransaction();
+//        $request = json_decode($request->getContent(), true);
+//        $data =  $request['data'];
+//        $movementID = explode($data['reference']);
+//
+//        $movement = MovementAmount::find($movementID);
+//
+//        if ($movement) {
+//
+//            $currency = Currency::whereCode($data['destinationCurrency'])->first();
+//
+//            if($currency){
+//                self::processOrder($movement, $data, $currency);
+//            }
+//            else{
+//
+//                $currency = new Currency();
+//                $currency->name = $data['destinationCurrency'];
+//                $currency->code = $data['destinationCurrency'];
+//                $currency->main = false;
+//                $currency->rate = 1;
+//                $currency->save();
+//
+//                self::processOrder($movement, $data, $currency);
+//            }
+//
+//        }
+//
+//        $movement->status = 'completed';
+//        $movement->update();
+//
+//        DB::commit();
+//
+//        return 'ok';
+//    }
+
     public function responseNotification(Request $request)
     {
-        // $data = json_decode($request->getContent(), true);
+        // DB::beginTransaction();
 
-        DB::beginTransaction();
         $request = json_decode($request->getContent(), true);
         $data =  $request['data'];
-        $movementID = explode($data['reference']);
 
-        $movement = MovementAmount::find($movementID);
+        $movement = MovementsBalancePending::find($movementID);
 
         if ($movement) {
 
-            $currency = Currency::whereCode($data['destinationCurrency'])->first();
+            if ($movement->type == 'order') {
 
-            if($currency){
-                self::processOrder($movement, $data, $currency);
+                $order = Order::find($movement->model_id);
+                // NotificaController::NotificaAdmin('error', 'Tiene orden: ' . $order->ref);
+
+                if ($request['status'] == 'OK') {
+
+                    //$requestSignature =  $data['signature'];
+                    // $ourSignature = hash('sha256', $order->ref . $email . sha1($password) . $order->total * 100);
+
+                    //  NotificaController::NotificaAdmin('error', 'Nuestra firma: ' . $ourSignature . ' Firma de la notificación: ' . $requestSignature);
+
+                    //    if ($requestSignature != $ourSignature) {
+                    //   NotificaController::NotificaAdmin('error', 'Error en la firma de la notificación en el pedido con referencia: ' . $order->ref);
+                    //  return;
+                    //  }
+
+                    $order->payload_response =  json_encode($data);
+                    $order->total = $data['destinationAmount'] / 100;
+                    $order->currency_code = $data['destinationCurrency'];
+                    // $order->status_payment_external = $data['state'];
+                    $order->update();
+
+
+                    OrderController::orderPaid($order->id);
+                } elseif ($data['state'] == 4) {
+
+                    $order->payment_status = 'failed';
+                    $order->status = 'canceled';
+                    $order->update();
+
+                    //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+
+                    NotificaController::NotificaAdmin('error', 'El pago de la orden #' . $order->red . ' ha sido rechazado por la pasarela de pagos');
+                }
+            } elseif ($movement->type == 'booking') {
+
+                if ($data['state'] == 5 &&  $request['status'] == 'OK') {
+
+                    $booking = Reservation::find($movement->model_id);
+                    $booking->price = $data['destinationAmount'] / 100;
+                    $booking->currency_code = $data['destinationCurrency'];
+                    $booking->update();
+
+                    BookingController::bookingPaid($booking->id);
+                } elseif ($data['state'] == 4) {
+
+                    $booking = Reservation::find($movement->model_id);
+                    $booking->payment_status = 'failed';
+                    $booking->status = 'canceled';
+                    $booking->update();
+
+                    NotificaController::NotificaAdmin('error', 'El pago de la reserva #' . $booking->red . ' ha sido rechazado por la pasarela de pagos');
+
+                    //Falta enviar notificacion al cliente
+
+                }
             }
-            else{
 
-                $currency = new Currency();
-                $currency->name = $data['destinationCurrency'];
-                $currency->code = $data['destinationCurrency'];
-                $currency->main = false;
-                $currency->rate = 1;
-                $currency->save();
 
-                self::processOrder($movement, $data, $currency);
-            }
-
+            $movement->delete();
         }
 
-        $movement->status = 'completed';
-        $movement->update();
-
-        DB::commit();
+        //   DB::commit();
 
         return 'ok';
     }

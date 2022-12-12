@@ -532,26 +532,6 @@ class OrderController extends Controller
             $order->user_id = $userId;
         }
 
-//      idShop: '',
-//      products: cart,
-//      deliveryCost: method !== methodsDeliveries[0] ? Number(deliveryPrice) : 0,
-//      discountCost: 0,
-//      userName: userName+''+userLastName,
-//      userEmail,
-//      userAddress,
-//      userPhone,
-//      methodDelivery: method !== methodsDeliveries[0] ? 'delivery' : 'pick',
-//      methodPayment: 'tropipay',
-//      client: {
-//        clientName: data.clientName,
-//        clientLastName: data.clientLastName,
-//        clientAddress: data.clientAddress,
-//        clientEmail: data.clientEmail,
-//        clientPhone: data.clientPhone,
-//        clientCountry: data.clientCountry,
-//      },
-//      currencyId: currencyMarket
-        
         $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $orderInfo['methodDelivery'];
         $order->status_payment = 'pending';

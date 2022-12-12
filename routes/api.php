@@ -16,6 +16,7 @@ use App\Http\Controllers\v1\UserController;
 use App\Http\Controllers\v1\PromosController;
 use App\Http\Controllers\v1\SuscriptorsController;
 use App\Http\Controllers\v1\TropiPayController;
+use App\Http\Controllers\v1\PaymentMethodsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +103,8 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/settings/data-canva-chart', [SettingsController::class, 'getChartOrdersStats']);
     Route::get('/v1/settings/data-pie-chart', [SettingsController::class, 'getChartProductsSoldByCategories']);
     Route::delete('/v1/settings/delete', [SettingsController::class, 'deleteSettings']);
+    Route::post('/v1/settings/payment-method/new', [PaymentMethodsController::class, 'newPaymentMethod']);
+    Route::get('/v1/settings/payment-method/view', [PaymentMethodsController::class, 'getPaymentMethod']);
 
 // section Routes_Currency
     Route::get('/v1/currency/all', [CurrencyController::class, 'getCurrencies']);

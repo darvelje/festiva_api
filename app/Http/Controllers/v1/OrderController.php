@@ -10,6 +10,7 @@ use App\Models\OrderProduct;
 use App\Models\Shop;
 use App\Models\ShopProduct;
 use App\Models\User;
+use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -521,121 +522,137 @@ class OrderController extends Controller
 //            );
 //        }
 //    }
-    public static function newOrder(
+    public static function newOrder($orderInfo, $userId) {
 
-        $cart,
-        $userId = null,
-        $pointToDelivery,
-        $deliveryCost,
-
-        $userName,
-        $userEmail,
-        $userPhone,
-        $schedule,
-        $dayDelivery,
-        $restaurantId,
-        $ownerPhone,
-        $ownerName,
-        $ownerEmail,
-        $userNote,
-        $userAddress,
-        $methodDelivery
-
-    ) {
-        //  DB::beginTransaction();
         $order = new Order();
 
         if ($userId) {
             $order->user_id = $userId;
         }
 
-        //Schedule delivery or Pick
-        //Hora
-        $order->schedule_id = $schedule;
-        //Dia
-        $order->date_delivery = $dayDelivery;
+//      idShop: '',
+//      products: cart,
+//      deliveryCost: method !== methodsDeliveries[0] ? Number(deliveryPrice) : 0,
+//      discountCost: 0,
+//      userName: userName+''+userLastName,
+//      userEmail,
+//      userAddress,
+//      userPhone,
+//      methodDelivery: method !== methodsDeliveries[0] ? 'delivery' : 'pick',
+//      methodPayment: 'tropipay',
+//      client: {
+//        clientName: data.clientName,
+//        clientLastName: data.clientLastName,
+//        clientAddress: data.clientAddress,
+//        clientEmail: data.clientEmail,
+//        clientPhone: data.clientPhone,
+//        clientCountry: data.clientCountry,
+//      },
+//      currencyId: currencyMarket
 
-        //Receptor
-        $order->user_name = $userName;
-        $order->user_note = $userNote;
-        $order->user_email = $userEmail;
-        $order->user_phone = $userPhone;
-        $order->user_address = $userAddress;
-        //Cleinte
-        $order->client_phone = $ownerPhone;
-        $order->client_name = $ownerName;
-        $order->client_email = $ownerEmail;
+        $order->shop_id = $orderInfo['idShop'];
+        $order->delivery_type = $orderInfo['methodDelivery'];
+        $order->status_payment = 'pending';
+        $order->status = 1;
+        $order->currency_id = $orderInfo['currencyId'];
+
+        // ----- no mando esto
+        $order->shop_coupon_id = null;
+        // ----- no mando esto
+
+        $total_price = 0;
+
+        $lengthProducts = count($orderInfo['products']);
+        for($j = 0; $j < $lengthProducts; $j++) {
+            $total_price = $total_price +( $orderInfo['products'][$j]['quantity'] * $orderInfo['products'][$j]['price']);
+        }
+
+        $order->total_price = $total_price;
+
+        $userAddress = new UserAddress();
+
+        $userAddress->user_id = $userId;
+        $userAddress->contact_name = $orderInfo['userName'];
+        $userAddress->contact_phone = $orderInfo['userPhone'];
+        $userAddress->contact_email = $orderInfo['userEmail'];
+        $userAddress->name = $orderInfo['userName'];
+        $userAddress->address = $orderInfo['userAddress'];
+
+        // ----- no mando esto
+        $userAddress->zip_code = null;
+        $userAddress->localitie_id = null;
+        // ----- no mando esto
+
+        $userAddress->save();
+
+        $order->user_address_id = $userAddress->id;
 
         $order->save();
 
-
-
-        if (Restaurant::find($restaurantId)) {
-            $restaurant = Restaurant::find($restaurantId);
-            $order->restaurant_id = $restaurant->id;
-            $codeProvince = $restaurant->codeProvince();
-            $restaurantId = $restaurant->id;
+        for($j = 0; $j < $lengthProducts; $j++)
+        {
+            $orderProduct = new OrderProduct();
+            $orderProduct->order_id = $order->id;
+            $orderProduct->shop_product_id = $orderInfo['products'][$j]['id'];
+            $orderProduct->amount = $orderInfo['products'][$j]['quantity'];
+            $orderProduct->save();
         }
 
-        // if ($pointToDelivery) {
-        //     $order->point_id = $pointToDelivery;
-        //     $order->delivery = 'delivery';
-        //     $point = DeliveryPoint::find($pointToDelivery);
-        //     if ($point) {
-        //         $order->user_name = $point->name;
-        //         $order->user_phone = $point->phone;
-        //     }
-        // } else {
-        //     $order->delivery = 'pick';
-        // }
 
-        $order->delivery = $methodDelivery;
-
-
-        $total = 0;
-        if ($model == 'product') {
-            //Add each product to order
-            foreach ($cart as $model) {
-                if (Product::find($model['id'])) {
-                    $productInOrder = new OrderProduct();
-                    $productInOrder->product_id = $model['id'];
-                    $productInOrder->order_id = $order->id;
-                    $productInOrder->amount = $model['quantity'];
-                    $productInOrder->save();
-                    $total = $total + $model['price'] * $model['quantity'];
-                }
-            }
-            //+ Cost delivery
-            $total = $total + $deliveryCost;
-            //Find the price total sum each price total
-            $order->price = $total;
-        }
-
-        $order->fee = $total * Setting::first()->fee_restaurants / 100;
-        $newTotal = $order->fee + $total;
-
-        if($newTotal < 20){
-            $order->fee = $order->fee + 0.50;
-        }
-
-        $order->total = $order->fee + $total;
-        $order->delivery_cost = $deliveryCost;
-        $order->update();
-
-
-        $invoice = InvoiceController::newInvoice(
-            $userId,
-            $order->total,
-            'pending',
-            'Nuevo Pedido para: ' . $restaurant->name . ' con ID: ' . $restaurant->id,
-            $order->id,
-            $codeProvince ?? 'H',
-            '01',
-            $restaurantId ?? 00
-        );
-
-        $order->ref = $invoice->invoice_id;
-        $order->update();
+//        if (Restaurant::find($restaurantId)) {
+//            $restaurant = Restaurant::find($restaurantId);
+//            $order->restaurant_id = $restaurant->id;
+//            $codeProvince = $restaurant->codeProvince();
+//            $restaurantId = $restaurant->id;
+//        }
+//
+//        $order->delivery = $methodDelivery;
+//
+//
+//        $total = 0;
+//        if ($model == 'product') {
+//            //Add each product to order
+//            foreach ($cart as $model) {
+//                if (Product::find($model['id'])) {
+//                    $productInOrder = new OrderProduct();
+//                    $productInOrder->product_id = $model['id'];
+//                    $productInOrder->order_id = $order->id;
+//                    $productInOrder->amount = $model['quantity'];
+//                    $productInOrder->save();
+//                    $total = $total + $model['price'] * $model['quantity'];
+//                }
+//            }
+//            //+ Cost delivery
+//            $total = $total + $deliveryCost;
+//            //Find the price total sum each price total
+//            $order->price = $total;
+//        }
+//
+//        $order->fee = $total * Setting::first()->fee_restaurants / 100;
+//        $newTotal = $order->fee + $total;
+//
+//        if($newTotal < 20){
+//            $order->fee = $order->fee + 0.50;
+//        }
+//
+//        $order->total = $order->fee + $total;
+//        $order->delivery_cost = $deliveryCost;
+//        $order->update();
+//
+//
+//        $invoice = InvoiceController::newInvoice(
+//            $userId,
+//            $order->total,
+//            'pending',
+//            'Nuevo Pedido para: ' . $restaurant->name . ' con ID: ' . $restaurant->id,
+//            $order->id,
+//            $codeProvince ?? 'H',
+//            '01',
+//            $restaurantId ?? 00
+//        );
+//
+//        $order->ref = $invoice->invoice_id;
+//        $order->update();
 
 
 

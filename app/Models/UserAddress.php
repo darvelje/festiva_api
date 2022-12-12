@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property string $contact_name
  * @property string $contact_phone
+ * @property string $contact_email
  * @property string $zip_code
  * @property string $name
  * @property string $address
@@ -24,7 +25,7 @@ class UserAddress extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'localitie_id', 'created_at', 'updated_at', 'contact_name', 'contact_phone', 'zip_code', 'name', 'address'];
+    protected $fillable = ['user_id', 'contact_email', 'localitie_id', 'created_at', 'updated_at', 'contact_name', 'contact_phone', 'zip_code', 'name', 'address'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -2,10 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property integer $id
+ * @property integer $currency_id
+ * @property string $model
+ * @property string $status
+ * @property integer $model_id
+ * @property float $amount
+ * @property string $type
+ * @property string $detail
+ * @property string $method
+ * @property boolean $only_register
+ * @property string $created_at
+ * @property string $updated_at
+ */
 class MovementAmount extends Model
 {
-    use HasFactory;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'cont_movement';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['status', 'currency_id', 'model', 'model_id', 'amount', 'type', 'detail', 'method', 'only_register', 'created_at', 'updated_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+
 }

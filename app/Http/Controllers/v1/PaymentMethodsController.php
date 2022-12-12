@@ -27,18 +27,18 @@ class PaymentMethodsController extends Controller
 
     }
 
-    public static function newPaymentMethod( $name, $mode, $client_id, $client_secret, $status){
+    public static function newPaymentMethod( Request $request){
 
         try{
             DB::beginTransaction();
 
             $paymentMethod = new PaymentMethod();
 
-            $paymentMethod->name = $name;
-            $paymentMethod->mode = $mode;
-            $paymentMethod->client_id = $client_id;
-            $paymentMethod->client_secret = $client_secret;
-            $paymentMethod->status = $status;
+            $paymentMethod->name = $request->methodName;
+            $paymentMethod->mode = $request->methodMode;
+            $paymentMethod->client_id = $request->methodClientId;
+            $paymentMethod->client_secret = $request->methodClientSecret;
+            $paymentMethod->status = $request->methodStatus;
 
             $paymentMethod->save();
 

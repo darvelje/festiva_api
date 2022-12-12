@@ -551,9 +551,7 @@ class OrderController extends Controller
 //        clientCountry: data.clientCountry,
 //      },
 //      currencyId: currencyMarket
-
-        return $orderInfo;
-
+        
         $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $orderInfo['methodDelivery'];
         $order->status_payment = 'pending';

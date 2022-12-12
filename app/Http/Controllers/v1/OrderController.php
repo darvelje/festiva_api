@@ -552,7 +552,7 @@ class OrderController extends Controller
 //      },
 //      currencyId: currencyMarket
 
-        return $orderInfo->idShop;
+        return $orderInfo;
 
         $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $orderInfo['methodDelivery'];

@@ -16,7 +16,7 @@ class PaymentController extends Controller
         $userDb = $request->user();
 
         $order = OrderController::newOrder(
-            $request->data,
+            $request->order,
             $userDb->id,
         );
 

@@ -550,6 +550,8 @@ class OrderController extends Controller
 //      },
 //      currencyId: currencyMarket
 
+        return $orderInfo;
+
         $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $orderInfo['methodDelivery'];
         $order->status_payment = 'pending';

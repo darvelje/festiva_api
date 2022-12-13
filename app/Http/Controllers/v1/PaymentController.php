@@ -21,11 +21,13 @@ class PaymentController extends Controller
 
         $newProduct = collect($ordersIdsCollectionNew);
 
+        $products = $newProduct->groupBy('idShop');
+
        // $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
 
         return response()->json([
             'code' => 'test',
-            'return' => $newProduct
+            'return' => $products
         ]);
 
 

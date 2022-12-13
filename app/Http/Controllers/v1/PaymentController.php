@@ -17,7 +17,7 @@ class PaymentController extends Controller
 
 
 
-        $ordersIdsCollectionNew = $request->order->products->values()->all();
+        $ordersIdsCollectionNew = $request->order['products']->values()->all();
 
        // $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
 

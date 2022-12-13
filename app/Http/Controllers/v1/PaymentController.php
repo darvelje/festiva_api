@@ -17,13 +17,15 @@ class PaymentController extends Controller
 
 
 
-        $ordersIdsCollectionNew = $request->order['products']->values()->all();
+        $ordersIdsCollectionNew = $request->order['products'];
+
+        $newProduct = collect($ordersIdsCollectionNew);
 
        // $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
 
         return response()->json([
             'code' => 'test',
-            'return' => $ordersIdsCollectionNew
+            'return' => $newProduct
         ]);
 
 

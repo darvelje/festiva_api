@@ -522,9 +522,7 @@ class OrderController extends Controller
 //            );
 //        }
 //    }
-    public static function newOrder($orderInfo, $userId) {
-
-
+    public static function newOrder($orderInfo, $products, $userId) {
 
         $order = new Order();
 
@@ -532,7 +530,7 @@ class OrderController extends Controller
             $order->user_id = $userId;
         }
 
-        $order->shop_id = $orderInfo['idShop'];
+        $order->shop_id = $products[0]['idShop'];
         $order->delivery_type = $orderInfo['methodDelivery'];
         $order->status_payment = 'pending';
         $order->status = 1;

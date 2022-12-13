@@ -21,21 +21,23 @@ class PaymentController extends Controller
 
         $newProduct = collect($ordersIdsCollectionNew);
 
-        $products = $newProduct->groupBy('idShop');
+        $shopProducts = $newProduct->groupBy('idShop');
 
        // $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
 
-        return response()->json([
-            'code' => 'test',
-            'return' => $products
-        ]);
+//        return response()->json([
+//            'code' => 'test',
+//            'return' => $products
+//        ]);
 
+        foreach ($shopProducts as $shopProduct){
+            $order = OrderController::newOrder(
+                $request->order,
+                $shopProduct,
+                $userDb->id,
+            );
+        }
 
-
-        $order = OrderController::newOrder(
-            $request->order,
-            $userDb->id,
-        );
 
         if ($order) {
             if ($request->methodPayment == 'tropipay') {

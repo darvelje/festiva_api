@@ -15,15 +15,15 @@ class PaymentController extends Controller
 
         $userDb = $request->user();
 
-        $ordersIdsCollection = collect($request->order);
 
-        $ordersIdsCollectionNew = $ordersIdsCollection->values()->all();
 
-        $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
+        $ordersIdsCollectionNew = $request->order->products->values()->all();
+
+       // $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
 
         return response()->json([
             'code' => 'test',
-            'return' => $ordersIds
+            'return' => $ordersIdsCollectionNew
         ]);
 
 

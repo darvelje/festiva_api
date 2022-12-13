@@ -382,7 +382,7 @@ class ProductController extends Controller
     //section Get_Product_By_Shop_Slug
     public function getProductByBusinessSlug(Request $request){
 
-        $shop = Shop::with('shopProducts.shopProductPhotos','shopProducts','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct', 'shopProducts.shopProductsPricesrates',  'shopProducts.shopProductsPricesrates.currency')->whereSlug($request->businessUrl)->first();
+        $shop = Shop::with('shopProducts.shopProductPhotos','shopProducts', 'shopProducts.shop','shopProducts.shopProductsHasCategoriesProducts.categoriesProduct', 'shopProducts.shopProductsPricesrates',  'shopProducts.shopProductsPricesrates.currency')->whereSlug($request->businessUrl)->first();
 
         if($shop){
             $products =$shop->shopProducts;

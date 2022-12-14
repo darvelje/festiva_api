@@ -28,7 +28,7 @@ class PaymentController extends Controller
 //            'return' => $products
 //        ]);
 
-        foreach ($request->orders as $order){
+        foreach ($request->order as $order){
 
         return response()->json([
             'code' => 'test',

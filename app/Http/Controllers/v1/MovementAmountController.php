@@ -14,6 +14,7 @@ class MovementAmountController extends Controller
 
         $movement->model = $model;
         $movement->model_id = $model_id;
+        $movement->orders_id = $ordersIds;
         $movement->amount = $amount;
         $movement->method = $method;
         $movement->detail = $detail;

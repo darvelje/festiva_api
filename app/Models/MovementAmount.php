@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $currency_id
  * @property string $model
  * @property string $status
+ * @property string $orders_id
  * @property integer $model_id
 * @property float $amount
  * @property string $type
@@ -30,7 +31,7 @@ class MovementAmount extends Model
     /**
      * @var array
      */
-    protected $fillable = ['model', 'model_id', 'amount', 'method', 'detail', 'currency_id',  'only_register',   'status',   'type',  'created_at', 'updated_at'];
+    protected $fillable = ['orders_id','model', 'model_id', 'amount', 'method', 'detail', 'currency_id',  'only_register',   'status',   'type',  'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

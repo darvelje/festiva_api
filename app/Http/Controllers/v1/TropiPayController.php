@@ -43,9 +43,11 @@ class TropiPayController extends Controller
 
         try {
             $token = self::auth($mode, $clientId, $clientSecret);
+
             if ($token['error'] == 501) {
                 return $token;
             }
+            
             if($mode == 'sandbox'){
               $url =  'https://tropipay-dev.herokuapp.com/api/v2/paymentcards';
             }else{
@@ -188,12 +190,15 @@ class TropiPayController extends Controller
         }
     }
 
-    public static function auth($mode = 'test', $clientId, $clientSecret)
+    public static function auth($mode, $clientId, $clientSecret)
     {
 
+        if($mode == 'sandbox'){
+            $url =  'https://tropipay-dev.herokuapp.com/api/v2/paymentcards';
+        }else{
+            $url =  'https://www.tropipay.com/api/v2/paymentcards';
+        }
 
-
-        $url =  'https://www.tropipay.com/api/v2/access/token';
 
 
         $curl = curl_init();
@@ -219,7 +224,6 @@ class TropiPayController extends Controller
         $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
-
 
 
         if ($http_status != 200) {

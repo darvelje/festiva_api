@@ -31,7 +31,7 @@ class PaymentController extends Controller
         foreach ($request->order as $order){
 
         return response()->json([
-            'code' => 'test',
+            'code' => 'test order',
             'return' => $order
         ]);
 

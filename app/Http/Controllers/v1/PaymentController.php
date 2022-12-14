@@ -14,14 +14,12 @@ class PaymentController extends Controller
         DB::beginTransaction();
 
         $userDb = $request->user();
-
-
-
-        $ordersIdsCollectionNew = $request->order['products'];
-
-        $newProduct = collect($ordersIdsCollectionNew);
-
-        $shopProducts = $newProduct->groupBy('idShop');
+//
+//        $ordersIdsCollectionNew = $request->order['products'];
+//
+//        $newProduct = collect($ordersIdsCollectionNew);
+//
+//        $shopProducts = $newProduct->groupBy('idShop');
 
        // $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
 
@@ -30,12 +28,18 @@ class PaymentController extends Controller
 //            'return' => $products
 //        ]);
 
-        foreach ($shopProducts as $shopProduct){
-            $order = OrderController::newOrder(
-                $request->order,
-                $shopProduct,
-                $userDb->id,
-            );
+        foreach ($request->orders as $order){
+
+        return response()->json([
+            'code' => 'test',
+            'return' => $order
+        ]);
+
+//            $order = OrderController::newOrder(
+//                $request->order,
+//                $shopProduct,
+//                $userDb->id,
+//            );
         }
 
 

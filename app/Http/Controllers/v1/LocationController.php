@@ -186,4 +186,50 @@ class LocationController extends Controller
         );
 
     }
+
+
+    public static function getCountriesTropipay()
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://tropipay-dev.herokuapp.com/api/v2/countries',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_HTTPHEADER => ''
+        ));
+
+
+        $result = curl_exec($curl);
+
+        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        curl_close($curl);
+
+
+
+        if ($http_status != 200) {
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Error al obtener los paises'
+                ]
+            );
+        } else {
+            $json = json_decode($result, true);
+
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Success',
+                    'data' => $json
+                ]
+            );
+        }
+    }
 }

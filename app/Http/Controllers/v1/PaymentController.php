@@ -32,7 +32,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'code' => 'test order',
-            'return' => $order->nameShop
+            'return' => $order['nameShop']
         ]);
 
 //            $order = OrderController::newOrder(

@@ -19,7 +19,7 @@ use Str;
 class TropiPayController extends Controller
 {
     public static function payWithTropiPay(
-        $mode = 'live',
+        $mode,
         $reference,
         $concept,
         $favorite,
@@ -42,19 +42,15 @@ class TropiPayController extends Controller
     ) {
 
         try {
-            //code...
-
-
             $token = self::auth($mode, $clientId, $clientSecret);
-
-
             if ($token['error'] == 501) {
                 return $token;
             }
-
-            $url =  'https://www.tropipay.com/api/v2/paymentcards';
-
-
+            if($mode == 'sandbox'){
+              $url =  'https://tropipay-dev.herokuapp.com/api/v2/paymentcards';
+            }else{
+               $url =  'https://www.tropipay.com/api/v2/paymentcards';
+            }
 
             $data = [
                 'reference' => $reference,

@@ -47,7 +47,7 @@ class TropiPayController extends Controller
             if ($token['error'] == 501) {
                 return $token;
             }
-            
+
             if($mode == 'sandbox'){
               $url =  'https://tropipay-dev.herokuapp.com/api/v2/paymentcards';
             }else{
@@ -220,6 +220,11 @@ class TropiPayController extends Controller
         ));
 
         $response = curl_exec($curl);
+
+        return response()->json([
+            'error'=>'error',
+            'tropipayError' =>$response
+        ]);
 
         $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 

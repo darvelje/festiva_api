@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
+use App\Models\PaymentMethod;
 use App\Models\ShopCurrency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +14,8 @@ class PaymentController extends Controller
     public function newPayment(Request $request){
 
         DB::beginTransaction();
+
+        $urlRequest = $request->host();
 
         $userDb = $request->user();
 
@@ -23,6 +27,8 @@ class PaymentController extends Controller
             'methodPayment' => $request->order['methodPayment'],
 
         ]);
+
+        $client = $request->order['client'];
 
         $receiver = collect([
             'userName' => $request->order['userName'],
@@ -64,12 +70,7 @@ class PaymentController extends Controller
                         'pending', 'earning');
                 }
 
-                return response()->json([
-                    'code' => 'movements',
-                    'message' => $movementPending
-                ]);
-
-               // return $this->newPaymentWithTropiPay($order, $movementPending, $request->order->client);
+               return $this->newPaymentWithTropiPay($movementPending,$client,$generalData,$receiver,$urlRequest);
             }
         } else {
 
@@ -80,51 +81,42 @@ class PaymentController extends Controller
         }
     }
 
-    public function newPaymentWithTropiPay($order, $movementPending, $client){
+    public function newPaymentWithTropiPay($movementPending, $client,$data,$receiver,$urlRequest){
+
+        $payment = PaymentMethod::where('name','Tropipay')->first();
+        $currency = Currency::find($movementPending->currency_id);
 
 
-        $setting = Setting::first();
+        if(!$payment || !$currency){
+            //return error
+        }
 
-        $clientId = $setting->tropipay_client;
-        $clientSecret =  $setting->tropipay_secret;
-        $order->method_payment = 'tropipay';
-
-        $client = $client;
-
-
-
-        // return response()->json([
-        //     'code' => 'order',
-        //     'message' => 'Ocurrió un error con la pasarela de pagos - Error Interno del Servidor',
-        //     'order' => $order,
-
-        // ]);
+        $clientId = $payment->client_id;
+        $clientSecret =  $payment->client_secret;
+        $mode = $payment->mode;
 
         $result = TropiPayController::payWithTropiPay(
-            'live',
-            $order->id . '-' . $movementPending->id,
-            'Pago del pedido: ' . $order->id,
+            $mode,
+            $movementPending->id,
+            $movementPending->detail,
             false,
-            'Pago del pedido: ' . $order->id,
-            $order->total * 100,
-            $currencyCode,
+             $movementPending->detail,
+            $movementPending->amount * 100,
+            $currency->code,
             true,
             4,
             1,
             'es',
-            'https://yavoycuba.com/pagocompletado',
-            'https://yavoycuba.com/errorenpago',
-            'https://app.yavoycuba.com/api/tropipay/api/notification',
-            now()->timezone('Europe/Madrid')->format('Y-m-d'),
+            $urlRequest.'/pagocompletado',
+            $urlRequest.'/errorenpago',
+            env('APP_URL').'/api/v1/tropipay/api/notification',
+                    now()->timezone('Europe/Madrid')->format('Y-m-d'),
             $client,
             true,
             ["EXT", "TPP"],
             $clientId,
             $clientSecret
         );
-
-
-
 
         if ($result['error'] == '500') {
             return response()->json([
@@ -143,11 +135,9 @@ class PaymentController extends Controller
         }
 
         $movementPending->url = $result['url'];
-        $movementPending->transation_uuid = $result['id'];
+      //  $movementPending->transation_uuid = $result['id'];
         $movementPending->update();
 
-
-        $order->update();
 
         DB::commit();
 

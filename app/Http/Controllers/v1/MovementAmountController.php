@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class MovementAmountController extends Controller
 {
 
-    public static function newMovement( $model, $model_id, $amount, $method, $detail, $currency_id, $only_register, $status, $type){
+    public static function newMovement( $model, $model_id,$ordersIds, $amount, $method, $detail, $currency_id, $only_register, $status, $type){
 
         $movement = new MovementAmount();
 

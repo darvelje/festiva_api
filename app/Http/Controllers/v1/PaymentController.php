@@ -14,42 +14,62 @@ class PaymentController extends Controller
         DB::beginTransaction();
 
         $userDb = $request->user();
-//
-//        $ordersIdsCollectionNew = $request->order['products'];
-//
-//        $newProduct = collect($ordersIdsCollectionNew);
-//
-//        $shopProducts = $newProduct->groupBy('idShop');
 
-       // $ordersIds = $ordersIdsCollectionNew->products->pluck('idShop')->unique()->toArray();
+        $generalData = collect([
+            'currencyId' => $request->order['currencyId'],
+            'deliveryCost' => $request->order['deliveryCost'],
+            'methodDelivery' => $request->order['methodDelivery'],
+            'discountCost' => $request->order['discountCost'],
+            'methodPayment' => $request->order['methodPayment'],
 
-//        return response()->json([
-//            'code' => 'test',
-//            'return' => $products
-//        ]);
+        ]);
+
+        $receiver = collect([
+            'userName' => $request->order['userName'],
+            'userEmail' => $request->order['userEmail'],
+            'userAddress' => $request->order['userAddress'],
+            'userPhone' => $request->order['userPhone'],
+        ]);
+
+        $ordersIds = collect();
+        $orderTotalPrice = 0;
 
         foreach ($request->order['orders'] as $order){
 
-        return response()->json([
-            'code' => 'test order',
-            'return' => $order['nameShop']
-        ]);
+            $order = OrderController::newOrder(
+                $order,
+                $userDb->id,
+                $generalData,
+                $receiver
+            );
 
-//            $order = OrderController::newOrder(
-//                $request->order,
-//                $shopProduct,
-//                $userDb->id,
-//            );
+            $ordersIds->add($order);
+            $orderTotalPrice += $order->total_price;
+
         }
 
 
-        if ($order) {
-            if ($request->methodPayment == 'tropipay') {
-                $movementPending = MovementAmountController::newMovement('order', $order->id, $order->total,
-                    'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
-                    'pending', 'earning');
+        if ($ordersIds->count()>0) {
+            if ($generalData['methodPayment'] == 'tropipay') {
 
-                return $this->newPaymentWithTropiPay($order, $movementPending, $request->order->client);
+                if($ordersIds->count()==1 ){
+                    $order = $ordersIds->first();
+                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, $order->total_price,
+                        'tropipay', 'Pago del pedido: ' . $order->id,  $generalData['currency_id'], true,
+                        'pending', 'earning');
+                }elseif($ordersIds->count()>1){
+                    $ordersIds = $ordersIds->pluck('id')->toArray();
+                    $movementPending = MovementAmountController::newMovement('orders', null,$ordersIds, $orderTotalPrice,
+                        'tropipay', 'Pago de los pedidos: ' . $ordersIds,  $generalData['currency_id'], true,
+                        'pending', 'earning');
+                }
+
+                return response()->json([
+                    'code' => 'movements',
+                    'message' => $movementPending
+                ]);
+
+               // return $this->newPaymentWithTropiPay($order, $movementPending, $request->order->client);
             }
         } else {
 

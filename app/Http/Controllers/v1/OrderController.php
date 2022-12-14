@@ -522,7 +522,7 @@ class OrderController extends Controller
 //            );
 //        }
 //    }
-    public static function newOrder($orderInfo, $products, $userId) {
+    public static function newOrder($orderInfo,$userId,$data,$receiver) {
 
         $order = new Order();
 
@@ -530,11 +530,11 @@ class OrderController extends Controller
             $order->user_id = $userId;
         }
 
-        $order->shop_id = $products[0]['idShop'];
-        $order->delivery_type = $orderInfo['methodDelivery'];
+        $order->shop_id = $orderInfo['idShop'];
+        $order->delivery_type = $data['methodDelivery'];
         $order->status_payment = 'pending';
         $order->status = 1;
-        $order->currency_id = $orderInfo['currencyId'];
+        $order->currency_id = $data['currencyId'];
 
         // ----- no mando esto
         $order->shop_coupon_id = null;
@@ -547,16 +547,16 @@ class OrderController extends Controller
             $total_price = $total_price +( $orderInfo['products'][$j]['quantity'] * $orderInfo['products'][$j]['price']);
         }
 
-        $order->total_price = $total_price + $orderInfo['deliveryCost'];
+        $order->total_price = $total_price + $data['deliveryCost'];
 
         $userAddress = new UserAddress();
 
         $userAddress->user_id = $userId;
-        $userAddress->contact_name = $orderInfo['userName'];
-        $userAddress->contact_phone = $orderInfo['userPhone'];
-        $userAddress->contact_email = $orderInfo['userEmail'];
-        $userAddress->name = $orderInfo['userName'];
-        $userAddress->address = $orderInfo['userAddress'];
+        $userAddress->contact_name = $receiver['userName'];
+        $userAddress->contact_phone = $receiver['userPhone'];
+        $userAddress->contact_email = $receiver['userEmail'];
+        $userAddress->name = $receiver['userName'];
+        $userAddress->address = $receiver['userAddress'];
 
         // ----- no mando esto
         $userAddress->zip_code = null;

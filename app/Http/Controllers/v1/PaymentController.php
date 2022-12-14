@@ -59,7 +59,7 @@ class PaymentController extends Controller
                         'pending', 'earning');
                 }elseif($ordersIds->count()>1){
                     $ordersIds = $ordersIds->pluck('id')->toArray();
-                    $movementPending = MovementAmountController::newMovement('orders', null,$ordersIds, $orderTotalPrice,
+                    $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
                         'tropipay', 'Pago de los pedidos: ' . $ordersIds,  $generalData['currency_id'], true,
                         'pending', 'earning');
                 }

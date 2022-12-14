@@ -28,11 +28,11 @@ class PaymentController extends Controller
 //            'return' => $products
 //        ]);
 
-        foreach ($request->order as $order){
+        foreach ($request->order->orders as $order){
 
         return response()->json([
             'code' => 'test order',
-            'return' => $order['nameShop']
+            'return' => $order
         ]);
 
 //            $order = OrderController::newOrder(

@@ -70,6 +70,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/business/currency/all', [BusinessCurrencyController::class, 'getBusinessCurrencies']);
     Route::post('/v1/business/currency/view', [BusinessCurrencyController::class, 'getBusinessCurrencyById']);
     Route::get('/v1/business/currency/{businessUrl}', [BusinessCurrencyController::class, 'getBusinessCurrencyBySlug']);
+    Route::post('/v1/business/currencies', [BusinessCurrencyController::class, 'getBusinessCurrencyByBusinessId']);
     Route::post('/v1/business/currency/new', [BusinessCurrencyController::class, 'newBusinessCurrency']);
     Route::post('/v1/business/currency/update', [BusinessCurrencyController::class, 'updateBusinessCurrency']);
     Route::delete('/v1/business/currency/delete', [BusinessCurrencyController::class, 'deleteBusinessCurrency']);

@@ -78,6 +78,29 @@ class BusinessCurrencyController extends Controller
         );
     }
 
+    //section Get_Business_Currency_By_Business_Id
+    public function getBusinessCurrencyByBusinessId(Request $request){
+
+        $shopCurrency =  DB::table('view_shopcurrencies_shopid')->where('shop_id',$request->businessId)->get();
+
+        if($shopCurrency){
+            return response()->json(
+                [
+                    'code' => 'ok',
+                    'message' => 'Shop currencies',
+                    'currencies' => $shopCurrency
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'code' => 'error',
+                'message' => 'Business not found'
+            ]
+        );
+    }
+
     //section New_Business_Currency
     public function newBusinessCurrency(Request $request){
 

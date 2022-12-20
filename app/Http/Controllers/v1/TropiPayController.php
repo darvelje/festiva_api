@@ -20,60 +20,64 @@ class TropiPayController extends Controller
 {
     public static function payWithTropiPay(
         $mode,
-        $reference,
-        $concept,
-        $favorite,
-        $description,
         $amount,
+        $saveToken,
+        $provider,
         $currency,
+        $concept,
+        $description,
+        $reference,
+        $urlSuccess,
+        $urlFailed,
+        $urlNotification,
+        $directPayment,
+        $serviceDate,
         $singleUse,
         $reasonId,
         $expirationDays,
         $lang,
-        $urlSuccess,
-        $urlFailed,
-        $urlNotification,
-        $serviceDate,
         $client,
-        $directPayment,
-        $paymentMethods,
-        $clientId,
-        $clientSecret
+        $clientTermsAndConditions
     ) {
 
         try {
-            $token = self::auth($mode, $clientId, $clientSecret);
-
-            if ($token['error'] == 501) {
-                return $token;
-            }
+//            $token = self::auth($mode, $clientId, $clientSecret);
+//
+//            if ($token['error'] == 501) {
+//                return $token;
+//            }
 
             if($mode == 'sandbox'){
-              $url =  'https://tropipay-dev.herokuapp.com/api/v2/paymentcards';
+              $url =  'https://pproxy.rentalho.com/pay/do-sync?env=dev';
             }else{
-               $url =  'https://www.tropipay.com/api/v2/paymentcards';
+               $url =  'https://pproxy.rentalho.com/pay/do-sync?env=prod';
             }
 
             $data = [
-                'reference' => $reference,
-                'concept' => $concept,
-                'favorite' => $favorite,
-                'description' => $description,
-                'amount' => intval($amount),
+                'amount' => $amount,
+                'saveToken' => $saveToken,
+                'provider' => $provider,
                 'currency' => $currency,
+                'concept' => $concept,
+                'description' => $description,
+                'reference' => $reference,
+                'urlSuccess' => $urlSuccess,
+                'urlFailed' => $urlFailed,
+                'urlNotification' => $urlNotification,
+                'directPayment' => $directPayment,
+                'serviceDate' => $serviceDate,
                 'singleUse' => $singleUse,
                 'reasonId' => $reasonId,
                 'expirationDays' => $expirationDays,
                 'lang' => $lang,
-                'urlSuccess' => $urlSuccess,
-                'urlFailed' => $urlFailed,
-                'urlNotification' => $urlNotification,
-                'serviceDate' => $serviceDate,
-                'client' => $client,
-                'directPayment' => $directPayment,
-                'paymentMethods' => $paymentMethods,
+                'clientName' => $client['clientName'],
+                'clientLastName' =>  $client['clientLastName'],
+                'clientEmail' =>  $client['clientEmail'],
+                'clientCountryId' =>  $client['clientCountry'],
+                'clientPhone' =>  $client['clientPhone'],
+                'clientAddress' =>  $client['clientAddress'],
+                'clientTermsAndConditions' => $clientTermsAndConditions,
             ];
-
 
             $curl = curl_init();
 
@@ -88,20 +92,15 @@ class TropiPayController extends Controller
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => json_encode($data),
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: Bearer ' . $token['token'],
                     'Content-Type: application/json'
                 ),
             ));
-
-
-
 
             $result = curl_exec($curl);
 
             $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             curl_close($curl);
-
 
             if ($http_status != 200) {
 
@@ -110,25 +109,33 @@ class TropiPayController extends Controller
                 $json = json_decode($result);
 
 
-                $id = $json->{'id'};
-                $userId = $json->{'userId'};
-                $state = $json->{'state'};
-                $qrImage = $json->{'qrImage'};
-                $shortUrl = $json->{'shortUrl'};
+//                $id = $json->{'id'};
+//                $userId = $json->{'userId'};
+//                $state = $json->{'state'};
+//                $qrImage = $json->{'qrImage'};
+//                $shortUrl = $json->{'shortUrl'};
                 //save movement
 
                 return [
                     'error' => 0,
-                    'id' => $id,
-                    'url' => $shortUrl,
-                    'qrImage' => $qrImage,
-                    'state' => $state,
-                    'userId' => $userId,
-                    'result' => $result
+//                    'id' => $id,
+                    'url' =>  $json->{'paymentUrl'},
+//                    'qrImage' => $qrImage,
+//                    'state' => $state,
+//                    'userId' => $userId,
+//                    'result' => $result
                 ];
             }
         } catch (\Throwable $th) {
-            NotificaController::NotificaAdmin('error', Str::limit($th->getMessage(), 350));
+            return [
+                'error' => 1,
+                'message' => $th->getMessage(),
+//                    'qrImage' => $qrImage,
+//                    'state' => $state,
+//                    'userId' => $userId,
+//                    'result' => $result
+            ];
+//            NotificaController::NotificaAdmin('error', Str::limit($th->getMessage(), 350));
         }
     }
 
@@ -198,8 +205,6 @@ class TropiPayController extends Controller
         }else{
             $url =  'https://www.tropipay.com/api/v2/paymentcards';
         }
-
-
 
         $curl = curl_init();
 

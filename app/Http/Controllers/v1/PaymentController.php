@@ -8,6 +8,7 @@ use App\Models\PaymentMethod;
 use App\Models\ShopCurrency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use mysql_xdevapi\Collection;
 
 class PaymentController extends Controller
 {
@@ -50,27 +51,34 @@ class PaymentController extends Controller
             );
 
             $ordersIds->add($order);
+
             $orderTotalPrice += $order->total_price;
 
         }
 
 
+
+
         if ($ordersIds->count()>0) {
             if ($generalData['methodPayment'] == 'tropipay') {
-
+                //code here tropipay
+                $order = $ordersIds->first();
+                $movementPending = collect();
                 if($ordersIds->count()==1 ){
-                    $order = $ordersIds->first();
                     $movementPending = MovementAmountController::newMovement('order', $order->id,null, $order->total_price,
-                        'tropipay', 'Pago del pedido: ' . $order->id,  $generalData['currencyId'], true,
+                        'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
                         'pending', 'earning');
                 }elseif($ordersIds->count()>1){
                     $ordersIds = $ordersIds->pluck('id')->toArray();
                     $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
-                        'tropipay', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $generalData['currencyId'], true,
+                        'tropipay', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
                         'pending', 'earning');
                 }
 
                return $this->newPaymentWithTropiPay($movementPending,$client,$generalData,$receiver,$urlRequest);
+            }
+            else if($generalData['methodPayment'] == 'rentalhopay'){
+                //code here rentalho_pay
             }
         } else {
 
@@ -81,41 +89,40 @@ class PaymentController extends Controller
         }
     }
 
-    public function newPaymentWithTropiPay($movementPending, $client,$data,$receiver,$urlRequest){
+    public function newPaymentWithTropiPay($movementPending, $client, $data, $receiver, $urlRequest){
 
         $payment = PaymentMethod::where('name','Tropipay')->first();
+
         $currency = Currency::find($movementPending->currency_id);
 
-
-        if(!$payment || !$currency){
+        if(!$currency){
             //return error
         }
 
-        $clientId = $payment->client_id;
-        $clientSecret =  $payment->client_secret;
+//        $clientId = $payment->client_id;
+//        $clientSecret =  $payment->client_secret;
         $mode = $payment->mode;
 
         $result = TropiPayController::payWithTropiPay(
             $mode,
-            $movementPending->id,
-            $movementPending->detail,
-            false,
-             $movementPending->detail,
             $movementPending->amount * 100,
+            false,
+            'TPP',
             $currency->code,
-            true,
-            4,
-            1,
-            'es',
+            $movementPending->detail,
+            $movementPending->detail,
+            $movementPending->id,
             $urlRequest.'/pagocompletado',
             $urlRequest.'/errorenpago',
             env('APP_URL').'/api/v1/tropipay/api/notification',
-                    now()->timezone('Europe/Madrid')->format('Y-m-d'),
-            $client,
             true,
-            ["EXT", "TPP"],
-            $clientId,
-            $clientSecret
+            now()->timezone('Europe/Madrid')->format('Y-m-d'),
+            true,
+            2,
+            0,
+            false,
+            $client,
+            true
         );
 
         if ($result['error'] == '500') {

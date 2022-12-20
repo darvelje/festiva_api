@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewBusinessRequest;
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Shop;
@@ -526,9 +527,13 @@ class OrderController extends Controller
 
         $order = new Order();
 
+        $currencyCode = Currency::whereId($data['currencyId'])->first()->code ?? '';
+
         if ($userId) {
             $order->user_id = $userId;
         }
+
+        // if pago tropipay y la moneda  es euro
 
         $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $data['methodDelivery'];

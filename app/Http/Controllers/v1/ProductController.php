@@ -8,6 +8,7 @@ use App\Models\Locality;
 use App\Models\Municipality;
 use App\Models\Province;
 use App\Models\Shop;
+use App\Models\ShopCurrency;
 use App\Models\ShopDeliveryZone;
 use App\Models\ShopProduct;
 use App\Models\ShopProductPhoto;
@@ -989,7 +990,6 @@ class ProductController extends Controller
                 }
             }
 
-
             $lengthArrayProductCategory = count($request->productCategory);
 
             if($lengthArrayProductCategory != 0){
@@ -1001,13 +1001,21 @@ class ProductController extends Controller
                 }
             }
 
-            $lengthArrayProductPrice = count($request->productPrice);
+            $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $request->productShopId)->get();
 
-            for($i=0; $i<$lengthArrayProductPrice; $i++){
+            foreach ($shopCurrencies as $currency){
+
                 $productPrice = new ShopProductsPricesrate();
                 $productPrice->shop_product_id = $product->id;
-                $productPrice->currency_id = $request->productPrice[$i]['currencyId'];
-                $productPrice->price = $request->productPrice[$i]['value'];
+                $productPrice->currency_id = $currency->currency->id;
+
+                if($currency->currency->code === 'USD'){
+                    $productPrice->price = $request->productPrice;
+                }
+                else{
+                    $productPrice->price = $request->productPrice * $currency->rate;
+                }
+
                 $productPrice->save();
             }
 

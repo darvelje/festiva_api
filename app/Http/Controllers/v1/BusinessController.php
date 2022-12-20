@@ -277,6 +277,8 @@ class BusinessController extends Controller
             }
 
             $business->save();
+            
+            BusinessCurrencyController::newBusinessCurrency($business->id);
 
             DB::commit();
 

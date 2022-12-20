@@ -102,30 +102,42 @@ class BusinessCurrencyController extends Controller
     }
 
     //section New_Business_Currency
-    public function newBusinessCurrency(Request $request){
+    public static function newBusinessCurrency($businessId){
 
         try{
             DB::beginTransaction();
 
-            $result = ShopCurrency::where('shop_id', $request->shopCurrencyShopId)->where('currency_id', $request->shopCurrencyId)->first();
+            $result = Shop::whereId($businessId)->first();
 
-            if($result){
+            if(!$result){
                 return response()->json(
                     [
                         'code' => 'error',
-                        'message' => 'The store already has that currency'
+                        'message' => 'Shop not found'
                     ]
                 );
             }
 
-            $shopCurrency = new ShopCurrency();
+            $currencies = Currency::all();
 
-            $shopCurrency->shop_id = $request->shopCurrencyShopId;
-            $shopCurrency->currency_id = $request->shopCurrencyId;
-            $shopCurrency->rate = $request->shopCurrencyRate;
-            $shopCurrency->main = $request->shopCurrencyMain;
+            foreach ($currencies as $currency){
 
-            $shopCurrency->save();
+                $shopCurrency = new ShopCurrency();
+
+                $shopCurrency->shop_id = $businessId;
+                $shopCurrency->currency_id = $currency->id;
+                $shopCurrency->rate = 1;
+                if($currency->code === 'USD'){
+                    $shopCurrency->main = true;
+                }
+                else{
+                    $shopCurrency->main = false;
+                }
+
+                $shopCurrency->save();
+
+            }
+
 
             DB::commit();
 

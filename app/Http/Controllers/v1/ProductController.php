@@ -331,12 +331,14 @@ class ProductController extends Controller
         $product = ShopProduct::with('shopProductPhotos', 'shop', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates',  'shopProductsPricesrates.currency')->whereSlug($request->productSlug)->first();
 
         if($product){
-            if($product->shopProductsHasCategoriesProducts->count()>0){
-                $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
-                $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
-                $product->category_slug = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->slug;
-            }
+//            if($product->shopProductsHasCategoriesProducts->count()>0){
+//                $product->category_id = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->id;
+//                $product->category_name = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->name;
+//                $product->category_slug = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->slug;
+//            }
 
+            $product->categories = $product->shopProductsHasCategoriesProducts->categoriesProduct;
+            
             $product->photos = $product->shopProductPhotos;
 
             foreach ($product->photos as $prod_photo){

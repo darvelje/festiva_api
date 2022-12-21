@@ -351,7 +351,7 @@ class ProductController extends Controller
 
                 unset($category->category_product_id);
                 unset($category->shop_product_id);
-                //unset($category->categoriesProduct);
+                unset($category->categoriesProduct);
                 unset($category->created_at);
                 unset($category->updated_at);
             }

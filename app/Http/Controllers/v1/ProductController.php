@@ -1096,7 +1096,6 @@ class ProductController extends Controller
                 }
             }
 
-
             $IdCurrencyUSD = Currency::whereCode('USD')->first()->id;
 
             $found = ShopProductsPricesrate::where('currency_id', $IdCurrencyUSD)->where('shop_product_id',$request->productId)->where('price', $request->productPrice)->first();

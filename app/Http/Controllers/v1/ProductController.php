@@ -337,8 +337,14 @@ class ProductController extends Controller
 //                $product->category_slug = $product->shopProductsHasCategoriesProducts->first()->categoriesProduct->slug;
 //            }
 
-            $product->categories = $product->shopProductsHasCategoriesProducts->categoriesProduct;
-            
+//            foreach ($product->shopProductsHasCategoriesProducts as $category){
+//                $
+//                unset($prod_photo->created_at);
+//                unset($prod_photo->updated_at);
+//            }
+
+            $product->categories = $product->shopProductsHasCategoriesProducts;
+
             $product->photos = $product->shopProductPhotos;
 
             foreach ($product->photos as $prod_photo){

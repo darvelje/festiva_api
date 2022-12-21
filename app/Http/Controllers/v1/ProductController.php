@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\CategoriesProduct;
+use App\Models\Currency;
 use App\Models\Locality;
 use App\Models\Municipality;
 use App\Models\Province;
@@ -1095,17 +1096,36 @@ class ProductController extends Controller
                 }
             }
 
-            $lengthArrayProductPrice= count($request->productPrice);
+           // $lengthArrayProductPrice= count($request->productPrice);
 
-            ShopProductsPricesrate::where('shop_product_id',$request->productId)->delete();
+            $IdCurrencyUSD = Currency::whereCode('USD')->first()->id;
 
-            for($i=0; $i<$lengthArrayProductPrice; $i++){
-                $productPrice = new ShopProductsPricesrate();
-                $productPrice->shop_product_id = $request->productId;
-                $productPrice->currency_id = $request->productPrice[$i]['currencyId'];
-                $productPrice->price = $request->productPrice[$i]['value'];
+            $found = ShopProductsPricesrate::where('currency_id', $IdCurrencyUSD)->where('shop_product_id',$request->productId)->where('price', $request->productPrice)->first();
 
-                $productPrice->save();
+            if(!$found){
+
+                ShopProductsPricesrate::where('shop_product_id',$request->productId)->delete();
+
+                $shopId = ShopProduct::whereId($request->productId)->firts()->shop_id;
+
+                $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $shopId)->get();
+
+                foreach ($shopCurrencies as $currency){
+
+                    $productPrice = new ShopProductsPricesrate();
+                    $productPrice->shop_product_id = $request->productId;
+                    $productPrice->currency_id = $currency->currency->id;
+
+                    if($currency->currency->code === 'USD'){
+                        $productPrice->price = $request->productPrice;
+                    }
+                    else{
+                        $productPrice->price = $request->productPrice * $currency->rate;
+                    }
+
+                    $productPrice->save();
+                }
+
             }
 
             DB::commit();

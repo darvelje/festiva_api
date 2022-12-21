@@ -340,7 +340,18 @@ class ProductController extends Controller
             $product->categories = $product->shopProductsHasCategoriesProducts;
 
             foreach ($product->categories as $category){
-                $category->category = $category->categoriesProduct;
+
+                unset($category->id);
+
+                $category->id = $category->categoriesProduct->id;
+                $category->name = $category->categoriesProduct->name;
+                $category->slug = $category->categoriesProduct->slug;
+                $category->parent_id = $category->categoriesProduct->parent_id;
+                $category->icon = $category->categoriesProduct->icon;
+
+                unset($category->category_product_id);
+                unset($category->shop_product_id);
+                //unset($category->categoriesProduct);
                 unset($category->created_at);
                 unset($category->updated_at);
             }

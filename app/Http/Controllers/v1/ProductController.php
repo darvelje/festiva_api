@@ -1070,7 +1070,7 @@ class ProductController extends Controller
 
             $product->update();
 
-            if($request->productImageDeleted !== null){
+            if($request->productImageDeleted !== "null"){
                 $lengthArrayProductImageDeleted = count($request->productImageDeleted);
 
                 for($i=0; $i<$lengthArrayProductImageDeleted; $i++){

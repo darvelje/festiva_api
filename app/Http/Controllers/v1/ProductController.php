@@ -1124,13 +1124,6 @@ class ProductController extends Controller
 
                 $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $shopId)->get();
 
-                return response()->json(
-                    [
-                        'code' => 'test',
-                        'shopCurrencies' => $shopCurrencies
-                    ]
-                );
-
                 foreach ($shopCurrencies as $currency){
 
                     $productPrice = new ShopProductsPricesrate();

@@ -1120,9 +1120,9 @@ class ProductController extends Controller
 
                 ShopProductsPricesrate::where('shop_product_id',$request->productId)->delete();
 
-                $shopId = ShopProduct::whereId($request->productId)->first()->shop_id;
+                $shopId = ShopProduct::whereId($request->productId)->first();
 
-                $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $shopId)->get();
+                $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $shopId[0]['shop_id'])->get();
 
                 foreach ($shopCurrencies as $currency){
 

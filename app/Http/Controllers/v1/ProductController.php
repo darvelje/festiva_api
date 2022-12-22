@@ -1053,6 +1053,13 @@ class ProductController extends Controller
     //section Update_Product
     public function updateProduct(Request $request){
 
+        return response()->json(
+            [
+                'code' => 'test',
+                'request' => $request->all()
+            ]
+        );
+
         try{
             DB::beginTransaction();
 

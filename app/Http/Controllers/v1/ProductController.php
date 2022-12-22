@@ -1070,33 +1070,35 @@ class ProductController extends Controller
 
             $product->update();
 
-            $lengthArrayProductImageDeleted = count($request->productImageDeleted);
+            if(count($request->productImageDeleted) !== 0){
+                $lengthArrayProductImageDeleted = count($request->productImageDeleted);
 
-            for($i=0; $i<$lengthArrayProductImageDeleted; $i++){
-                ShopProductPhoto::whereId($request->productImageDeleted[$i])->delete();
-            }
+                for($i=0; $i<$lengthArrayProductImageDeleted; $i++){
+                    ShopProductPhoto::whereId($request->productImageDeleted[$i])->delete();
+                }
 
-            $lengthArrayProductImage = count($request->productImage);
+                $lengthArrayProductImage = count($request->productImage);
 
-            if($lengthArrayProductImage != 0){
-                for($i=0; $i<$lengthArrayProductImage; $i++){
-                    $productPhoto = new ShopProductPhoto();
-                    $productPhoto->shop_product_id = $product->id;
-                    $productPhoto->main = $request->productImage[$i]['main'];
-                    $productPhoto->path_photo = self::uploadImage($request->productImage[$i]['image'], $request->productName);
-                    $productPhoto->save();
+                if($lengthArrayProductImage != 0){
+                    for($i=0; $i<$lengthArrayProductImage; $i++){
+                        $productPhoto = new ShopProductPhoto();
+                        $productPhoto->shop_product_id = $product->id;
+                        $productPhoto->main = $request->productImage[$i]['main'];
+                        $productPhoto->path_photo = self::uploadImage($request->productImage[$i]['image'], $request->productName);
+                        $productPhoto->save();
+                    }
+                }
+
+                $productMain = ShopProductPhoto::where('shop_product_id',$request->productId)->whereMain(true)->count();
+
+                if($productMain == 0){
+                    $productPhotoMain = ShopProductPhoto::where('shop_product_id',$request->productId)->first();
+
+                    $productPhotoMain->main = true;
+                    $productPhotoMain->update();
                 }
             }
-
-            $productMain = ShopProductPhoto::where('shop_product_id',$request->productId)->whereMain(true)->count();
-
-            if($productMain == 0){
-                $productPhotoMain = ShopProductPhoto::where('shop_product_id',$request->productId)->first();
-
-                $productPhotoMain->main = true;
-                $productPhotoMain->update();
-            }
-
+            
             $lengthArrayProductCategory = count($request->productCategory);
 
             ShopProductsHasCategoriesProduct::where('shop_product_id',$request->productId)->delete();

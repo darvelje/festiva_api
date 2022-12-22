@@ -1122,7 +1122,7 @@ class ProductController extends Controller
 
                 $shopId = ShopProduct::whereId($request->productId)->first();
 
-                $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $shopId[0]['shop_id'])->get();
+                $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $shopId->shop_id)->get();
 
                 foreach ($shopCurrencies as $currency){
 

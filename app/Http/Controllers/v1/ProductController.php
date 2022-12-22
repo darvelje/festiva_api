@@ -1070,7 +1070,7 @@ class ProductController extends Controller
 
             $product->update();
 
-            if(count($request->productImageDeleted) !== 0){
+            if($request->productImageDeleted !== null){
                 $lengthArrayProductImageDeleted = count($request->productImageDeleted);
 
                 for($i=0; $i<$lengthArrayProductImageDeleted; $i++){
@@ -1098,7 +1098,7 @@ class ProductController extends Controller
                     $productPhotoMain->update();
                 }
             }
-            
+
             $lengthArrayProductCategory = count($request->productCategory);
 
             ShopProductsHasCategoriesProduct::where('shop_product_id',$request->productId)->delete();

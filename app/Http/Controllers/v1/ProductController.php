@@ -1130,7 +1130,7 @@ class ProductController extends Controller
                     $productPrice->shop_product_id = $request->productId;
                     $productPrice->currency_id = $currency->currency->id;
 
-                    if($currency->currency->id === $IdCurrencyUSD){
+                    if($currency->currency->id == $IdCurrencyUSD){
                         $productPrice->price = $request->productPrice;
                     }
                     else{

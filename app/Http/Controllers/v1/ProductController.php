@@ -654,7 +654,7 @@ class ProductController extends Controller
 
                 if ($province) {
                     $shopsArrayIds = ShopDeliveryZone::whereProvinceId($province->id)->pluck('shop_id')->unique();
-                    $products = ShopProduct::with('shop','shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct')->whereIn('shop_id', $shopsArrayIds)->get();
+                    $products = ShopProduct::with('shop','shopProductsHasCategoriesProducts', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shop')->whereIn('shop_id', $shopsArrayIds)->get();
 
                     foreach ($products as $product){
 

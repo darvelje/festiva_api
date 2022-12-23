@@ -819,7 +819,7 @@ class ProductController extends Controller
                             $product->categories = $product->shopProductsHasCategoriesProducts;
 
                             foreach ($product->categories as $prod_cat){
-                                if($prod_cat->categoriesProduct->slug === $request->categorySlug){
+                                if($prod_cat->categoriesProduct->slug === $category->slug){
                                     array_push($array_products, $product);
                                 }
                             }
@@ -868,7 +868,7 @@ class ProductController extends Controller
                             $product->categories = $product->shopProductsHasCategoriesProducts;
 
                             foreach ($product->categories as $prod_cat){
-                                if($prod_cat->categoriesProduct->slug === $request->categorySlug){
+                                if($prod_cat->categoriesProduct->slug === $category->slug){
                                     array_push($array_products, $product);
                                 }
                             }
@@ -917,7 +917,7 @@ class ProductController extends Controller
                             $product->categories = $product->shopProductsHasCategoriesProducts;
 
                             foreach ($product->categories as $prod_cat){
-                                if($prod_cat->categoriesProduct->slug === $request->categorySlug){
+                                if($prod_cat->categoriesProduct->slug === $category->slug){
                                     array_push($array_products, $product);
                                 }
                             }

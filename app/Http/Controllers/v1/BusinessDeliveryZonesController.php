@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
 use App\Models\Shop;
 use App\Models\ShopCurrency;
 use App\Models\ShopDeliveryZone;
@@ -225,18 +226,34 @@ class BusinessDeliveryZonesController extends Controller
 
             $shopDeliveryZone->update();
 
-            ShopZonesDeliveryPricesrate::where('shop_zones_delivery_id', $request->businessDeliveryZoneId)->delete();
+            $IdCurrencyUSD = Currency::whereCode('USD')->first()->id;
 
-            $lengthArrayDeliveryZonesPrices = count($request->businessDeliveryZonePrices);
+            $found = ShopZonesDeliveryPricesrate::where('currency_id', $IdCurrencyUSD)->where('shop_zones_delivery_id', $request->businessDeliveryZoneId)->where('price', $request->businessDeliveryZonePrices)->first();
 
-            if($lengthArrayDeliveryZonesPrices != 0){
-                for($i=0; $i<$lengthArrayDeliveryZonesPrices; $i++){
+            if(!$found){
+
+                ShopZonesDeliveryPricesrate::where('shop_zones_delivery_id', $request->businessDeliveryZoneId)->delete();
+
+                $shopId = ShopDeliveryZone::whereId($request->businessDeliveryZoneId)->first()->shop_id;
+
+                $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $shopId)->get();
+
+                foreach ($shopCurrencies as $currency){
+
                     $shopDeliveryZonePricesrate = new ShopZonesDeliveryPricesrate();
-                    $shopDeliveryZonePricesrate->shop_zones_delivery_id = $shopDeliveryZone->id;
-                    $shopDeliveryZonePricesrate->currency_id = $request->businessDeliveryZonePrices[$i]['currencyId'];
-                    $shopDeliveryZonePricesrate->price = $request->businessDeliveryZonePrices[$i]['price'];
+                    $shopDeliveryZonePricesrate->shop_zones_delivery_id = $request->businessDeliveryZoneId;
+                    $shopDeliveryZonePricesrate->currency_id = $currency->currency->id;
+                    if($currency->currency->id == $IdCurrencyUSD){
+                        $shopDeliveryZonePricesrate->price = $request->businessDeliveryZonePrices;
+                    }
+                    else{
+                        $shopDeliveryZonePricesrate->price = $request->businessDeliveryZonePrices * $currency->rate;
+                    }
+
                     $shopDeliveryZonePricesrate->save();
+
                 }
+
             }
 
             DB::commit();

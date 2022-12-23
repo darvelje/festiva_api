@@ -103,7 +103,7 @@ class CurrencyController extends Controller
 
                 foreach ($shopProducts as $idProduct){
 
-                    $priceProductUSD = ShopProductsPricesrate::where('shop_product_id', $idProduct)->where('currency_id', $IdCurrencyUSD)->firts()->price;
+                    $priceProductUSD = ShopProductsPricesrate::where('shop_product_id', $idProduct)->where('currency_id', $IdCurrencyUSD)->first()->price;
 
                     $productPrice = new ShopProductsPricesrate();
 

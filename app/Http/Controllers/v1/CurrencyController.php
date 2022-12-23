@@ -4,6 +4,10 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
+use App\Models\ShopCurrency;
+use App\Models\ShopProduct;
+use App\Models\ShopProductsPricesrate;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -76,8 +80,37 @@ class CurrencyController extends Controller
             $currency->name = $request->currencyName;
             $currency->code = $request->currencyCode;
             $currency->main = $request->currencyMain;
+            $currency->rate = $request->currencyRate;
 
             $currency->save();
+
+            $array_shop_ids = ShopCurrency::all()->pluck('shop_id')->unique()->values();
+
+            foreach ($array_shop_ids as $idShop){
+
+                $shopCurrency = new ShopCurrency();
+
+                $shopCurrency->shop_id = $idShop;
+                $shopCurrency->currency_id = $currency->id;
+                $shopCurrency->rate = $currency->rate;
+                $shopCurrency->main = false;
+
+                $shopCurrency->save();
+
+                $shopProducts = ShopProduct::where('shop_id', $idShop)->get()->pluck('id')->values();
+
+                foreach ($shopProducts as $idProduct){
+
+                    $productPrice = new ShopProductsPricesrate();
+
+                    $productPrice->shop_product_id = $idProduct;
+                    $productPrice->currency_id = $currency->id;
+                    $productPrice->price = $shopCurrency->rate;
+
+                    $productPrice->save();
+
+                }
+            }
 
             DB::commit();
 

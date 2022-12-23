@@ -391,7 +391,6 @@ class PromosController extends Controller
         }
     }
 
-
     //section Upload_image
     public static function uploadImage($path, $name){
         $image = $path;

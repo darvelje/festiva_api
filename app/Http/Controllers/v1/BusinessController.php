@@ -21,14 +21,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 
-//        return response()->json(
-//            [
-//                'code' => 'ok',
-//                'message' => 'Test',
-//                'request' => $request->all()
-//            ]
-//        );
-
 class BusinessController extends Controller
 {
 

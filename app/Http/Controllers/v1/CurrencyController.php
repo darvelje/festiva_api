@@ -132,13 +132,13 @@ class CurrencyController extends Controller
 
                 foreach ($shopDeliveryZones as $idDeliveryZones){
 
-                   // $priceDeliveryZoneUSD = ShopZonesDeliveryPricesrate::where('shop_zones_delivery_id', $idDeliveryZones)->where('currency_id', $IdCurrencyUSD)->first()->price;
+                    $priceDeliveryZoneUSD = ShopZonesDeliveryPricesrate::where('shop_zones_delivery_id', $idDeliveryZones)->where('currency_id', $IdCurrencyUSD)->first()->price;
 
                     $deliveryZonePrice = new ShopZonesDeliveryPricesrate();
 
                     $deliveryZonePrice->shop_zones_delivery_id = $idDeliveryZones;
                     $deliveryZonePrice->currency_id = $currency->id;
-                    $deliveryZonePrice->price = 1 * $shopCurrency->rate;
+                    $deliveryZonePrice->price = $priceDeliveryZoneUSD * $shopCurrency->rate;
 
                     $deliveryZonePrice->save();
 

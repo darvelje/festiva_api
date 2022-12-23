@@ -5,8 +5,10 @@ namespace App\Http\Controllers\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\ShopCurrency;
+use App\Models\ShopDeliveryZone;
 use App\Models\ShopProduct;
 use App\Models\ShopProductsPricesrate;
+use App\Models\ShopZonesDeliveryPricesrate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -112,6 +114,22 @@ class CurrencyController extends Controller
                     $productPrice->price = $priceProductUSD * $shopCurrency->rate;
 
                     $productPrice->save();
+
+                }
+
+                $shopDeliveryZones = ShopDeliveryZone::where('shop_id', $idShop)->get()->pluck('id')->values();
+
+                foreach ($shopDeliveryZones as $idDeliveryZones){
+
+                    $priceDeliveryZoneUSD = ShopZonesDeliveryPricesrate::where('shop_zones_delivery_id', $idDeliveryZones)->where('currency_id', $IdCurrencyUSD)->first()->price;
+
+                    $deliveryZonePrice = new ShopZonesDeliveryPricesrate();
+
+                    $deliveryZonePrice->shop_zones_delivery_id = $idDeliveryZones;
+                    $deliveryZonePrice->currency_id = $currency->id;
+                    $deliveryZonePrice->price = $priceDeliveryZoneUSD * $shopCurrency->rate;
+
+                    $deliveryZonePrice->save();
 
                 }
             }

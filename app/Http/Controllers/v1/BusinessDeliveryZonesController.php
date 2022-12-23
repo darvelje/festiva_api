@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
+use App\Models\ShopCurrency;
 use App\Models\ShopDeliveryZone;
 use App\Models\ShopZonesDeliveryPricesrate;
 use Illuminate\Database\Eloquent\Model;
@@ -173,16 +174,22 @@ class BusinessDeliveryZonesController extends Controller
 
             $shopDeliveryZone->save();
 
-            $lengthArrayDeliveryZonesPrices = count($request->businessDeliveryZonePrices);
+            $shopCurrencies = ShopCurrency::with('currency')->where('shop_id', $request->businessDeliveryZoneShopId)->get();
 
-            if($lengthArrayDeliveryZonesPrices != 0){
-                for($i=0; $i<$lengthArrayDeliveryZonesPrices; $i++){
-                    $shopDeliveryZonePricesrate = new ShopZonesDeliveryPricesrate();
-                    $shopDeliveryZonePricesrate->shop_zones_delivery_id = $shopDeliveryZone->id;
-                    $shopDeliveryZonePricesrate->currency_id = $request->businessDeliveryZonePrices[$i]['currencyId'];
-                    $shopDeliveryZonePricesrate->price = $request->businessDeliveryZonePrices[$i]['price'];
-                    $shopDeliveryZonePricesrate->save();
+            foreach ($shopCurrencies as $currency){
+
+                $shopDeliveryZonePricesrate = new ShopZonesDeliveryPricesrate();
+                $shopDeliveryZonePricesrate->shop_zones_delivery_id = $shopDeliveryZone->id;
+                $shopDeliveryZonePricesrate->currency_id = $currency->currency->id;
+                if($currency->currency->code === 'USD'){
+                    $shopDeliveryZonePricesrate->price = $request->businessDeliveryZonePrices;
                 }
+                else{
+                    $shopDeliveryZonePricesrate->price = $request->businessDeliveryZonePrices * $currency->rate;
+                }
+
+                $shopDeliveryZonePricesrate->save();
+
             }
 
             DB::commit();

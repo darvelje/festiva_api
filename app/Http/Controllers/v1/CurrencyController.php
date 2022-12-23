@@ -99,7 +99,7 @@ class CurrencyController extends Controller
 
                 $shopCurrency->save();
 
-                $shopProducts = ShopProduct::with('currency')->where('shop_id', $idShop)->get()->pluck('id')->values();
+                $shopProducts = ShopProduct::where('shop_id', $idShop)->get()->pluck('id')->values();
 
                 foreach ($shopProducts as $idProduct){
 

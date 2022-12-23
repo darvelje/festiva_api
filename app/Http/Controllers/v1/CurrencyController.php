@@ -86,6 +86,8 @@ class CurrencyController extends Controller
 
             $array_shop_ids = ShopCurrency::all()->pluck('shop_id')->unique()->values();
 
+            $IdCurrencyUSD = Currency::whereCode('USD')->first()->id;
+
             foreach ($array_shop_ids as $idShop){
 
                 $shopCurrency = new ShopCurrency();
@@ -97,15 +99,17 @@ class CurrencyController extends Controller
 
                 $shopCurrency->save();
 
-                $shopProducts = ShopProduct::where('shop_id', $idShop)->get()->pluck('id')->values();
+                $shopProducts = ShopProduct::with('currency')->where('shop_id', $idShop)->get()->pluck('id')->values();
 
                 foreach ($shopProducts as $idProduct){
+
+                    $priceProductUSD = ShopProductsPricesrate::where('shop_product_id', $idProduct)->where('currency_id', $IdCurrencyUSD)->firts()->price;
 
                     $productPrice = new ShopProductsPricesrate();
 
                     $productPrice->shop_product_id = $idProduct;
                     $productPrice->currency_id = $currency->id;
-                    $productPrice->price = $shopCurrency->rate;
+                    $productPrice->price = $priceProductUSD * $shopCurrency->rate;
 
                     $productPrice->save();
 

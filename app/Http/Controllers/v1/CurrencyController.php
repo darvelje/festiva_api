@@ -59,16 +59,16 @@ class CurrencyController extends Controller
     //section New_Currency
     public function newCurrency(Request $request){
 
-        $IdCurrencyUSD = Currency::whereCode('USD')->first()->id;
-
-        $priceProductUSD = ShopProductsPricesrate::where('shop_product_id', 40)->where('currency_id', $IdCurrencyUSD)->first()->price;
-
-
-        return response()->json(
-            [
-                'code' => 'test',
-                'price' => $priceProductUSD
-            ]);
+//        $IdCurrencyUSD = Currency::whereCode('USD')->first()->id;
+//
+//        $priceProductUSD = ShopProductsPricesrate::where('shop_product_id', 40)->where('currency_id', $IdCurrencyUSD)->first()->price;
+//
+//
+//        return response()->json(
+//            [
+//                'code' => 'test',
+//                'price' => $priceProductUSD
+//            ]);
 
         try{
             DB::beginTransaction();

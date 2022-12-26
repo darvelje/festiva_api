@@ -57,7 +57,7 @@ class PaymentController extends Controller
 
         }
 
-        //$orderTotalPrice += $request->order['commissionCost'];
+        $orderTotalPrice += $request->order['commissionCost']*100;
 
         if ($ordersIds->count()>0) {
             if ($generalData['methodPayment'] == 'tropipay') {
@@ -65,7 +65,7 @@ class PaymentController extends Controller
                 $order = $ordersIds->first();
                 $movementPending = collect();
                 if($ordersIds->count()==1 ){
-                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, round($orderTotalPrice,1),
+                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
                         'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
                         'pending', 'earning');
                 }elseif($ordersIds->count()>1){

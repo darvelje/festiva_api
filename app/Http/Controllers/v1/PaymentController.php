@@ -70,7 +70,7 @@ class PaymentController extends Controller
                         'pending', 'earning');
                 }elseif($ordersIds->count()>1){
                     $ordersIds = $ordersIds->pluck('id')->toArray();
-                    $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true),  round($orderTotalPrice,0),
+                    $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
                         'tropipay', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
                         'pending', 'earning');
                 }
@@ -103,7 +103,7 @@ class PaymentController extends Controller
 
         $result = TropiPayController::payWithTropiPay(
             $mode,
-            $movementPending->amount * 100,
+            round($movementPending->amount * 100, 2),
             false,
             'TPP',
             $currency->code,
@@ -118,7 +118,7 @@ class PaymentController extends Controller
             true,
             2,
             0,
-            'es',
+            'en',
             $client,
             true
         );

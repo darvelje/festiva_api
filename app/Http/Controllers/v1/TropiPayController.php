@@ -102,40 +102,23 @@ class TropiPayController extends Controller
 
             curl_close($curl);
 
-            if ($http_status != 200) {
+            if ($http_status == 500) {
 
                 return ['error' => 500,'result' => $result,'data'=>json_encode($data)];
             } else {
                 $json = json_decode($result);
 
-
-//                $id = $json->{'id'};
-//                $userId = $json->{'userId'};
-//                $state = $json->{'state'};
-//                $qrImage = $json->{'qrImage'};
-//                $shortUrl = $json->{'shortUrl'};
-                //save movement
-
                 return [
                     'error' => 0,
-//                    'id' => $id,
                     'url' =>  $json->{'paymentUrl'},
-//                    'qrImage' => $qrImage,
-//                    'state' => $state,
-//                    'userId' => $userId,
-//                    'result' => $result
                 ];
             }
         } catch (\Throwable $th) {
             return [
                 'error' => 1,
                 'message' => $th->getMessage(),
-//                    'qrImage' => $qrImage,
-//                    'state' => $state,
-//                    'userId' => $userId,
-//                    'result' => $result
+
             ];
-//            NotificaController::NotificaAdmin('error', Str::limit($th->getMessage(), 350));
         }
     }
 

@@ -65,7 +65,7 @@ class PaymentController extends Controller
                 $order = $ordersIds->first();
                 $movementPending = collect();
                 if($ordersIds->count()==1 ){
-                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, round($orderTotalPrice,0),
+                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, round($orderTotalPrice,1),
                         'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
                         'pending', 'earning');
                 }elseif($ordersIds->count()>1){

@@ -21,7 +21,7 @@ class PaymentController extends Controller
         $userDb = $request->user();
 
         $generalData = collect([
-            'currencyId' => $request->order['currencyId'],
+           // 'currencyId' => $request->order['currencyId'],
             'deliveryCost' => $request->order['deliveryCost'],
             'methodDelivery' => $request->order['methodDelivery'],
             'discountCost' => $request->order['discountCost'],
@@ -55,9 +55,6 @@ class PaymentController extends Controller
             $orderTotalPrice += $order->total_price;
 
         }
-
-
-
 
         if ($ordersIds->count()>0) {
             if ($generalData['methodPayment'] == 'tropipay') {
@@ -99,8 +96,6 @@ class PaymentController extends Controller
             //return error
         }
 
-//        $clientId = $payment->client_id;
-//        $clientSecret =  $payment->client_secret;
         $mode = $payment->mode;
 
         $result = TropiPayController::payWithTropiPay(

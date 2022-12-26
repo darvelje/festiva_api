@@ -41,11 +41,6 @@ class TropiPayController extends Controller
     ) {
 
         try {
-//            $token = self::auth($mode, $clientId, $clientSecret);
-//
-//            if ($token['error'] == 501) {
-//                return $token;
-//            }
 
             if($mode == 'sandbox'){
               $url =  'https://pproxy.rentalho.com/pay/do-sync?env=dev';
@@ -61,8 +56,8 @@ class TropiPayController extends Controller
                 'concept' => $concept,
                 'description' => $description,
                 'reference' => $reference,
-                'urlSuccess' => $urlSuccess,
-                'urlFailed' => $urlFailed,
+                'urlSuccess' => 'https://'.$urlSuccess,
+                'urlFailed' => 'https://'.$urlFailed,
                 'urlNotification' => $urlNotification,
                 'directPayment' => $directPayment,
                 'serviceDate' => $serviceDate,

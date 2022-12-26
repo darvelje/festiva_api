@@ -53,9 +53,11 @@ class PaymentController extends Controller
 
             $ordersIds->add($order);
 
-            $orderTotalPrice += ($order->total_price + $request->order['commissionCost']);
+            $orderTotalPrice += $order->total_price;
 
         }
+
+        $orderTotalPrice += $request->order['commissionCost'];
 
         if ($ordersIds->count()>0) {
             if ($generalData['methodPayment'] == 'tropipay') {

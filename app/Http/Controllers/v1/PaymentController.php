@@ -25,6 +25,7 @@ class PaymentController extends Controller
             'deliveryCost' => $request->order['deliveryCost'],
             'methodDelivery' => $request->order['methodDelivery'],
             'discountCost' => $request->order['discountCost'],
+            'commissionCost' => $request->order['commissionCost'],
             'methodPayment' => $request->order['methodPayment'],
 
         ]);
@@ -52,7 +53,7 @@ class PaymentController extends Controller
 
             $ordersIds->add($order);
 
-            $orderTotalPrice += $order->total_price;
+            $orderTotalPrice += ($order->total_price + $request->order['commissionCost']);
 
         }
 
@@ -62,7 +63,7 @@ class PaymentController extends Controller
                 $order = $ordersIds->first();
                 $movementPending = collect();
                 if($ordersIds->count()==1 ){
-                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, $order->total_price,
+                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
                         'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
                         'pending', 'earning');
                 }elseif($ordersIds->count()>1){

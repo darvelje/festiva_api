@@ -111,7 +111,7 @@ class PaymentController extends Controller
 
         $result = TropiPayController::payWithTropiPay(
             $mode,
-            round(($movementPending->amount + $movementPending->fee) * 100, 2),
+            'ese',
             false,
             'TPP',
             $currency->code,
@@ -126,7 +126,7 @@ class PaymentController extends Controller
             true,
             2,
             0,
-            false,
+            'en',
             $client,
             true
         );

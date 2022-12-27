@@ -163,7 +163,7 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/suscriptors/delete', [SuscriptorsController::class, 'deleteSuscriptor']);
 
 // section Tropipay
-    Route::post('/api/v1/tropipay/api/notification', [TropiPayController::class, 'responseNotification']);
+    Route::post('/v1/tropipay/api/notification', [TropiPayController::class, 'responseNotification']);
 
 // section Payments
     Route::post('/v1/payment/new', [PaymentController::class, 'newPayment'])->middleware('auth:sanctum');

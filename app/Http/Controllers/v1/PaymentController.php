@@ -126,7 +126,7 @@ class PaymentController extends Controller
             true,
             2,
             0,
-            'es',
+            'en',
             $client,
             true
         );

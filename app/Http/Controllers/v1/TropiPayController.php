@@ -249,7 +249,7 @@ class TropiPayController extends Controller
 
     public function responseNotification(Request $request){
 
-        $order = Order::find(72);
+        $order = Order::whereId(72)->first();
 
 
         $order->payload_response =  'hola pepe';

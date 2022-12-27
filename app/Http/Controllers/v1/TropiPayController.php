@@ -97,7 +97,7 @@ class TropiPayController extends Controller
 
             curl_close($curl);
 
-            if ($http_status == 500) {
+            if ($http_status != 200) {
 
                 return ['error' => 500,'result' => $result,'data'=>json_encode($data)];
             } else {

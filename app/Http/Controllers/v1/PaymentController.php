@@ -120,7 +120,7 @@ class PaymentController extends Controller
             $movementPending->id,
             '127.0.0.1:5173'.'/pagocompletado',
             '127.0.0.1:5173'.'/errorenpago',
-            env('APP_URL').'/api/v1/tropipay/api/notification',
+            'https://stylla.app/api/v1/tropipay/api/notification',
             true,
             now()->timezone('Europe/Madrid')->format('Y-m-d'),
             true,

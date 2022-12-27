@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $currency_id
  * @property string $created_at
  * @property string $updated_at
+ * @property string $client_name
+ * @property string $client_last_name
+ * @property string $client_email
+ * @property string $client_phone
+ * @property string $payload_response
  * @property string $delivery_type
  * @property integer $status_payment
  * @property string $status
@@ -29,7 +34,7 @@ class Order extends Model
     /**
      * @var array
      */
-    protected $fillable = ['status','shop_id', 'user_id', 'user_address_id', 'shop_coupon_id', 'currency_id', 'created_at', 'updated_at', 'delivery_type', 'status_payment', 'total_price'];
+    protected $fillable = ['client_name', 'client_last_name', 'client_email', 'client_phone', 'payload_response', 'status','shop_id', 'user_id', 'user_address_id', 'shop_coupon_id', 'currency_id', 'created_at', 'updated_at', 'delivery_type', 'status_payment', 'total_price'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

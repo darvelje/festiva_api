@@ -48,7 +48,8 @@ class PaymentController extends Controller
                 $order,
                 $userDb->id,
                 $generalData,
-                $receiver
+                $receiver,
+                $client
             );
 
             $ordersIds->add($order);
@@ -57,11 +58,14 @@ class PaymentController extends Controller
 
         }
 
+        $commissionCost = 0;
         foreach ($request->order['commissionCost'] as $commission){
             if($commission['currency_code'] === 'EUR'){
-                $orderTotalPrice += $commission['price'];
+                $commissionCost += $commission['price'];
             }
         }
+
+//        $orderTotalPrice += $commissionCost;
 
         if ($ordersIds->count()>0) {
             if ($generalData['methodPayment'] == 'tropipay') {
@@ -71,12 +75,12 @@ class PaymentController extends Controller
                 if($ordersIds->count()==1 ){
                     $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
                         'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
-                        'pending', 'earning');
+                        'pending', 'earning', $commissionCost);
                 }elseif($ordersIds->count()>1){
                     $ordersIds = $ordersIds->pluck('id')->toArray();
                     $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
                         'tropipay', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
-                        'pending', 'earning');
+                        'pending', 'earning', $commissionCost);
                 }
 
                return $this->newPaymentWithTropiPay($movementPending,$client,$generalData,$receiver);
@@ -107,7 +111,7 @@ class PaymentController extends Controller
 
         $result = TropiPayController::payWithTropiPay(
             $mode,
-            round($movementPending->amount * 100, 2),
+            round(($movementPending->amount + $movementPending->fee) * 100, 2),
             false,
             'TPP',
             $currency->code,

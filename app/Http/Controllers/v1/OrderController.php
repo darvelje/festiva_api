@@ -15,6 +15,7 @@ use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -482,48 +483,7 @@ class OrderController extends Controller
 
     }
 
-    //section New_Order
-//    public function newOrder(Request $request){
-//
-//        try{
-//            DB::beginTransaction();
-//
-//            $userDb = $request->user();
-//
-//            $order = new Order();
-//
-//            $order->user_id = $userDb->id;
-//            $length = count($request->order);
-//
-//                $order->shop_id = $request->order['idShop'];
-//                $order->save();
-//                $idOrder = $order->id;
-//                $lengthProducts = count($request->order['products']);
-//                for($j = 0; $j < $lengthProducts; $j++)
-//                {
-//                    $orderProduct = new OrderProduct();
-//                    $orderProduct->order_id = $idOrder;
-//                    $orderProduct->shop_product_id = $request->order['products'][$j]['idProduct'];
-//                    $orderProduct->amount = $request->order['products'][$j]['amount'];
-//                    $orderProduct->save();
-//                }
-//
-//            DB::commit();
-//
-//            return response()->json(
-//                [
-//                    'code' => 'ok',
-//                    'message' => 'Order created successfully'
-//                ]
-//            );
-//        }
-//        catch(\Throwable $th){
-//            return response()->json(
-//                ['code' => 'error', 'message' => $th->getMessage()]
-//            );
-//        }
-//    }
-    public static function newOrder($orderInfo,$userId,$data,$receiver) {
+    public static function newOrder($orderInfo,$userId,$data,$receiver, $client) {
 
         $order = new Order();
 
@@ -534,6 +494,10 @@ class OrderController extends Controller
         $order->shop_id = $orderInfo['idShop'];
         $order->delivery_type = $data['methodDelivery'];
         $order->status_payment = 'pending';
+        $order->client_name = $client['clientName'];
+        $order->client_last_name = $client['clientLastName'];
+        $order->client_email = $client['clientEmail'];
+        $order->client_phone = $client['clientPhone'];
         $order->status = 1;
 
         // ----- no mando esto
@@ -687,6 +651,31 @@ class OrderController extends Controller
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
         }
+    }
+
+
+    // section ordewr paid
+    public static function orderPaid($order)
+    {
+
+        $order->status = 2;
+        $order->status_payment = "complete";
+        $order->update();
+
+        $shop = Shop::whereId($order->shop_id)->first();
+
+        //Send to notification to Restaurant Owner
+//        if ($shop) {
+//            Mail::to($shop->email)->send(new OrderNotification($order));
+//        }
+//
+//        //Send to notification to User
+//        Mail::to($order->client_email)->send(new NewOrderToUser($order));
+//
+//        //Send to notification to Client Pay
+//        Mail::to('cluzstudio@gmail.com')->send(new NewOrderToUser($order));
+
+        return;
     }
 
 

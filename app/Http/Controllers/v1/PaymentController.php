@@ -16,7 +16,7 @@ class PaymentController extends Controller
 
         DB::beginTransaction();
 
-        $urlRequest = $request->host();
+        //$urlRequest = $request->host();
 
         $userDb = $request->user();
 
@@ -79,7 +79,7 @@ class PaymentController extends Controller
                         'pending', 'earning');
                 }
 
-               return $this->newPaymentWithTropiPay($movementPending,$client,$generalData,$receiver,$urlRequest);
+               return $this->newPaymentWithTropiPay($movementPending,$client,$generalData,$receiver);
             }
             else if($generalData['methodPayment'] == 'rentalhopay'){
                 //code here rentalho_pay
@@ -93,7 +93,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function newPaymentWithTropiPay($movementPending, $client, $data, $receiver, $urlRequest){
+    public function newPaymentWithTropiPay($movementPending, $client, $data, $receiver){
 
         $payment = PaymentMethod::where('name','Tropipay')->first();
 
@@ -114,8 +114,8 @@ class PaymentController extends Controller
             $movementPending->detail,
             $movementPending->detail,
             $movementPending->id,
-            $urlRequest.'/pagocompletado',
-            $urlRequest.'/errorenpago',
+            '127.0.0.1:5173'.'/pagocompletado',
+            '127.0.0.1:5173'.'/errorenpago',
             env('APP_URL').'/api/v1/tropipay/api/notification',
             true,
             now()->timezone('Europe/Madrid')->format('Y-m-d'),

@@ -88,13 +88,13 @@ class PaymentController extends Controller
             else if($generalData['methodPayment'] == 'rentalhopay'){
                 //code here rentalho_pay
             }
-        } else {
-
-            return response()->json([
-                'code' => 'error',
-                'message' => 'Order or Shop not found'
-            ], 404);
         }
+
+        return response()->json([
+            'code' => 'error',
+            'message' => 'Order or Shop not found'
+        ], 404);
+
     }
 
     public function newPaymentWithTropiPay($movementPending, $client, $data, $receiver){

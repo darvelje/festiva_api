@@ -57,7 +57,11 @@ class PaymentController extends Controller
 
         }
 
-        $orderTotalPrice += $request->order['commissionCost'];
+        foreach ($request->order['commissionCost'] as $commission){
+            if($commission['currency_code'] === 'EUR'){
+                $orderTotalPrice += $commission['price'];
+            }
+        }
 
         if ($ordersIds->count()>0) {
             if ($generalData['methodPayment'] == 'tropipay') {

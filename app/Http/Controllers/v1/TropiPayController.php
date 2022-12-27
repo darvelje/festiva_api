@@ -249,66 +249,61 @@ class TropiPayController extends Controller
 
     public function responseNotification(Request $request){
 
-//        $request = json_decode($request->getContent(), true);
-//
-//        $data =  $request['data'];
+        $request = json_decode($request->getContent(), true);
+        $data =  $request['data'];
 
-        $order = Order::find(72);
-        $order->payload_response =  'hola pepe';
-        $order->update();
+        $movement = MovementAmount::find($data['reference']);
 
-//        $movement = MovementAmount::find($data['reference']);
-//
-//        if ($movement) {
-//
-//            $movement->fee = $data['destinationAmount'] - $movement->amount;
-//            $movement->update();
-//
-//            if ($movement->type == 'order') {
-//
-//                $order = Order::find($movement->model_id);
-//
-//                if ($request['status'] == 'OK') {
-//                    $order->payload_response =  json_encode($data);
-//                    $order->update();
-//                    OrderController::orderPaid($order);
-//
-//                } elseif ($data['state'] == 4) {
-//
-//                    $order->payment_status = 'failed';
-//                    $order->status = 3;
-//                    $order->update();
-//
-//                    //Falta enviar notificacion al cliente de que el pago ha sido rechazado
-//
-//                }
-//            }
-//            else {
-//
-//                $ordersIds = json_decode($movement->orders_id);
-//
-//                foreach ($ordersIds as $id_order){
-//                    $order = Order::find($id_order);
-//
-//                    if ($request['status'] == 'OK') {
-//                        $order->payload_response =  json_encode($data);
-//                        $order->update();
-//                        OrderController::orderPaid($order);
-//
-//                    } elseif ($data['state'] == 4) {
-//
-//                        $order->payment_status = 'failed';
-//                        $order->status = 3;
-//                        $order->update();
-//
-//                        //Falta enviar notificacion al cliente de que el pago ha sido rechazado
-//
-//                    }
-//                }
-//
-//            }
-//
-//        }
+        if ($movement) {
+
+            $movement->fee = $data['destinationAmount'] - $movement->amount;
+            $movement->update();
+
+            if ($movement->type == 'order') {
+
+                $order = Order::find($movement->model_id);
+
+                if ($request['status'] == 'OK') {
+                    $order->payload_response =  json_encode($data);
+                    $order->update();
+                    OrderController::orderPaid($order);
+
+                } elseif ($data['state'] == 4) {
+
+                    $order->payment_status = 'failed';
+                    $order->status = 3;
+                    $order->update();
+
+                    //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+
+                }
+            }
+            else {
+
+                $ordersIds = json_decode($movement->orders_id);
+
+                foreach ($ordersIds as $id_order){
+                    $order = Order::find($id_order);
+
+                    if ($request['status'] == 'OK') {
+                        $order->payload_response =  json_encode($data);
+                        $order->update();
+                        OrderController::orderPaid($order);
+
+                    } elseif ($data['state'] == 4) {
+
+                        $order->payment_status = 'failed';
+                        $order->status = 3;
+                        $order->update();
+
+                        //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+
+                    }
+                }
+
+            }
+
+        }
 
         return 'ok';
     }

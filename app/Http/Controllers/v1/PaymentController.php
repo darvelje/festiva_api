@@ -153,7 +153,8 @@ class PaymentController extends Controller
         return response()->json([
             'code' => 'ok',
             'message' => 'Payment created',
-            'url' => $result['url']
+            'url' => $result['url'],
+            'result'=>$result
         ]);
     }
 }

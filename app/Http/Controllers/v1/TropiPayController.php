@@ -106,7 +106,6 @@ class TropiPayController extends Controller
                 return [
                     'error' => 0,
                     'url' =>  $json->{'paymentUrl'},
-                    'json'=>$json
                 ];
             }
         } catch (\Throwable $th) {

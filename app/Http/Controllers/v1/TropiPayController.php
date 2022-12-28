@@ -251,7 +251,7 @@ class TropiPayController extends Controller
 
         if ($movement) {
 
-            $movement->fee = ($request['destinationAmount'] / 100) - ( $movement->amount + $movement->fee ) ;
+            $movement->fee = ( $movement->amount + $movement->fee ) - ($request['destinationAmount'] / 100) ;
             $movement->status = 'completed';
             $movement->update();
 

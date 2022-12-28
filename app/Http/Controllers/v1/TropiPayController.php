@@ -249,7 +249,7 @@ class TropiPayController extends Controller
 
     public function responseNotification(Request $request){
 
-//        $request = json_decode($request->getContent(), true);
+        $request = json_decode($request->getContent(), true);
 //        $data =  $request['data'];
 
         Log::debug('Request data', [$request]);

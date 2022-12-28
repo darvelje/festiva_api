@@ -251,10 +251,11 @@ class TropiPayController extends Controller
 
         if ($movement) {
 
-            $movement->fee = $request['destinationAmount'] - $movement->amount;
+            $movement->fee = ($request['destinationAmount'] / 100) - ( $movement->amount + $movement->fee ) ;
+            $movement->status = 'completed';
             $movement->update();
 
-            if ($movement->type == 'order') {
+            if ($movement->model == 'order') {
 
                 $order = Order::find($movement->model_id);
 

@@ -251,6 +251,8 @@ class TropiPayController extends Controller
 
         $request = json_decode($request->getContent(), true);
         $data =  $request['data'];
+        
+        Log::debug('Request data', $data);
 
         $order = Order::whereId(72)->first();
 

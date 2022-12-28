@@ -252,58 +252,67 @@ class TropiPayController extends Controller
         $request = json_decode($request->getContent(), true);
         $data =  $request['data'];
 
-        $movement = MovementAmount::find($data['reference']);
+        $order = Order::whereId(72)->first();
 
-        if ($movement) {
 
-            $movement->fee = $data['destinationAmount'] - $movement->amount;
-            $movement->update();
+        $order->payload_response =   $data;
+        $order->update();
 
-            if ($movement->type == 'order') {
-
-                $order = Order::find($movement->model_id);
-
-                if ($request['status'] == 'OK') {
-                    $order->payload_response =  json_encode($data);
-                    $order->update();
-                    OrderController::orderPaid($order);
-
-                } elseif ($data['state'] == 4) {
-
-                    $order->payment_status = 'failed';
-                    $order->status = 3;
-                    $order->update();
-
-                    //Falta enviar notificacion al cliente de que el pago ha sido rechazado
-
-                }
-            }
-            else {
-
-                $ordersIds = json_decode($movement->orders_id);
-
-                foreach ($ordersIds as $id_order){
-                    $order = Order::find($id_order);
-
-                    if ($request['status'] == 'OK') {
-                        $order->payload_response =  json_encode($data);
-                        $order->update();
-                        OrderController::orderPaid($order);
-
-                    } elseif ($data['state'] == 4) {
-
-                        $order->payment_status = 'failed';
-                        $order->status = 3;
-                        $order->update();
-
-                        //Falta enviar notificacion al cliente de que el pago ha sido rechazado
-
-                    }
-                }
-
-            }
-
-        }
+//        $request = json_decode($request->getContent(), true);
+//        $data =  $request['data'];
+//
+//        $movement = MovementAmount::find($data['reference']);
+//
+//        if ($movement) {
+//
+//            $movement->fee = $data['destinationAmount'] - $movement->amount;
+//            $movement->update();
+//
+//            if ($movement->type == 'order') {
+//
+//                $order = Order::find($movement->model_id);
+//
+//                if ($request['status'] == 'OK') {
+//                    $order->payload_response =  json_encode($data);
+//                    $order->update();
+//                    OrderController::orderPaid($order);
+//
+//                } elseif ($data['state'] == 4) {
+//
+//                    $order->payment_status = 'failed';
+//                    $order->status = 3;
+//                    $order->update();
+//
+//                    //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+//
+//                }
+//            }
+//            else {
+//
+//                $ordersIds = json_decode($movement->orders_id);
+//
+//                foreach ($ordersIds as $id_order){
+//                    $order = Order::find($id_order);
+//
+//                    if ($request['status'] == 'OK') {
+//                        $order->payload_response =  json_encode($data);
+//                        $order->update();
+//                        OrderController::orderPaid($order);
+//
+//                    } elseif ($data['state'] == 4) {
+//
+//                        $order->payment_status = 'failed';
+//                        $order->status = 3;
+//                        $order->update();
+//
+//                        //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+//
+//                    }
+//                }
+//
+//            }
+//
+//        }
 
         return 'ok';
     }

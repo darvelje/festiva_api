@@ -76,8 +76,9 @@ class PaymentController extends Controller
         }
 
 //        $orderTotalPrice += $commissionCost;
+        $count = $ordersIds->count();
 
-        if ($ordersIds->count()>0) {
+        if ($count > 0) {
 
             $order = $ordersIds->first();
             $movementPending = collect();
@@ -117,7 +118,7 @@ class PaymentController extends Controller
         return response()->json([
             'code' => 'error',
             'message' => 'Order or Shop not found',
-            'order' => $ordersIds->count(),
+            'order' => $count,
         ], 404);
 
     }

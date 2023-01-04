@@ -506,37 +506,37 @@ class OrderController extends Controller
         $lengthProducts = count($orderInfo['products']);
         // ----- no mando esto
 
+        $currencyCode = collect();
+
         if($data['methodPayment'] === 'tropipay'){
+            $currencyCode = Currency::whereCode('EUR')->first();
+        }
+        else if($data['methodPayment'] === 'rentalho'){
+            $currencyCode = Currency::whereCode('USD')->first();
+        }
             // buscar cual es el id de la moneda EUR , y buscar el valor de los productos en EUR
 
-            $currencyEUR = Currency::whereCode('EUR')->first();
+        $order->currency_id = $currencyCode->id;
 
-            $order->currency_id = $currencyEUR->id;
+        $total_price = 0;
 
-            $total_price = 0;
+        $lengthPrices = count($orderInfo['products'][0]['price']);
 
-            $lengthPrices = count($orderInfo['products'][0]['price']);
-
-            for($j = 0; $j < $lengthProducts; $j++) {
-                for($k = 0; $k < $lengthPrices; $k++){
-                    if($orderInfo['products'][$j]['price'][$k]['currency_id'] == $currencyEUR->id){
-                        $total_price = $total_price +( $orderInfo['products'][$j]['quantity'] * $orderInfo['products'][$j]['price'][$k]['price']);
-                    }
-                }
-            }
-
+        for($j = 0; $j < $lengthProducts; $j++) {
             for($k = 0; $k < $lengthPrices; $k++){
-                if($data['deliveryCost'][$k]['currency_id'] == $currencyEUR->id){
-                    $total_price = $total_price +$data['deliveryCost'][$k]['price'];
+                if($orderInfo['products'][$j]['price'][$k]['currency_id'] == $currencyCode->id){
+                    $total_price = $total_price +( $orderInfo['products'][$j]['quantity'] * $orderInfo['products'][$j]['price'][$k]['price']);
                 }
             }
-
-            $order->total_price = $total_price;
-
         }
-        else {
-            // no tropipay method payment
+
+        for($k = 0; $k < $lengthPrices; $k++){
+            if($data['deliveryCost'][$k]['currency_id'] == $currencyCode->id){
+                $total_price = $total_price +$data['deliveryCost'][$k]['price'];
+            }
         }
+
+        $order->total_price = $total_price;
 
         $userAddress = new UserAddress();
 

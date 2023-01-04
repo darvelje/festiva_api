@@ -710,7 +710,7 @@ class ProductController extends Controller
                 ]
             );
         }
-        
+
         return response()->json(
             [
                 'code' => 'ok',

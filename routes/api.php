@@ -16,6 +16,7 @@ use App\Http\Controllers\v1\UserController;
 use App\Http\Controllers\v1\PromosController;
 use App\Http\Controllers\v1\SuscriptorsController;
 use App\Http\Controllers\v1\TropiPayController;
+use App\Http\Controllers\v1\RentalhoPayController;
 use App\Http\Controllers\v1\PaymentMethodsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -162,8 +163,9 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/suscriptors/new', [SuscriptorsController::class, 'newSuscriptor']);
     Route::delete('/v1/suscriptors/delete', [SuscriptorsController::class, 'deleteSuscriptor']);
 
-// section Tropipay
+// section Tropipay and Rentalho
     Route::post('/v1/tropipay/api/notification', [TropiPayController::class, 'responseNotification']);
+    Route::post('/v1/rentalho/api/notification', [RentalhoPayController::class, 'responseNotification']);
 
 // section Payments
     Route::post('/v1/payment/new', [PaymentController::class, 'newPayment'])->middleware('auth:sanctum');

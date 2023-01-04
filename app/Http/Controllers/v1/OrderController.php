@@ -514,7 +514,6 @@ class OrderController extends Controller
         else if($data['methodPayment'] === 'rentalho'){
             $currencyCode = Currency::whereCode('USD')->first();
         }
-            // buscar cual es el id de la moneda EUR , y buscar el valor de los productos en EUR
 
         $order->currency_id = $currencyCode->id;
 

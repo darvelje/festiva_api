@@ -60,9 +60,18 @@ class PaymentController extends Controller
         }
 
         $commissionCost = 0;
-        foreach ($request->order['commissionCost'] as $commission){
-            if($commission['currency_code'] === 'EUR'){
-                $commissionCost += $commission['price'];
+        if($generalData['methodPayment'] == 'tropipay'){
+            foreach ($request->order['commissionCost'] as $commission){
+                if($commission['currency_code'] === 'EUR'){
+                    $commissionCost += $commission['price'];
+                }
+            }
+        }
+        else if($generalData['methodPayment'] == 'rentalho'){
+            foreach ($request->order['commissionCost'] as $commission){
+                if($commission['currency_code'] === 'USD'){
+                    $commissionCost += $commission['price'];
+                }
             }
         }
 
@@ -107,7 +116,8 @@ class PaymentController extends Controller
 
         return response()->json([
             'code' => 'error',
-            'message' => 'Order or Shop not found'
+            'message' => 'Order or Shop not found',
+            'order' => $ordersIds->count(),
         ], 404);
 
     }

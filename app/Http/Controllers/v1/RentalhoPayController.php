@@ -66,7 +66,7 @@ class RentalhoPayController extends Controller
 
                 return [
                     'error' => 0,
-                    'url' =>  $json->{'payURL'},
+                    'data' =>  $json->{'data'},
                 ];
             }
         } catch (\Throwable $th) {

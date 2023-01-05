@@ -205,7 +205,7 @@ class PaymentController extends Controller
         return response()->json([
             'code' => 'TEST',
             'message' => 'TEST',
-            'result' => json_encode($result),
+            'result' => $result,
         ]);
 
         if ($result['error'] == '500') {

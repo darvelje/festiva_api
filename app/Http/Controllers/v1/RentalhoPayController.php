@@ -56,7 +56,7 @@ class RentalhoPayController extends Controller
 
             return [
                 'error' => 'test 200',
-                'result' =>  json_encode($result),
+                'result' =>  json_decode($result),
             ];
 
             $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);

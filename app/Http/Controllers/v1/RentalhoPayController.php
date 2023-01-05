@@ -54,11 +54,6 @@ class RentalhoPayController extends Controller
 
             $result = curl_exec($curl);
 
-            return [
-                'error' => 'test 200',
-                'result' =>  json_decode($result),
-            ];
-
             $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             curl_close($curl);
@@ -71,7 +66,7 @@ class RentalhoPayController extends Controller
 
                 return [
                     'error' => 0,
-                    'url' =>  $json->{'paymentUrl'},
+                    'url' =>  $json->{'payURL'},
                 ];
             }
         } catch (\Throwable $th) {

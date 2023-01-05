@@ -75,8 +75,11 @@ class PaymentController extends Controller
             }
         }
 
-//        $orderTotalPrice += $commissionCost;
-      
+        return response()->json([
+            'code' => 'error',
+            'message' => 'debug error',
+            'order' => json_encode($ordersIds,true),
+        ]);
 
         if ($ordersIds->count() > 0) {
 
@@ -119,7 +122,7 @@ class PaymentController extends Controller
             'code' => 'error',
             'message' => 'Order or Shop not found',
             'order' => $ordersIds->count(),
-        ], 404);
+        ], 512);
 
     }
 

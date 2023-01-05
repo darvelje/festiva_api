@@ -202,6 +202,12 @@ class PaymentController extends Controller
             $data['tokenAuth'],
         );
 
+        return response()->json([
+            'code' => 'TEST',
+            'message' => 'TEST',
+            'result' => $result['data']['payURL'],
+        ]);
+
         if ($result['error'] == '500') {
             return response()->json([
                 'code' => 'error',

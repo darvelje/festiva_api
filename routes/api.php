@@ -18,6 +18,7 @@ use App\Http\Controllers\v1\SuscriptorsController;
 use App\Http\Controllers\v1\TropiPayController;
 use App\Http\Controllers\v1\RentalhoPayController;
 use App\Http\Controllers\v1\PaymentMethodsController;
+use App\Http\Controllers\v1\PermissionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,10 @@ use Illuminate\Support\Facades\Route;
         return $request->user();
     });
 
-// section Routes_User
+    // section Routes_User
+    Route::post('/v1/user/me', [UserController::class, 'me'])->middleware('auth:sanctum');
+    Route::post('/v1/register', [UserController::class, 'register']);
+    Route::post('/v1/login', [UserController::class, 'login']);
     Route::get('/v1/user/all', [UserController::class, 'getUsers']);
     Route::get('/v1/user/view/{userId}', [UserController::class, 'getUserById']);
     Route::post('/v1/user/new', [UserController::class, 'newUser']);
@@ -36,8 +40,18 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/user/favorites', [UserController::class, 'getUserFavoritesProducts'])->middleware('auth:sanctum');
     Route::delete('/v1/user/delete-favorite', [UserController::class, 'deleteUserFavoritesProducts'])->middleware('auth:sanctum');
 
+    //Rols and permissions
+    Route::get('/v1/rols/all', [PermissionsController::class, 'getRols']);
+    Route::get('/v1/rols/staff', [PermissionsController::class, 'getStaff']);
+    Route::post('/v1/rols/add', [PermissionsController::class, 'addRol']);
+    Route::post('/v1/rols/adduser', [PermissionsController::class, 'addUserToRol']);
+    Route::post('/v1/rols/permissiontorol', [PermissionsController::class, 'addPermissionToRol']);
+    Route::post('/v1/rols/update', [PermissionsController::class, 'updateRol']);
+    Route::delete('/v1/rols/staff/delete', [PermissionsController::class, 'deleteRoleForStaff']);
+    Route::delete('/v1/rols/delete', [PermissionsController::class, 'deleteRol']);
+    Route::delete('/v1/rols/deletePermissionToEdit', [PermissionsController::class, 'deletePermissionToEdit']);
 
-// section Routes_Business
+    // section Routes_Business
     Route::get('/v1/business/all', [BusinessController::class, 'getBusinesses']);
     Route::post('/v1/business/all/front', [BusinessController::class, 'getAllBusinesses']);
     Route::get('/v1/business/view/{businessSlug}', [BusinessController::class, 'getBusinessBySlug']);
@@ -50,7 +64,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/business/update/pick', [BusinessController::class, 'changeStatusPick']);
     Route::delete('/v1/business/delete', [BusinessController::class, 'deleteBusiness']);
 
-// section Routes_Location
+    // section Routes_Location
     Route::get('/v1/provinces/all', [LocationController::class, 'getProvinces']);
     Route::get('/v1/provinces/delivery-zones/', [LocationController::class, 'getProvincesWithShop']);
     Route::get('/v1/municipalities/{provinceId}', [LocationController::class, 'getMunicipalities']);
@@ -59,7 +73,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/v1/localities/delivery-zones/{municipalityId}', [LocationController::class, 'getLocalitiesWithShop']);
     Route::get('/v1/tropipay/countries', [LocationController::class, 'getCountriesTropipay']);
 
-// section Routes_Business_Coupons
+    // section Routes_Business_Coupons
     Route::get('/v1/business/coupons/all', [BusinessCouponsController::class, 'getShopCoupons']);
     Route::get('/v1/business/coupons/view/{shopCouponId}', [BusinessCouponsController::class, 'getShopCouponById']);
     Route::get('/v1/business/coupons/{businessUrl}', [BusinessCouponsController::class, 'getShopCouponByShopSlug']);
@@ -67,7 +81,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/business/coupons/update', [BusinessCouponsController::class, 'updateShopCoupon']);
     Route::delete('/v1/business/coupons/delete', [BusinessCouponsController::class, 'deleteShopCoupon']);
 
-// section Routes_Shop_Currency
+    // section Routes_Shop_Currency
     Route::get('/v1/business/currency/all', [BusinessCurrencyController::class, 'getBusinessCurrencies']);
     Route::post('/v1/business/currency/view', [BusinessCurrencyController::class, 'getBusinessCurrencyById']);
     Route::get('/v1/business/currency/{businessUrl}', [BusinessCurrencyController::class, 'getBusinessCurrencyBySlug']);
@@ -76,7 +90,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/business/currency/update', [BusinessCurrencyController::class, 'updateBusinessCurrency']);
     Route::delete('/v1/business/currency/delete', [BusinessCurrencyController::class, 'deleteBusinessCurrency']);
 
-// section Routes_Business_Delivery_Zones
+    // section Routes_Business_Delivery_Zones
     Route::get('/v1/business/delivery/zones/{businessUrl}', [BusinessDeliveryZonesController::class, 'getBusinessDeliveryZonesByBusinessSlug']);
     Route::get('/v1/business/delivery/zones/view/{businessDeliveryZoneId}', [BusinessDeliveryZonesController::class, 'getBusinessDeliveryZoneById']);
     Route::post('/v1/business/delivery/zones/new', [BusinessDeliveryZonesController::class, 'newBusinessDeliveryZone']);

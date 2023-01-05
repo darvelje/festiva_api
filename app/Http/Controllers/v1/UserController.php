@@ -4,8 +4,11 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewUserRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Mail\MessageHelp;
+use App\Models\Order;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\UserFavoritesHasShopProduct;
@@ -24,6 +27,94 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
 
+    
+    // Login: method to login an user
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (!Auth::attempt($request->only(['email', 'password']))) {
+            return response()->json([
+                'code' => 'error',
+                'message' => 'Invalid login details',
+                'password' => $request->password
+            ], 401);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+        
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => new UserResource($user),
+            'code' => 'ok',
+            'message' => 'User logged in',
+        ]);
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        try {
+            $user = new User();
+            $user->email = $request->email;
+            $user->name = $request->name;
+            $user->password = Hash::make($request->password);
+            $user->email_verified_at = now();
+            $user->save();
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
+                'code' => 'ok',
+                'message' => 'User registered'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'code' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function me(Request $request)
+    {
+        $user = $request->user();
+        $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+
+            'code' => 'ok',
+            'message' => 'Success',
+            'data' =>
+            [
+                'user' => new UserResource($user),
+                'orders' => $orders,
+              
+            ]
+        ]);
+    }
+
+       // logout: method to logout an user
+       public function logout(Request $request)
+       {
+           $request->user()->currentAccessToken()->delete();
+   
+           return response()->json([
+               'code' => 'ok',
+               'message' => 'Logged out',
+           ]);
+       }
+   
+
     //section Get_User_By_Token_Rentalho
     protected function getUserByToken($token)
     {
@@ -33,7 +124,8 @@ class UserController extends Controller
     }
 
     //section Get_Token_User
-    public function getTokenUser(Request $request){
+    public function getTokenUser(Request $request)
+    {
 
         $userDriver = $this->getUserByToken($request->token);
 
@@ -48,7 +140,6 @@ class UserController extends Controller
                 'code' => 'ok',
                 'message' => 'User logged in',
             ]);
-
         } else {
             $user = User::create([
                 'name' => $userDriver['data']['name'],
@@ -69,7 +160,6 @@ class UserController extends Controller
                 'code' => 'ok',
                 'message' => 'User registered',
             ]);
-
         }
 
 
@@ -81,11 +171,11 @@ class UserController extends Controller
                 'data' =>  $userDriver['data']['email']
             ]
         );
-
     }
 
     //section Get_Users
-    public function getUsers(){
+    public function getUsers()
+    {
 
         $users = User::all();
 
@@ -99,11 +189,12 @@ class UserController extends Controller
     }
 
     //section Get_User
-    public function getUserById(Request $request){
+    public function getUserById(Request $request)
+    {
 
         $user = User::whereId($request->userId)->first();
 
-        if($user){
+        if ($user) {
             return response()->json(
                 [
                     'code' => 'ok',
@@ -122,11 +213,13 @@ class UserController extends Controller
     }
 
     //section Get_User_Favorites_Products
-    public function getUserFavoritesProducts(Request $request){
+    public function getUserFavoritesProducts(Request $request)
+    {
 
         $userDb = $request->user();
 
-        $userFavoritesProducts = UserFavoritesHasShopProduct::with('shopProduct',
+        $userFavoritesProducts = UserFavoritesHasShopProduct::with(
+            'shopProduct',
             'shopProduct.shopProductsHasCategoriesProducts',
             'shopProduct.shopProductPhotos',
             'shopProduct.shopProductsHasCategoriesProducts.categoriesProduct',
@@ -134,9 +227,9 @@ class UserController extends Controller
             'shopProduct.shopProductsPricesrates.currency',
         )->where('user_id', $userDb->id)->get();
 
-        if($userFavoritesProducts){
+        if ($userFavoritesProducts) {
 
-            foreach ($userFavoritesProducts as $product){
+            foreach ($userFavoritesProducts as $product) {
 
                 unset($product->id);
                 unset($product->user_id);
@@ -148,7 +241,7 @@ class UserController extends Controller
 
                 $product->categories = $product->product->shopProductsHasCategoriesProducts;
 
-                foreach ($product->categories as $prod_cat){
+                foreach ($product->categories as $prod_cat) {
                     $prod_cat->id = $prod_cat->categoriesProduct->id;
                     $prod_cat->name = $prod_cat->categoriesProduct->name;
                     $prod_cat->parent_id = $prod_cat->categoriesProduct->parent_id;
@@ -162,14 +255,14 @@ class UserController extends Controller
 
                 $product->photos = $product->product->shopProductPhotos;
 
-                foreach ($product->photos as $prod_photo){
+                foreach ($product->photos as $prod_photo) {
                     unset($prod_photo->created_at);
                     unset($prod_photo->updated_at);
                 }
 
                 $product->prices = $product->product->shopProductsPricesrates;
 
-                foreach ($product->prices as $prod_prices){
+                foreach ($product->prices as $prod_prices) {
                     $prod_prices->currency_code = $prod_prices->currency->code;
                     unset($prod_prices->currency);
                     unset($prod_prices->created_at);
@@ -184,7 +277,6 @@ class UserController extends Controller
                 unset($product->product->shop_id);
 
                 unset($product->shopProduct);
-
             }
 
             return response()->json(
@@ -194,8 +286,7 @@ class UserController extends Controller
                     'favorites_products' => $userFavoritesProducts
                 ]
             );
-        }
-        else{
+        } else {
             return response()->json(
                 [
                     'code' => 'error',
@@ -203,13 +294,13 @@ class UserController extends Controller
                 ]
             );
         }
-
     }
 
     //section Add_User_Favorites_Products
-    public function addUserFavoritesProducts(Request $request){
+    public function addUserFavoritesProducts(Request $request)
+    {
 
-        try{
+        try {
             DB::beginTransaction();
 
             $userDb = $request->user();
@@ -229,8 +320,7 @@ class UserController extends Controller
                     'message' => 'Product added favorite successfully'
                 ]
             );
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json(
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
@@ -238,9 +328,10 @@ class UserController extends Controller
     }
 
     //section Delete_User_Favorites_Products
-    public function deleteUserFavoritesProducts(Request $request){
+    public function deleteUserFavoritesProducts(Request $request)
+    {
 
-        try{
+        try {
             DB::beginTransaction();
 
             $userDb = $request->user();
@@ -249,7 +340,7 @@ class UserController extends Controller
 
             DB::commit();
 
-            if($result){
+            if ($result) {
                 return response()->json(
                     [
                         'code' => 'ok',
@@ -264,9 +355,7 @@ class UserController extends Controller
                     'message' => 'Product not found'
                 ]
             );
-
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json(
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
@@ -274,9 +363,10 @@ class UserController extends Controller
     }
 
     //section New_User
-    public function newUser(NewUserRequest $request){
+    public function newUser(NewUserRequest $request)
+    {
 
-        try{
+        try {
             DB::beginTransaction();
             $user = new User();
 
@@ -299,8 +389,7 @@ class UserController extends Controller
                     'message' => 'User created successfully'
                 ]
             );
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json(
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
@@ -308,8 +397,9 @@ class UserController extends Controller
     }
 
     //section Update_User
-    public function updateUser(UpdateUserRequest $request){
-        try{
+    public function updateUser(UpdateUserRequest $request)
+    {
+        try {
             DB::beginTransaction();
 
             $user = User::whereId($request->userId)->first();
@@ -319,7 +409,7 @@ class UserController extends Controller
             $user->phone = $request->userPhone;
             $user->email = $request->userEmail;
 
-            if($request->userPassword){
+            if ($request->userPassword) {
                 $user->password = Hash::make($request->userPassword);
             }
             if ($request->hasFile('userAvatar')) {
@@ -336,8 +426,7 @@ class UserController extends Controller
                     'message' => 'User updated successfully'
                 ]
             );
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json(
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
@@ -345,14 +434,15 @@ class UserController extends Controller
     }
 
     // section Delete_User
-    public function deleteUser(Request $request){
+    public function deleteUser(Request $request)
+    {
         try {
             DB::beginTransaction();
             $result = User::whereId($request->userId)->delete();
 
             DB::commit();
 
-            if($result){
+            if ($result) {
                 return response()->json(
                     [
                         'code' => 'ok',
@@ -367,9 +457,7 @@ class UserController extends Controller
                     'message' => 'User not found'
                 ]
             );
-
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json(
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
@@ -377,7 +465,8 @@ class UserController extends Controller
     }
 
     // section Send_Help_Message
-    public function sendHelpMessage(Request $request){
+    public function sendHelpMessage(Request $request)
+    {
 
 
         try {
@@ -387,7 +476,7 @@ class UserController extends Controller
 
             $date = now();
 
-            Mail::to($settings->email)->send(new MessageHelp($request->message, $request->email, $request->name,$date));
+            Mail::to($settings->email)->send(new MessageHelp($request->message, $request->email, $request->name, $date));
 
             DB::commit();
 
@@ -397,9 +486,7 @@ class UserController extends Controller
                     'message' => 'Help message sended successfully'
                 ]
             );
-
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json(
                 ['code' => 'error', 'message' => $th->getMessage()]
             );
@@ -407,7 +494,8 @@ class UserController extends Controller
     }
 
     //section Upload_image
-    public static function uploadImage($path, $name){
+    public static function uploadImage($path, $name)
+    {
         $image = $path;
 
         $avatarName =  $name . substr(uniqid(rand(), true), 7, 7) . '.webp';
@@ -426,6 +514,4 @@ class UserController extends Controller
 
         return $path;
     }
-
-
 }

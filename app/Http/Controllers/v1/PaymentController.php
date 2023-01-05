@@ -75,12 +75,6 @@ class PaymentController extends Controller
             }
         }
 
-        return response()->json([
-            'code' => 'error',
-            'message' => 'debug error',
-            'order' => json_encode($ordersIds,true),
-        ]);
-
         if ($ordersIds->count() > 0) {
 
             $order = $ordersIds->first();
@@ -99,9 +93,9 @@ class PaymentController extends Controller
                         'pending', 'earning', $commissionCost);
                 }
 
-               return $this->newPaymentWithTropiPay($movementPending,$client,$generalData,$receiver);
+               return $this->newPaymentWithTropiPay($movementPending,$client);
             }
-            else if($generalData['methodPayment'] == 'rentalhopay'){
+            else if($generalData['methodPayment'] == 'rentalho'){
 
                 if($ordersIds->count()==1 ){
                     $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
@@ -114,19 +108,18 @@ class PaymentController extends Controller
                         'pending', 'earning', $commissionCost);
                 }
 
-                return $this->newPaymentWithRentalho($movementPending,$client,$generalData,$receiver);
+                return $this->newPaymentWithRentalho($movementPending,$generalData);
             }
         }
 
         return response()->json([
             'code' => 'error',
             'message' => 'Order or Shop not found',
-            'order' => $ordersIds->count(),
-        ], 512);
+        ]);
 
     }
 
-    public function newPaymentWithTropiPay($movementPending, $client, $data, $receiver){
+    public function newPaymentWithTropiPay($movementPending, $client){
 
         $payment = PaymentMethod::where('name','Tropipay')->first();
 
@@ -191,7 +184,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function newPaymentWithRentalho($movementPending, $client, $data, $receiver){
+    public function newPaymentWithRentalho($movementPending, $data){
 
         $currency = Currency::find($movementPending->currency_id);
 

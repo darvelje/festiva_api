@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'rols' => $this->getRoleNames(),
             'permissions' => $this->getAllPermissions()->pluck('name'),
+            'shop' => $this->shop,
         ];
     }
 }

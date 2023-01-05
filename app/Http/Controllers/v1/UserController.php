@@ -130,7 +130,7 @@ class UserController extends Controller
 
         $userDriver = $this->getUserByToken($request->token);
 
-        if ($user = User::whereEmail($userDriver['data']['email'])->first()) {
+        if ($user = User::with('shop')->whereEmail($userDriver['data']['email'])->first()) {
 
             $token = $user->createToken('auth_token')->plainTextToken;
 

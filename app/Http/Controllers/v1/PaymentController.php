@@ -202,12 +202,6 @@ class PaymentController extends Controller
             $data['tokenAuth'],
         );
 
-        return response()->json([
-            'code' => 'TEST',
-            'message' => 'TEST',
-            'result' => $result['data']->{'payURL'},
-        ]);
-
         if ($result['error'] == '500') {
             return response()->json([
                 'code' => 'error',
@@ -224,7 +218,7 @@ class PaymentController extends Controller
             ]);
         }
 
-        $movementPending->url = $result['data']['payURL'];
+        $movementPending->url = $result['data']->{'payURL'};
       //  $movementPending->transation_uuid = $result['id'];
         $movementPending->update();
 
@@ -234,7 +228,7 @@ class PaymentController extends Controller
         return response()->json([
             'code' => 'ok',
             'message' => 'Payment created',
-            'url' => $result['data']['payURL'],
+            'url' => $result['data']->{'payURL'},
             'result'=>$result
         ]);
     }

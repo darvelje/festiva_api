@@ -137,7 +137,8 @@ class UserController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => new UserResource($user),
+//                'user' => new UserResource($user),
+                'user' => $user,
                 'code' => 'ok',
                 'message' => 'User logged in',
             ]);
@@ -157,7 +158,8 @@ class UserController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => new UserResource($user),
+//                'user' => new UserResource($user),
+                'user' => $user,
                 'code' => 'ok',
                 'message' => 'User registered',
             ]);

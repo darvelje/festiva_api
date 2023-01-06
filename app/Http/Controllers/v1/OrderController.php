@@ -309,6 +309,14 @@ class OrderController extends Controller
 
         $shop = Shop::with('orders.currency','orders.user', 'orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
 
+        return response()->json(
+            [
+                'code' => 'test',
+                'message' => 'Debug code',
+                'shop' => $shop
+            ]
+        );
+
         if($shop){
             $orders = $shop->orders;
 

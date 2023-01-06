@@ -309,13 +309,13 @@ class OrderController extends Controller
 
         $shop = Shop::with('orders.currency','orders.user', 'orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
 
-        return response()->json(
-            [
-                'code' => 'test',
-                'message' => 'Debug code',
-                'shop' => $shop
-            ]
-        );
+//        return response()->json(
+//            [
+//                'code' => 'test',
+//                'message' => 'Debug code',
+//                'shop' => $shop
+//            ]
+//        );
 
         if($shop){
             $orders = $shop->orders;
@@ -366,14 +366,14 @@ class OrderController extends Controller
                 unset($order->deliver_address->created_at);
                 unset($order->deliver_address->updated_at);
 
-                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
-
-                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
-                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
-                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
-                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
-
-                unset($order->deliver_address->locality);
+//                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+//
+//                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+//                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+//                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+//                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+//
+//                unset($order->deliver_address->locality);
                 unset($order->userAddress);
 
                 if($order->status === 1){

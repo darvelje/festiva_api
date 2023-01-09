@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContEarnings;
 use App\Models\Currency;
+use App\Models\MovementAmount;
 use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\ShopCurrency;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Collection;
@@ -252,4 +255,37 @@ class PaymentController extends Controller
             'result'=>$result
         ]);
     }
+
+    // section Check_Pay_Earnings
+    static public function checkPayEarnings($order){
+
+        $movement = MovementAmount::whereId($order->movement_id)->first();
+
+        if($movement->model !== 'order'){
+            $ordersId = json_decode($movement->orders_id);
+
+            foreach($ordersId as $order){
+                if($order->status !== 6){
+                    return false;
+                }
+            }
+        }
+
+        self::payEarnings($movement);
+
+    }
+
+    // section Pay_Earning
+    static public function payEarnings($movement){
+
+        $earning = new ContEarnings();
+
+        $earning->method = $movement->method;
+        $earning->amount = $movement->fee;
+        $earning->currency_id = $movement->currency_id;
+
+        $earning->save();
+
+    }
+
 }

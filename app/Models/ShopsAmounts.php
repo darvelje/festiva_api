@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $shop_id
- * @property integer $currency_code
+ * @property integer $currency_id
  * @property float $pending_amount
  * @property float $amount
  * @property string $created_at
@@ -19,7 +19,7 @@ class ShopsAmounts extends Model
     /**
      * @var array
      */
-    protected $fillable = ['shop_id', 'currency_code', 'pending_amount', 'amount', 'created_at', 'updated_at'];
+    protected $fillable = ['shop_id', 'currency_id', 'pending_amount', 'amount', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Shop;
 use App\Models\ShopProduct;
+use App\Models\ShopsAmounts;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Model;
@@ -595,11 +596,17 @@ class OrderController extends Controller
 
             if($request->orderStatus === 6){
 
+                $shopMovement = new ShopsAmounts();
 
+                $shopMovement->shop_id = $order->shop_id;
+                $shopMovement->currency_id = $order->currency_id;
+                $shopMovement->pending_amount = 0;
+                $shopMovement->amount = $order->total_price;
 
+                $shopMovement->save();
+
+                PaymentController::payEarnings($order);
             }
-
-
 
             DB::commit();
 

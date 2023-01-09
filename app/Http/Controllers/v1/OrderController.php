@@ -538,8 +538,8 @@ class OrderController extends Controller
         }
 
         for($k = 0; $k < $lengthPrices; $k++){
-            if($data['deliveryCost'][$k]['currency_id'] == $currencyCode->id){
-                $total_price = $total_price +$data['deliveryCost'][$k]['price'];
+            if($orderInfo['deliveryCost'][$k]['currency_id'] == $currencyCode->id){
+                $total_price = $total_price +$orderInfo['deliveryCost'][$k]['price'];
             }
         }
 
@@ -590,6 +590,16 @@ class OrderController extends Controller
             $order->status = $request->orderStatus;
 
             $order->update();
+
+            //todo asignarle el dinero al comercio
+
+            if($request->orderStatus === 6){
+
+
+
+            }
+
+
 
             DB::commit();
 

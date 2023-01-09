@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
+use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\ShopCurrency;
 use Illuminate\Http\Request;
@@ -77,35 +78,54 @@ class PaymentController extends Controller
 
         if ($ordersIds->count() > 0) {
 
-            $order = $ordersIds->first();
+
             $movementPending = collect();
 
             if ($generalData['methodPayment'] == 'tropipay') {
                 //code here tropipay
                 if($ordersIds->count()==1 ){
+                    $order = $ordersIds->first();
                     $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
                         'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
+
+                    $order->movement_id = $movementPending->id;
+                    $order->update();
                 }elseif($ordersIds->count()>1){
                     $ordersIds = $ordersIds->pluck('id')->toArray();
                     $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
                         'tropipay', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
+                    foreach ($ordersIds as $order){
+                        $order = Order::whereId($order->id)->first();
+                        $order->movement_id = $movementPending->id;
+                        $order->update();
+                    }
                 }
+
+
 
                return $this->newPaymentWithTropiPay($movementPending,$client);
             }
             else if($generalData['methodPayment'] == 'rentalho'){
 
                 if($ordersIds->count()==1 ){
+                    $order = $ordersIds->first();
                     $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
                         'rentalho', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
+                    $order->movement_id = $movementPending->id;
+                    $order->update();
                 }elseif($ordersIds->count()>1){
                     $ordersIds = $ordersIds->pluck('id')->toArray();
                     $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
                         'rentalho', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
+                    foreach ($ordersIds as $order){
+                        $order = Order::whereId($order->id)->first();
+                        $order->movement_id = $movementPending->id;
+                        $order->update();
+                    }
                 }
 
                 return $this->newPaymentWithRentalho($movementPending,$generalData);

@@ -109,7 +109,7 @@ class RentalhoPayController extends Controller
                     $order->status = 3;
                     $order->update();
 
-                    //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+                    // todo Falta enviar notificacion al cliente de que el pago ha sido rechazado
 
                 }
             }
@@ -132,7 +132,7 @@ class RentalhoPayController extends Controller
                         $order->status = 3;
                         $order->update();
 
-                        //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+                        // todo Falta enviar notificacion al cliente de que el pago ha sido rechazado
 
                     }
                 }

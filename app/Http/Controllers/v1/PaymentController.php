@@ -97,7 +97,7 @@ class PaymentController extends Controller
                         'tropipay', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
                     foreach ($ordersIds as $order){
-                        $order = Order::whereId($order->id)->first();
+                        $order = Order::whereId($order)->first();
                         $order->movement_id = $movementPending->id;
                         $order->update();
                     }
@@ -122,7 +122,7 @@ class PaymentController extends Controller
                         'rentalho', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
                     foreach ($ordersIds as $order){
-                        $order = Order::whereId($order->id)->first();
+                        $order = Order::whereId($order)->first();
                         $order->movement_id = $movementPending->id;
                         $order->update();
                     }

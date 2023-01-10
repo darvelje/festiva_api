@@ -410,9 +410,12 @@ class SettingsController extends Controller
 
         if($userDb){
 
-//            $walletMoney = DB::table('shops_amounts')->groupBy(['currency_id'])->sum('amount');
+            $walletMoney =DB::table('shops_amounts')
+                 ->select(DB::raw('sum("amount") as amount, currency_id as currrency_id'))
+                 ->groupBy(['currency_id'])
+                 ->get();
 
-            $walletMoney = ShopsAmounts::with('currency')->groupBy(['currency_id'])->get()->sum('amount');
+//            $walletMoney = ShopsAmounts::groupBy(['currency_id'])->sum('amount');
 
             return response()->json([
                 'code' => 'test',

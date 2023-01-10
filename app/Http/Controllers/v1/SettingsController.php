@@ -410,7 +410,7 @@ class SettingsController extends Controller
 
         if($userDb){
 
-            $walletMoney = ShopsAmounts::with('currency')->get();
+            $walletMoney = ShopsAmounts::with('currency')->sum('amount')->get();
 
             return response()->json([
                 'code' => 'test',

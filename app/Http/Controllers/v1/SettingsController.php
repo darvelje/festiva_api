@@ -415,12 +415,21 @@ class SettingsController extends Controller
                  ->groupBy(['currency_id'])
                  ->get();
 
-//            $walletMoney = ShopsAmounts::groupBy(['currency_id'])->sum('amount');
+            $earningsMoney =DB::table('cont_earnings')
+                ->select(DB::raw('sum("amount") as amount, currency_id as currrency_id'))
+                ->groupBy(['currency_id'])
+                ->get();
+
+
+
 
             return response()->json([
                 'code' => 'test',
                 'message' => 'Debug function',
-                'data' => $walletMoney
+                'data' => [
+                    "walletMoney" => $walletMoney,
+                    "earningsMoney" => $earningsMoney
+                ]
             ]);
         }
         else{

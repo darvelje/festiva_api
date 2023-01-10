@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Setting;
 use App\Models\SettingsPage;
 use App\Models\ShopProduct;
+use App\Models\ShopsAmounts;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -402,4 +403,28 @@ class SettingsController extends Controller
         return $path;
     }
 
+    //section Platform_Economy
+    public function getPlatformEconomy(Request $request){
+
+        $userDb = $request->user();
+
+        if($userDb){
+
+            $walletMoney = ShopsAmounts::with('currency')->get();
+
+            return response()->json([
+                'code' => 'test',
+                'message' => 'Debug function',
+                'data' => $walletMoney
+            ]);
+        }
+        else{
+            return response()->json([
+                'code' => 'error',
+                'message' => 'You do not have permissions to view this information.',
+            ]);
+        }
+
+
+    }
 }

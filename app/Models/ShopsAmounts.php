@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property Shop $shop
+ * @property Currency $currency
  */
 class ShopsAmounts extends Model
 {
@@ -27,5 +28,10 @@ class ShopsAmounts extends Model
     public function shop()
     {
         return $this->belongsTo('App\Models\Shop');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo('App\Models\Currency');
     }
 }

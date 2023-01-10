@@ -122,6 +122,7 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/settings/delete', [SettingsController::class, 'deleteSettings']);
     Route::post('/v1/settings/payment-method/new', [PaymentMethodsController::class, 'newPaymentMethod']);
     Route::get('/v1/settings/payment-method/view', [PaymentMethodsController::class, 'getPaymentMethod']);
+    Route::get('/v1/settings/economy', [SettingsController::class, 'getPlatformEconomy'])->middleware('auth:sanctum');;
 
 // section Routes_Currency
     Route::get('/v1/currency/all', [CurrencyController::class, 'getCurrencies']);

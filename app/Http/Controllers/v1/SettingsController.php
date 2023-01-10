@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\CategoriesProduct;
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Setting;
 use App\Models\SettingsPage;
@@ -420,6 +421,8 @@ class SettingsController extends Controller
                 ->groupBy(['currency_id'])
                 ->get();
 
+            $currencyLength = Currency::all()->count();
+
 
 
 
@@ -428,7 +431,8 @@ class SettingsController extends Controller
                 'message' => 'Debug function',
                 'data' => [
                     "walletMoney" => $walletMoney,
-                    "earningsMoney" => $earningsMoney
+                    "earningsMoney" => $earningsMoney,
+                    "currencyLength" => $currencyLength
                 ]
             ]);
         }

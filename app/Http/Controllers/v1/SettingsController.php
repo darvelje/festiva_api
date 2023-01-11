@@ -438,19 +438,15 @@ class SettingsController extends Controller
                     }
                 }
 
-               // todo asignar precio total
                 array_push($incomeMoney, ['currency_id' => $currency->id, 'amount' => $total]);
             }
 
-
             return response()->json([
-                'code' => 'test',
-                'message' => 'Debug function',
-                'data' => [
-                    "walletMoney" => $walletMoney,
-                    "earningsMoney" => $earningsMoney,
-                    "incomeMoney" => $incomeMoney
-                ]
+                'code' => 'ok',
+                'message' => 'Administrative economic balance',
+                "walletMoney" => $walletMoney,
+                "earningsMoney" => $earningsMoney,
+                "incomeMoney" => $incomeMoney
             ]);
         }
         else{

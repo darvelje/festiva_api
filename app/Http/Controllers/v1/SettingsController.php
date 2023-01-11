@@ -428,18 +428,18 @@ class SettingsController extends Controller
             foreach ($currencyLength as $currency){
                 $total = 0;
                 foreach ($walletMoney as $wallet){
-                    if($wallet->currency_id === $currency->id){
-                        $total = $wallet->amount;
+                    if($wallet['currency_id'] === $currency['id']){
+                        $total = $wallet['amount'];
                     }
                 }
                 foreach ($earningsMoney as $earning){
-                    if($earning->currency_id === $currency->id){
-                        $total = $earning->amount;
+                    if($earning['currency_id'] === $currency['id']){
+                        $total = $earning['amount'];
                     }
                 }
 
                // todo asignar precio total
-                array_push($incomeMoney, ['currency_id' => $currency->id, 'amount' => $total]);
+                array_push($incomeMoney, ['currency_id' => $currency['id'], 'amount' => $total]);
             }
 
 

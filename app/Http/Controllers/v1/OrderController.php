@@ -274,12 +274,12 @@ class OrderController extends Controller
                 unset($order->deliver_address->created_at);
                 unset($order->deliver_address->updated_at);
 
-                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
-
-                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
-                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
-                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
-                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+//                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+//
+//                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+//                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+//                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+//                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
 
                 unset($order->deliver_address->locality);
                 unset($order->userAddress);

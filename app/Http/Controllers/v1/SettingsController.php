@@ -429,12 +429,12 @@ class SettingsController extends Controller
                 $total = 0;
                 foreach ($walletMoney as $wallet){
                     if($wallet->currency_id === $currency->id){
-                        $total = $wallet->amount;
+                        $total += $wallet->amount;
                     }
                 }
                 foreach ($earningsMoney as $earning){
                     if($earning->currency_id === $currency->id){
-                        $total = $earning->amount;
+                        $total += $earning->amount;
                     }
                 }
 

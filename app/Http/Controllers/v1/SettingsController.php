@@ -449,7 +449,7 @@ class SettingsController extends Controller
                 'data' => [
                     "walletMoney" => $walletMoney,
                     "earningsMoney" => $earningsMoney,
-//                    "incomeMoney" => $incomeMoney
+                    "incomeMoney" => $incomeMoney
                 ]
             ]);
         }

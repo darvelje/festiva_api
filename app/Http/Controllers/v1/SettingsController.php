@@ -412,12 +412,12 @@ class SettingsController extends Controller
         if($userDb){
 
             $walletMoney =DB::table('shops_amounts')
-                 ->select(DB::raw('sum("amount") as amount, currency_id as currrency_id'))
+                 ->select(DB::raw('sum("amount") as amount, currency_id as currency_id'))
                  ->groupBy(['currency_id'])
                  ->get();
 
             $earningsMoney =DB::table('cont_earnings')
-                ->select(DB::raw('sum("amount") as amount, currency_id as currrency_id'))
+                ->select(DB::raw('sum("amount") as amount, currency_id as currency_id'))
                 ->groupBy(['currency_id'])
                 ->get();
 
@@ -425,22 +425,22 @@ class SettingsController extends Controller
 
             $incomeMoney = [];
 
-//            foreach ($currencyLength as $currency){
-//                $total = 0;
-//                foreach ($walletMoney as $wallet){
-//                    if($wallet['currency_id'] === $currency['id']){
-//                        $total = $wallet['amount'];
-//                    }
-//                }
-//                foreach ($earningsMoney as $earning){
-//                    if($earning['currency_id'] === $currency['id']){
-//                        $total = $earning['amount'];
-//                    }
-//                }
-//
-//               // todo asignar precio total
-//                array_push($incomeMoney, ['currency_id' => $currency['id'], 'amount' => $total]);
-//            }
+            foreach ($currencyLength as $currency){
+                $total = 0;
+                foreach ($walletMoney as $wallet){
+                    if($wallet->currency_id === $currency->id){
+                        $total = $wallet->amount;
+                    }
+                }
+                foreach ($earningsMoney as $earning){
+                    if($earning->currency_id === $currency->id){
+                        $total = $earning->amount;
+                    }
+                }
+
+               // todo asignar precio total
+                array_push($incomeMoney, ['currency_id' => $currency->id, 'amount' => $total]);
+            }
 
 
             return response()->json([

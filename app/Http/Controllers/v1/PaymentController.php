@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContEarnings;
 use App\Models\Currency;
+use App\Models\MovementAmount;
+use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\ShopCurrency;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Collection;
@@ -27,6 +31,7 @@ class PaymentController extends Controller
             'discountCost' => $request->order['discountCost'],
             'commissionCost' => $request->order['commissionCost'],
             'methodPayment' => $request->order['methodPayment'],
+            'tokenAuth' => $request->order['tokenAuth'],
 
         ]);
 
@@ -59,45 +64,85 @@ class PaymentController extends Controller
         }
 
         $commissionCost = 0;
-        foreach ($request->order['commissionCost'] as $commission){
-            if($commission['currency_code'] === 'EUR'){
-                $commissionCost += $commission['price'];
+        if($generalData['methodPayment'] == 'tropipay'){
+            foreach ($request->order['commissionCost'] as $commission){
+                if($commission['currency_code'] === 'EUR'){
+                    $commissionCost += $commission['price'];
+                }
+            }
+        }
+        else if($generalData['methodPayment'] == 'rentalho'){
+            foreach ($request->order['commissionCost'] as $commission){
+                if($commission['currency_code'] === 'USD'){
+                    $commissionCost += $commission['price'];
+                }
             }
         }
 
-//        $orderTotalPrice += $commissionCost;
+        if ($ordersIds->count() > 0) {
 
-        if ($ordersIds->count()>0) {
+
+            $movementPending = collect();
+
             if ($generalData['methodPayment'] == 'tropipay') {
                 //code here tropipay
-                $order = $ordersIds->first();
-                $movementPending = collect();
                 if($ordersIds->count()==1 ){
+                    $order = $ordersIds->first();
                     $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
                         'tropipay', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
+
+                    $order->movement_id = $movementPending->id;
+                    $order->update();
                 }elseif($ordersIds->count()>1){
                     $ordersIds = $ordersIds->pluck('id')->toArray();
                     $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
                         'tropipay', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
                         'pending', 'earning', $commissionCost);
+                    foreach ($ordersIds as $order){
+                        $order = Order::whereId($order)->first();
+                        $order->movement_id = $movementPending->id;
+                        $order->update();
+                    }
                 }
 
-               return $this->newPaymentWithTropiPay($movementPending,$client,$generalData,$receiver);
+
+
+               return $this->newPaymentWithTropiPay($movementPending,$client);
             }
-            else if($generalData['methodPayment'] == 'rentalhopay'){
-                //code here rentalho_pay
+            else if($generalData['methodPayment'] == 'rentalho'){
+
+                if($ordersIds->count()==1 ){
+                    $order = $ordersIds->first();
+                    $movementPending = MovementAmountController::newMovement('order', $order->id,null, $orderTotalPrice,
+                        'rentalho', 'Pago del pedido: ' . $order->id,  $order->currency_id, true,
+                        'pending', 'earning', $commissionCost);
+                    $order->movement_id = $movementPending->id;
+                    $order->update();
+                }elseif($ordersIds->count()>1){
+                    $ordersIds = $ordersIds->pluck('id')->toArray();
+                    $movementPending = MovementAmountController::newMovement('orders', null,json_encode($ordersIds,true), $orderTotalPrice,
+                        'rentalho', 'Pago de los pedidos: ' . json_encode($ordersIds,true),  $order->currency_id, true,
+                        'pending', 'earning', $commissionCost);
+                    foreach ($ordersIds as $order){
+                        $order = Order::whereId($order)->first();
+                        $order->movement_id = $movementPending->id;
+                        $order->update();
+                    }
+                }
+
+                return $this->newPaymentWithRentalho($movementPending,$generalData);
             }
         }
 
         return response()->json([
             'code' => 'error',
-            'message' => 'Order or Shop not found'
-        ], 404);
+            'message' => 'Order or Shop not found',
+        ]);
 
     }
 
-    public function newPaymentWithTropiPay($movementPending, $client, $data, $receiver){
+    public function newPaymentWithTropiPay($movementPending, $client){
 
         $payment = PaymentMethod::where('name','Tropipay')->first();
 
@@ -161,4 +206,86 @@ class PaymentController extends Controller
             'result'=>$result
         ]);
     }
+
+    public function newPaymentWithRentalho($movementPending, $data){
+
+        $currency = Currency::find($movementPending->currency_id);
+
+        if(!$currency){
+            //return error
+        }
+
+        $result = RentalhoPayController::payWithRentalhoPay(
+            round(($movementPending->amount + $movementPending->fee), 2),
+            $movementPending->detail,
+            $movementPending->id,
+            '127.0.0.1:5173'.'/pagocompletado',
+            '127.0.0.1:5173'.'/errorenpago',
+            'https://stylla.app/api/v1/rentalho/api/notification',
+            $data['tokenAuth'],
+        );
+
+        if ($result['error'] == '500') {
+            return response()->json([
+                'code' => 'error',
+                'message' => 'Ocurrió un error con la pasarela de pagos - Error Interno del Servidor',
+                'result' => $result['result'],
+                'data' => $result['data']
+            ]);
+        }
+
+        if ($result['error'] == '501') {
+            return response()->json([
+                'code' => 'error',
+                'message' => 'Ocurrió un error con la pasarela de pagos - Autentificación'
+            ]);
+        }
+
+        $movementPending->url = $result['data']->{'payURL'};
+      //  $movementPending->transation_uuid = $result['id'];
+        $movementPending->update();
+
+
+        DB::commit();
+
+        return response()->json([
+            'code' => 'ok',
+            'message' => 'Payment created',
+            'url' => $result['data']->{'payURL'},
+            'result'=>$result
+        ]);
+    }
+
+    // section Check_Pay_Earnings
+    static public function checkPayEarnings($order){
+
+        $movement = MovementAmount::whereId($order->movement_id)->first();
+
+        if($movement->model !== 'order'){
+            $ordersId = json_decode($movement->orders_id);
+
+            foreach($ordersId as $order){
+                if($order->status !== 6){
+                    return false;
+                }
+            }
+        }
+
+        self::payEarnings($movement);
+
+    }
+
+    // section Pay_Earning
+    static public function payEarnings($movement){
+
+        $earning = new ContEarnings();
+
+        $earning->method = $movement->method;
+        $earning->amount = $movement->fee;
+        $earning->currency_id = $movement->currency_id;
+
+        $earning->save();
+
+    }
+
 }

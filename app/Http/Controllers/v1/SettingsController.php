@@ -4,10 +4,12 @@ namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\CategoriesProduct;
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Setting;
 use App\Models\SettingsPage;
 use App\Models\ShopProduct;
+use App\Models\ShopsAmounts;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -402,4 +404,58 @@ class SettingsController extends Controller
         return $path;
     }
 
+    //section Platform_Economy
+    public function getPlatformEconomy(Request $request){
+
+        $userDb = $request->user();
+
+        if($userDb){
+
+            $walletMoney =DB::table('shops_amounts')
+                 ->select(DB::raw('sum("amount") as amount, currency_id as currency_id'))
+                 ->groupBy(['currency_id'])
+                 ->get();
+
+            $earningsMoney =DB::table('cont_earnings')
+                ->select(DB::raw('sum("amount") as amount, currency_id as currency_id'))
+                ->groupBy(['currency_id'])
+                ->get();
+
+            $currencyLength = Currency::all();
+
+            $incomeMoney = [];
+
+            foreach ($currencyLength as $currency){
+                $total = 0;
+                foreach ($walletMoney as $wallet){
+                    if($wallet->currency_id === $currency->id){
+                        $total += $wallet->amount;
+                    }
+                }
+                foreach ($earningsMoney as $earning){
+                    if($earning->currency_id === $currency->id){
+                        $total += $earning->amount;
+                    }
+                }
+
+                array_push($incomeMoney, ['currency_id' => $currency->id, 'amount' => $total]);
+            }
+
+            return response()->json([
+                'code' => 'ok',
+                'message' => 'Administrative economic balance',
+                "walletMoney" => $walletMoney,
+                "earningsMoney" => $earningsMoney,
+                "incomeMoney" => $incomeMoney
+            ]);
+        }
+        else{
+            return response()->json([
+                'code' => 'error',
+                'message' => 'You do not have permissions to view this information.',
+            ]);
+        }
+
+
+    }
 }

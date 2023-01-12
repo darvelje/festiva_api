@@ -271,7 +271,7 @@ class TropiPayController extends Controller
                     $order->status = 3;
                     $order->update();
 
-                    //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+                    // todo Falta enviar notificacion al cliente de que el pago ha sido rechazado
 
                 }
             }
@@ -279,7 +279,12 @@ class TropiPayController extends Controller
 
                 $ordersIds = json_decode($movement->orders_id);
 
+                Log::debug('Orders ID', [$ordersIds]);
+
                 foreach ($ordersIds as $id_order){
+
+                    Log::debug('Order ID ', [$id_order]);
+
                     $order = Order::find($id_order);
 
                     if ($request['status'] == 'OK') {
@@ -294,7 +299,7 @@ class TropiPayController extends Controller
                         $order->status = 3;
                         $order->update();
 
-                        //Falta enviar notificacion al cliente de que el pago ha sido rechazado
+                        // todo Falta enviar notificacion al cliente de que el pago ha sido rechazado
 
                     }
                 }

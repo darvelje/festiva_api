@@ -1,4 +1,4 @@
-<?php
+product/view/<?php
 
 use Illuminate\Support\Facades\Route;
 

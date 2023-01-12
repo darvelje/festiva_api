@@ -16,6 +16,7 @@ use App\Http\Controllers\v1\UserController;
 use App\Http\Controllers\v1\PromosController;
 use App\Http\Controllers\v1\SuscriptorsController;
 use App\Http\Controllers\v1\TropiPayController;
+use App\Http\Controllers\v1\RentalhoPayController;
 use App\Http\Controllers\v1\PaymentMethodsController;
 use App\Http\Controllers\v1\PermissionsController;
 use Illuminate\Http\Request;
@@ -121,6 +122,7 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/v1/settings/delete', [SettingsController::class, 'deleteSettings']);
     Route::post('/v1/settings/payment-method/new', [PaymentMethodsController::class, 'newPaymentMethod']);
     Route::get('/v1/settings/payment-method/view', [PaymentMethodsController::class, 'getPaymentMethod']);
+    Route::get('/v1/settings/economy', [SettingsController::class, 'getPlatformEconomy'])->middleware('auth:sanctum');;
 
 // section Routes_Currency
     Route::get('/v1/currency/all', [CurrencyController::class, 'getCurrencies']);
@@ -176,8 +178,9 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/suscriptors/new', [SuscriptorsController::class, 'newSuscriptor']);
     Route::delete('/v1/suscriptors/delete', [SuscriptorsController::class, 'deleteSuscriptor']);
 
-// section Tropipay
+// section Tropipay and Rentalho
     Route::post('/v1/tropipay/api/notification', [TropiPayController::class, 'responseNotification']);
+    Route::post('/v1/rentalho/api/notification', [RentalhoPayController::class, 'responseNotification']);
 
 // section Payments
     Route::post('/v1/payment/new', [PaymentController::class, 'newPayment'])->middleware('auth:sanctum');

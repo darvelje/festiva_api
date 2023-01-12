@@ -30,7 +30,7 @@ class PermissionsController extends Controller
     {
         $user = User::whereEmail($request->userEmail)->first();
         if ($user) {
-         $user =    $user->removeRole($request->rol);
+         $user = $user->removeRole($request->rol);
             return response()->json(
                 [
                     'code' => 'ok',
@@ -57,9 +57,9 @@ class PermissionsController extends Controller
         $users = User::whereHas('roles', function ($q) {
             $q->where('name', '!=', '');
         })->get();
-       
+
         $users = UserResource::collection($users);
-       
+
         return response()->json(
             [
                 'code' => 'ok',

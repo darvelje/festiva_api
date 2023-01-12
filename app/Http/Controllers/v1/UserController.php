@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\UserFavoritesHasShopProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +28,7 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
 
-    
+
     // Login: method to login an user
     public function login(Request $request)
     {
@@ -47,7 +48,7 @@ class UserController extends Controller
         $user = User::where('email', $request->email)->first();
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        
+
 
         return response()->json([
             'access_token' => $token,
@@ -98,7 +99,7 @@ class UserController extends Controller
             [
                 'user' => new UserResource($user),
                 'orders' => $orders,
-              
+
             ]
         ]);
     }
@@ -107,13 +108,13 @@ class UserController extends Controller
        public function logout(Request $request)
        {
            $request->user()->currentAccessToken()->delete();
-   
+
            return response()->json([
                'code' => 'ok',
                'message' => 'Logged out',
            ]);
        }
-   
+
 
     //section Get_User_By_Token_Rentalho
     protected function getUserByToken($token)
@@ -129,14 +130,15 @@ class UserController extends Controller
 
         $userDriver = $this->getUserByToken($request->token);
 
-        if ($user = User::whereEmail($userDriver['data']['email'])->first()) {
+        if ($user = User::with('shop')->whereEmail($userDriver['data']['email'])->first()) {
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user,
+                'user' => new UserResource($user),
+//                'user' => $user,
                 'code' => 'ok',
                 'message' => 'User logged in',
             ]);
@@ -156,21 +158,13 @@ class UserController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user,
+                'user' => new UserResource($user),
+//                'user' => $user,
                 'code' => 'ok',
                 'message' => 'User registered',
             ]);
         }
 
-
-        return response()->json(
-            [
-                'code' => 'ok',
-                'message' => 'TOKEN',
-                'token' => $request->token,
-                'data' =>  $userDriver['data']['email']
-            ]
-        );
     }
 
     //section Get_Users

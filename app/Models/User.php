@@ -69,4 +69,12 @@ class User extends  Authenticatable
     {
         return $this->hasMany('App\Models\Order');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function shop()
+    {
+        return $this->hasOne(Shop::class);
+    }
 }

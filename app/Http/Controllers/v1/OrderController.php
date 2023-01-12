@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Shop;
 use App\Models\ShopProduct;
+use App\Models\ShopsAmounts;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Model;
@@ -273,12 +274,12 @@ class OrderController extends Controller
                 unset($order->deliver_address->created_at);
                 unset($order->deliver_address->updated_at);
 
-                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
-
-                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
-                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
-                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
-                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+//                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+//
+//                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+//                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+//                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+//                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
 
                 unset($order->deliver_address->locality);
                 unset($order->userAddress);
@@ -308,6 +309,14 @@ class OrderController extends Controller
     public function getOrdersByBusinessSlug(Request $request){
 
         $shop = Shop::with('orders.currency','orders.user', 'orders', 'orders.orderProducts', 'orders.orderProducts.shopProduct', 'orders.userAddress' ,'orders.userAddress.locality', 'orders.userAddress.locality.municipality',  'orders.userAddress.locality.municipality.province')->whereSlug($request->businessSlug)->first();
+
+//        return response()->json(
+//            [
+//                'code' => 'test',
+//                'message' => 'Debug code',
+//                'shop' => $shop
+//            ]
+//        );
 
         if($shop){
             $orders = $shop->orders;
@@ -358,14 +367,14 @@ class OrderController extends Controller
                 unset($order->deliver_address->created_at);
                 unset($order->deliver_address->updated_at);
 
-                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
-
-                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
-                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
-                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
-                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
-
-                unset($order->deliver_address->locality);
+//                $order->deliver_address->locality_name = $order->deliver_address->locality->name;
+//
+//                $order->deliver_address->municipalitie_id = $order->deliver_address->locality->municipalitie_id;
+//                $order->deliver_address->municipalitie_name = $order->deliver_address->locality->municipality->name;
+//                $order->deliver_address->province_id = $order->deliver_address->locality->municipality->province_id;
+//                $order->deliver_address->province_name = $order->deliver_address->locality->municipality->province->name;
+//
+//                unset($order->deliver_address->locality);
                 unset($order->userAddress);
 
                 if($order->status === 1){
@@ -506,37 +515,36 @@ class OrderController extends Controller
         $lengthProducts = count($orderInfo['products']);
         // ----- no mando esto
 
+        $currencyCode = collect();
+
         if($data['methodPayment'] === 'tropipay'){
-            // buscar cual es el id de la moneda EUR , y buscar el valor de los productos en EUR
+            $currencyCode = Currency::whereCode('EUR')->first();
+        }
+        else if($data['methodPayment'] === 'rentalho'){
+            $currencyCode = Currency::whereCode('USD')->first();
+        }
 
-            $currencyEUR = Currency::whereCode('EUR')->first();
+        $order->currency_id = $currencyCode->id;
 
-            $order->currency_id = $currencyEUR->id;
+        $total_price = 0;
 
-            $total_price = 0;
+        $lengthPrices = count($orderInfo['products'][0]['price']);
 
-            $lengthPrices = count($orderInfo['products'][0]['price']);
-
-            for($j = 0; $j < $lengthProducts; $j++) {
-                for($k = 0; $k < $lengthPrices; $k++){
-                    if($orderInfo['products'][$j]['price'][$k]['currency_id'] == $currencyEUR->id){
-                        $total_price = $total_price +( $orderInfo['products'][$j]['quantity'] * $orderInfo['products'][$j]['price'][$k]['price']);
-                    }
-                }
-            }
-
+        for($j = 0; $j < $lengthProducts; $j++) {
             for($k = 0; $k < $lengthPrices; $k++){
-                if($data['deliveryCost'][$k]['currency_id'] == $currencyEUR->id){
-                    $total_price = $total_price +$data['deliveryCost'][$k]['price'];
+                if($orderInfo['products'][$j]['price'][$k]['currency_id'] == $currencyCode->id){
+                    $total_price = $total_price +( $orderInfo['products'][$j]['quantity'] * $orderInfo['products'][$j]['price'][$k]['price']);
                 }
             }
-
-            $order->total_price = $total_price;
-
         }
-        else {
-            // no tropipay method payment
+
+        for($k = 0; $k < $lengthPrices; $k++){
+            if($orderInfo['deliveryCost'][$k]['currency_id'] == $currencyCode->id){
+                $total_price = $total_price +$orderInfo['deliveryCost'][$k]['price'];
+            }
         }
+
+        $order->total_price = $total_price;
 
         $userAddress = new UserAddress();
 
@@ -583,6 +591,22 @@ class OrderController extends Controller
             $order->status = $request->orderStatus;
 
             $order->update();
+
+            //todo asignarle el dinero al comercio
+
+            if($request->orderStatus === 6){
+
+                $shopMovement = new ShopsAmounts();
+
+                $shopMovement->shop_id = $order->shop_id;
+                $shopMovement->currency_id = $order->currency_id;
+                $shopMovement->pending_amount = 0;
+                $shopMovement->amount = $order->total_price;
+
+                $shopMovement->save();
+
+                PaymentController::payEarnings($order);
+            }
 
             DB::commit();
 

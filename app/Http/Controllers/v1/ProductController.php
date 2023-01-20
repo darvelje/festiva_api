@@ -186,12 +186,8 @@ class ProductController extends Controller
 
     public function getPacksAdmin(Request $request)
     {
-        
-      
-       
   
-                $packs = ShopPack::with('shopProductPhotos', 'shop','products', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates',  'shopProductsPricesrates.currency')->orderBy('created_at', 'desc')->inRandomOrder()->take(7)->get();
-        
+            $packs = ShopPack::with('shopProductPhotos', 'shop','products', 'shopProductsHasCategoriesProducts.categoriesProduct', 'shopProductsPricesrates',  'shopProductsPricesrates.currency')->orderBy('created_at', 'desc')->inRandomOrder()->take(7)->get();
 
             return response()->json(
                 [
@@ -201,10 +197,6 @@ class ProductController extends Controller
                 ]
             );
        
-
-     
-     
-
     }
 
 

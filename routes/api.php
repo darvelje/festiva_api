@@ -148,7 +148,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/packs/update', [ProductController::class, 'updatePack']);
     Route::get('/v1/packs/view/{packId}', [ProductController::class, 'getPackById']);
     Route::post('/v1/packs/new', [ProductController::class, 'newPack']);
-    Route::get('/v1/packs/all', [ProductController::class, 'getPacks']);
+    Route::post('/v1/packs/all', [ProductController::class, 'getPacks']);
     Route::get('/v1/packs/all/admin', [ProductController::class, 'getPacksAdmin']);
 
 

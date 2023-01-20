@@ -313,9 +313,12 @@ class CategoryController extends Controller
     // section Delete_Category
     public function deleteCategory(Request $request){
         try {
+
+ 
             DB::beginTransaction();
 
             $result = CategoriesProduct::whereId($request->categoryId)->delete();
+
 
             DB::commit();
 

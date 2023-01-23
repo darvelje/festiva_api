@@ -106,8 +106,6 @@ class PaymentController extends Controller
                     }
                 }
 
-
-
                return $this->newPaymentWithTropiPay($movementPending,$client);
             }
             else if($generalData['methodPayment'] == 'rentalho'){

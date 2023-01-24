@@ -70,21 +70,9 @@ class PromosController extends Controller
     //section Get_Promos
     public function getPromoById(Request $request){
 
-        $promos = Promo::with('promosType', 'categoriesProduct')->whereId($request->promoId)->first();
+        $promos = Promo::whereId($request->promoId)->first();
 
         if($promos){
-            $promos->ubicacion = $promos->promosType->ubication;
-            if($promos->category_id !== null){
-                $promos->category_name = $promos->categoriesProduct->name;
-            }
-            else{
-                $promos->category_name = null;
-            }
-            $promos->promo_name = $promos->promosType->name;
-            unset($promos->created_at);
-            unset($promos->updated_at);
-            unset($promos->promosType);
-            unset($promos->categoriesProduct);
 
             return response()->json(
                 [

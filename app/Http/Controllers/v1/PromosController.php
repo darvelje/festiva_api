@@ -54,29 +54,7 @@ class PromosController extends Controller
 
     //section Get_Promos
     public function getPromos(){
-        $promos = Promo::with('promosType', 'categoriesProduct')->get();
-
-        if($promos){
-            foreach ($promos as $promo){
-                $promo->ubicacion = $promo->promosType->ubication;
-                if($promo->categoriesProduct !== null){
-                    $promo->categoryname = $promo->categoriesProduct->name;
-                }
-                unset($promo->created_at);
-                unset($promo->updated_at);
-                unset($promo->id_promo_type);
-                unset($promo->promosType);
-                unset($promo->categoriesProduct);
-            }
-
-            return response()->json(
-                [
-                    'code' => 'ok',
-                    'message' => 'Promos',
-                    'promos' => $promos
-                ]
-            );
-        }
+        $promos = Promo::all();
 
         return response()->json(
             [

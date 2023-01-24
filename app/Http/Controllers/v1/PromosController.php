@@ -96,7 +96,7 @@ class PromosController extends Controller
     //section Get_Promos_HomeMarket
     public function getPromosHome(Request $request){
 
-        $promos = Promo::with('promosType')->whereCategoryId(null)->where('province_id', $request->provinceId)->get();
+        $promos = Promo::whereCategoryId(null)->where('province_id', $request->provinceId)->get();
 
         if($promos){
 

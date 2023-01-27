@@ -146,6 +146,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/v1/product/update', [ProductController::class, 'updateProduct']);
     Route::delete('/v1/product/delete', [ProductController::class, 'deleteProduct']);
     Route::post('/v1/packs/update', [ProductController::class, 'updatePack']);
+    Route::delete('/v1/packs/delete', [ProductController::class, 'deletePack']);  
     Route::get('/v1/packs/view/{packId}', [ProductController::class, 'getPackById']);
     Route::post('/v1/packs/new', [ProductController::class, 'newPack']);
     Route::post('/v1/packs/all', [ProductController::class, 'getPacks']);

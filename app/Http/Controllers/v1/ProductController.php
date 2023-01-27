@@ -1659,6 +1659,36 @@ class ProductController extends Controller
             );
         }
     }
+    public function deletePack(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $result = ShopPack::whereId($request->packId)->delete();
+
+            DB::commit();
+
+            if ($result) {
+                return response()->json(
+                    [
+                        'code' => 'ok',
+                        'message' => 'Pack deleted successfully'
+                    ]
+                );
+            }
+
+            return response()->json(
+                [
+                    'code' => 'error',
+                    'message' => 'Pack not found'
+                ]
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                ['code' => 'error', 'message' => $th->getMessage()]
+            );
+        }
+    }
 
     //section Upload_image
     public static function uploadImage($path, $name)
